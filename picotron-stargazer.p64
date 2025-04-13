@@ -1,0 +1,467 @@
+picotron cartridge // www.picotron.net
+version 2
+
+:: gfx/
+:: gfx/0.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCIscmV2aXNpb249ODczXV1sejQAtQAAADsyAADzIXtbMF09e2JtcD1weHUA
+QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgA13k9MCx6b29tPTE1fSw-APEKCAsE
+EBoZIBoJBgcJECkXCQB-GQAXARcBEAUA-wEPEEcQBw43EF4QXhAeEB4AWwAaAJoAH-AyAP------
+----------------------------------------------------------_lUD0xNX19
+:: gfx/1.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCIscmV2aXNpb249ODM5XV1sejQANQEAAMsxAADzE3tbMF09e2JtcD1weHUA
+QyABAQQALGZsYWdzPTAscGFuX3gIAMd5PTAsem9vbT04fSwwAJAICASPFCAOEB4CAHMADgAOEB4g
+BABPEC4AjksACy4xNkwAkxAVEB4ABRAFAAYAryAFEB4QBSAeADVOACL-EB8QEB8UAA8QEA4AHxQw
+DgAdIA4QHQAOEA4AHRAeEI1SAB8xAA8fTAACRABlAD4AHTAOBAAPUAAh4TYAHgAGMB4AJhAeMAYA
+BAA-ACYQ7AAhkBwQHgAMMB4ALAgAMxAMAAYALxAcTgAhYgA6AB4wCgQAcCAKEB4QCiAEAA9KABtf
+EBAE8PBPAgwPMQD-------------------------------------------------------------
+-2BQbT04fX0=
+:: gfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCJdXQ==
+:: map/
+:: map/debug.map
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEzIDE3OjA0OjExIixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCIscmV2aXNpb249MzExXV1sejQAiQMAAKhyAAD-D3t7Ym1wPXVzZXJkYXRh
+KCJpMTYiLDEzOCw1MywiMAEA--------------------------_1OTEwNwQADyAADQ8oAv-uDyAA
+FA8oAv--3B8xAgAADxgAAQ4wAA8UAAMMHAAPAQDBDggCDyAAAw-8AMMfMRAACg8UAAAPIAACDwEA
+-84M5AEXMQIADxgAEQQcAA8BAP-ODOQBDvQBDzQALzUxMDQEAA8BALEEXAYECAAMDAAPAQDBD-QB
+AQgCAA8YAAEMAQAOFAAIHAAGJAIPLAK1BBQCBAgADAwADwEA-yIEHAIPVATJBAwADzgAEw8CAE8P
+AQCpTzEwNTABAO0fMQIAGh81BAAQDzACCg8oAtIfMTwDvB8xAgASHzUEACQPKALDHzECAIwMAQAP
+sABHHzUEADQOAgAPNAKRHzECAP8LHzUEAEwPLAIGDxAC-4UPAgABHzUEAFQPAgASDwAC-2EPAgAZ
+HzUEAFQPKAIODxQCsB81BAAQDwIAfR81BACMDygCkR8yBAAUFzHYAA8EACkIAgAfNQQA9A4oAg88
+BHMfMgQAIBcx2AAPBAD-Pg8oAnUfMgQAMBcx2AAPBAD-Og8kAhcPKAIbHzIEAGQXMdwADwQA-zoP
+KAIdHzIEAIwXMdwADwQA-zYPJAIbDygC-_AfMSQCIg8oAv-YHzEkAioPKAL-1A8kAi8PKAIfFzcM
+AAwQAB83EAAECBQADwQAIRcx9AAPBAD-Hg4CAA9QBFMI_AEMDAAbMgwADhQADwQAIxcx_AAPBAD-
+Bg4CAA8YAi0PUAQzDwgAAQgEAB4yEAAPBAAmFzEQAQ8EAP0PGAITHzEkAiwGRAAfMgQAFB83EAAE
+HzcUAAUPBAAwDAIAHzUEAMgPAgAfDwEAGA8oAsgPAgBtFzUIAA8EAEEOAgAPKAKFDiwCDwQAdQ8I
+AQ8fMQIAYhc1CAAPBAApDyAClw90AQMfMgQAcA8MASMfMQIAYw-0AaYPLAKrDzgBcg8kAv8HDzAC
+bw84AYoPFALuDxgBEx8yBABEDkQBDwEA-6YZMQIAHzIEADQPHAIKDzQC-70EAgAfMgQAFAYCAA8B
+AP-eHzECABgPAQD---------------------yPELIiksaGlkZGVuPWZhbHNlLHBhbl94PS01NzML
+AOJ5PTEzLHRpbGVfaD0xNgoAEHcKALB6b29tPTAuMjV9fQ==
+:: map/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCJdXQ==
+:: sfx/
+:: sfx/0.sfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCIscmV2aXNpb249ODQ4XV1sejQAtgAAADMKAAD-MHB4dQADKAAABAAED0AQ
+Ag4AAaABIAKgDgAPEAAN8MoBAgNADw_QBAUGB0AMkAgJCgtADJAPDA8NDw4MQAzw-wEA6-8pqgEQ
+Bg8gEAEgASAB8AACEAIOEAEgDyEgATAPQPDDD3wP-w8c8MUP_AoP-w_AD-cPDQHwCQEQBg4yAAZf
+KA--8MYwAP------nx--AQCsz8gPQAAPEED--7DwcAsADQExABuVEAAPAQD-21D-----3g==
+:: sfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
+NC0xMyAyMToxOToxMCJdXQ==
+:: chunk.lua
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-04-13 21:19:10",revision=1315]]
+--[[
+  [x] Chunk allocation
+  [x] Chunk loading -> Loads from debug map
+  [x] Chunk rendering
+  [x] Store chunks to file system
+  [x] Load chunks back from fs
+  [ ] Chunk generation
+
+]]
+
+-- Sooooooo
+-- We need to solve a few tasks
+-- 1. Load chunks to memory
+-- 2. Render them to screen
+-- HOW 2 do? Either
+--- Do all the everything manually <- tried this, 3x slower
+--- OR
+--- Leverage Picotron's native crap <- went with this!
+
+include "constants.lua"
+include "logging.lua"
+
+chunk = {}
+LOADED_CHUNKS = {}
+ALLOCATION_TABLE = {}
+RENDER_CHUNK_HEAP = userdata("i16",8*8*200,8)
+WORLD_NAME = "test_world"
+
+
+local center_x = 0
+local center_y = 0
+
+function chunk.set_center(x,y)
+	center_x = x
+	center_y = y
+end
+
+function set_world_name(name)
+	WORLD_NAME = name
+	mkdir(SAVEGAME_DIRECTORY .. "/" .. WORLD_NAME)
+end
+
+function chunk.init()
+	mkdir(SAVEGAME_DIRECTORY)
+	mkdir(SAVEGAME_DIRECTORY .. "/" .. WORLD_NAME)
+	memmap(RENDER_CHUNK_HEAP,0x100000)
+end
+
+function chunk.build_chunk()
+	return {
+		tiles = userdata(u8,16,16), -- picked arbitrarily, TODO optimize?
+		
+		get_block = chunk.get_block,
+		set_block = chunk.set_block,
+		render_terrain = chunk.render_terrain
+	}
+end
+
+--[[
+ Allocate and add a new chunk to the world
+ cx, cy: world position in whole chunks
+ c: chunk instance
+]]
+function chunk.add_chunk(cx,cy,c)
+	local chunk_id = cx .. "_" .. cy
+	LOADED_CHUNKS[chunk_id] = c
+	-- Find an unallocated chunk in heap by looking for a "false"
+	local alloc_idx = indexof(ALLOCATION_TABLE, false)
+	-- If we get a nil, that means we need a new slot
+	if alloc_idx == nil then 
+		alloc_idx = #ALLOCATION_TABLE+1 
+	else
+	
+	end
+	-- Mark the slot as allocated
+	ALLOCATION_TABLE[alloc_idx] = true
+	-- Finally, write to the heap...
+	-- The heap is structured like a long-ass map, 8 in height and 1024 in length
+	-- This can store 128 map layers
+	-- TODO optimize this
+	local write_offset = alloc_idx * CHUNK_SIZE
+	local source_tiles = c.tiles
+	for ix=0,CHUNK_SIZE-1 do
+		for iy = 0,CHUNK_SIZE-1 do
+			local tile = 256 + source_tiles:get(ix,iy)
+			if (tile == 256) tile = 0
+			RENDER_CHUNK_HEAP:set( write_offset+ix, iy, tile )
+		end
+	end
+	-- Precalculate some stuff...
+	c.own_id = chunk_id
+	c.alloc_idx = alloc_idx
+	c.tile_idx = write_offset
+	c.screen_x = cx * CHUNK_SIZE_IN_PIXELS
+	c.screen_y = cy * CHUNK_SIZE_IN_PIXELS
+	c.x = cx
+	c.y = cy
+end
+
+function get_chunk_fname(cx, cy)
+	return SAVEGAME_DIRECTORY .. "/" .. WORLD_NAME .. "/" .. cx .. "_" .. cy .. "-chunk.pod"
+end
+
+function chunk.free_chunk(c)
+	ALLOCATION_TABLE[c.alloc_idx] = false
+	LOADED_CHUNKS[c.own_id] = nil
+	
+	if c.changed then
+		CHUNKS_TO_SAVE[#CHUNKS_TO_SAVE+1] = c
+	end
+end
+
+function chunk.get_chunk_by_world_pos(x,y)
+	return chunk.get_chunk(flr(x/CHUNK_SIZE),flr(y/CHUNK_SIZE))
+end
+
+function chunk.get_chunk(cx,cy)
+	local chunk_id = cx .. "_" .. cy
+	return LOADED_CHUNKS[chunk_id]
+end
+
+function chunk.render_loaded_chunks(base_x,base_y)
+	if ( key("tab") and key("shift") ) map() return
+	for i,c in pairs(LOADED_CHUNKS) do
+		map(
+			c.tile_idx,  --tile_x,       starting tiles
+		   0,         	 --tile_y, 
+			c.screen_x,  --[sx,          screen position
+			c.screen_y,  --sy], 
+			8,           --[tiles_x,     how much to draw 
+			8,           --tiles_y], 
+			0x00,        --[p8layers],   p8 layers...
+			8,            --[tile_w,      tile size
+			8            --tile_h]
+		)
+		if (key("tab")) then
+			print("Chunk " .. i, c.screen_x, c.screen_y, 7) 
+			print("Alloc " .. c.tile_idx)
+		end
+	end
+
+end
+
+function chunk.load_chunk(cx,cy)
+	local filename = get_chunk_fname(cx, cy)
+	local type, size, path = fstat(filename)
+	if type then
+		-- Load from disk...
+		local new_chunk = chunk.build_chunk()
+		local data = fetch(filename)
+		new_chunk.tiles = data
+		return new_chunk
+	else
+		-- Generate...
+		yield()
+		local new_chunk = create_debug_chunk(cx,cy)
+		new_chunk.changed = true
+		return new_chunk
+	end
+end
+
+function chunk.start_loader_routine() 
+	return cocreate(function() 
+		while true do
+			aggro_loader()
+		end
+	end)
+end
+
+function aggro_loader()
+	local loader_area_start_x = flr(center_x/CHUNK_SIZE_IN_PIXELS) - 1
+	local loader_area_start_y = flr(center_y/CHUNK_SIZE_IN_PIXELS) - 1
+	local loader_area_end_x   = loader_area_start_x + 10
+	local loader_area_end_y   = loader_area_start_y + 8
+	for iy = loader_area_start_y, loader_area_end_y do
+		yield()	
+		for ix = loader_area_start_x, loader_area_end_x do
+
+			local found_chunk = chunk.get_chunk(ix, iy)
+			if found_chunk then
+				found_chunk.touched = true
+			else
+				local new_chunk = chunk.load_chunk(ix, iy)
+				chunk.add_chunk(ix, iy, new_chunk)	
+				new_chunk.touched = true		
+			end
+		end
+	end
+	for i,c in pairs(LOADED_CHUNKS) do
+		if c.touched then
+			c.touched = false
+		else
+			chunk.free_chunk(c)
+		end
+	end
+end
+
+CHUNKS_TO_SAVE = {}
+
+function chunk.start_saver_routine()
+	return cocreate(function() 
+		while true do
+			aggro_saver()
+			yield()
+		end
+	end)
+end
+
+function aggro_saver()
+	local c = deli(CHUNKS_TO_SAVE)
+	if c then
+		local filename = get_chunk_fname(c.x,c.y)
+		local data = c.tiles
+		store(filename, data)
+	end
+end
+--===========--
+debug_map = fetch("map/debug.map")[1].bmp
+function create_debug_chunk(cx,cy)
+	local new_chunk = chunk.build_chunk()
+	for ix=0,8 do
+		for iy = 0,8 do
+			local tile = debug_map:get(ix+cx*CHUNK_SIZE,iy+cy*CHUNK_SIZE)
+			new_chunk.tiles:set(ix,iy,tile) 
+		end
+	end
+	return new_chunk
+end
+:: constants.lua
+--[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-04-13 21:19:10",revision=811]]
+
+GAME_VERSION_STRING = "Indev 0w0"
+TILE_SIZE = 8
+CHUNK_SIZE = 8
+CHUNK_SIZE_IN_PIXELS = TILE_SIZE * CHUNK_SIZE
+SAVEGAME_DIRECTORY = "/appdata/picotron_stargazer"
+
+BOTTOM_RIGHT_PIXEL_X=479
+BOTTOM_RIGHT_PIXEL_Y=269
+:: logging.lua
+--[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-04-13 21:19:10",revision=843]]
+include "util.lua"
+
+CURRENT_LOG = ""
+
+function dbg(str)
+	CURRENT_LOG ..= str .. "\n"
+	CURRENT_LOG = sub(CURRENT_LOG,-1024)
+end
+
+function drawlog(x,y)
+	local split_log = split(CURRENT_LOG,"\n")
+	local c = 0;
+	for i = max(1,#split_log-20),#split_log do
+		prints(split_log[i],x,y+c*10)
+		c += 1;
+	end
+end
+
+function odbg(o,indent)
+   if not indent then dbg('Dumping object...') end
+	if type(o) == "userdata" then 
+		local w,h,t = o:attribs()
+		dbg(w .. "x" .. h .. " of " .. t)
+		return 
+	end
+	if type(o) != "table" then dbg("Dumping undumpable " .. type(o) .. ": "  .. o) return end
+	local indent = indent or ''
+	for i,v in pairs(o) do
+		if     (type(v) == 'table') then
+			dbg(indent .. i .. " -> ")
+			odbg(v, indent .. '  ')	
+		elseif (type(v) == "function") then
+			dbg("callable " .. i )
+		elseif (type(v) == "userdata") then
+			local w,h,t = v:attribs()
+			dbg(indent .. i .. "	-> " .. w .. "x" .. h .. " of " .. t)
+		else
+			dbg(indent .. i .. ' = ' .. v )
+		end
+	end
+	if indent == '' then
+		dbg("Done dumping")
+	end
+end
+:: main.lua
+--[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-04-13 21:19:10",revision=1204]]
+-- Picotron Stargazer
+-- ~~ CREDITS ~~
+-- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
+
+-- Todo
+--[[
+ [_] CHUNKS
+  [ ] Tracked in chunk.lua
+ [ ] Platformer physics
+ [ ] World interaction
+ [ ] Inventory and item usage
+ [ ] Entities
+ [ ] Storage
+ [ ] Interactive blocks
+ [ ] Final control scheme?
+ [ ] Lore?
+ [ ] Graphics?
+ [ ] OST?
+ [ ] Oleg?
+]]
+
+include "util.lua"
+include "constants.lua"
+include "chunk.lua"
+include "logging.lua"
+
+local CAMERA_OFFSET_X = 0
+local CAMERA_OFFSET_Y = 0
+local CHUNK_X = 0
+local CHUNK_Y = 0
+
+
+function _init()
+	window { cursor = 'crosshair' }
+	chunk.init()
+	chunk_loader = chunk.start_loader_routine()
+	chunk_saver  = chunk.start_saver_routine()
+
+end
+
+function _draw()
+	cls()
+	camera(CAMERA_OFFSET_X,CAMERA_OFFSET_Y)
+	chunk.render_loaded_chunks()
+	camera()
+
+	rect(0,0,BOTTOM_RIGHT_PIXEL_X,BOTTOM_RIGHT_PIXEL_Y,1)	
+	local mem = stat(3)
+	if (key('tab')) then 
+		mem = stat(0)
+		prints("Picotron version: "..  stat(5),1,10)
+		prints("Loaded chunks: " .. real_count(LOADED_CHUNKS), 1, 20)
+		drawlog(1, 30)
+	end
+	prints(
+		"Picotron Stargazer ".. GAME_VERSION_STRING 
+		.."! PERF: " .. stat(1) .. 
+		" MEM: " .. mem/1024/1024 ..
+		"\nCL " .. (LOADER_STATUS and "OK" or "DEAD :( ") ..
+		" CS " .. (SAVER_STATUS and "OK/" .. real_count(CHUNKS_TO_SAVE) or "DEAD :(") 
+		,1,1)
+end
+
+DEBUG_CAMERA_SPEED = 4
+
+function _update()
+	if (key("up")) CAMERA_OFFSET_Y -= DEBUG_CAMERA_SPEED
+	if (key("down")) CAMERA_OFFSET_Y += DEBUG_CAMERA_SPEED
+	if (key("left")) CAMERA_OFFSET_X -= DEBUG_CAMERA_SPEED
+	if (key("right")) CAMERA_OFFSET_X += DEBUG_CAMERA_SPEED
+	chunk.set_center(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
+	
+	if not key("tab") then
+		LOADER_STATUS, LOADER_OUTPUT = coresume(chunk_loader)
+		--aggro_loader()
+		
+		SAVER_STATUS = coresume(chunk_saver)
+		--aggro_saver()
+	end
+
+end
+:: noise.lua
+--[[pod_format="raw",created="2025-04-09 19:34:23",modified="2025-04-12 21:54:12",revision=199]]
+-- TODO PICOTRON PERLIN IMPL!
+:: util.lua
+--[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-04-13 21:19:10",revision=824]]
+function prints(s,x,y,c)
+	print(s,x+2,y+2,19)
+	print(s,x+1,y+1,19)
+	print(s,x-1,y-1,19)
+	print(s,x,y,c or 7)
+end
+
+function real_count(t)
+	local c = 0
+	for i,v in pairs(t) do c+=1 end
+	return c
+end
+
+function indexof(t,iv)
+	for i,ov in pairs(t) do if iv == ov then return i end end
+end
+:: .info.pod
+b64$LS1bW3BvZCxiYnNfaWQ9Il9kZXYyMjc5IixjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUwOjMx
+IixpY29uPXVzZXJkYXRhKCJ1OCIsMTYsMTYsIjAwMDAwMDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAw
+MDAwMDAwMDAxMDcwNzA3MDcwNzA3MDcwNzA3MDcwMTAwMDAwMDAxMDcxNTE1MTUwYTBhMGEwYTE1
+MTUxNTA3MDEwMDAxMDcxNTE1MTUwYTBhMDkwNjA3MGExNTE1MTUwNzAxMDEwNzE1MTUxNTA5MDkw
+OTA3MDcwOTE1MTUxNTA3MDEwMTA3MTUxNTE5MTkxOTE5MTkxOTE5MTkxNTE1MDcwMTAxMDcxNTE1
+MTUwNzA3MDEwNzA3MDExNTE1MTUwNzAxMDEwNzE1MTUxNTA3MDcwMTA3MDcwMTE1MTUxNTA3MDEw
+MTA3MTUxNTE1MTAwNzA3MDcwNzA3MTUxNTE1MDcwMTAxMDcxNTE1MTUwNzEwMDcwNzA3MDcxNTE1
+MTUwNzAxMDEwNzAxMTUxNTEwMTAxMDEwMTAxMDE1MTUxNTA3MDEwMTA2MDcxNTE1MTAxMDAxMDEx
+MDEwMTUxNTA3MDYwMTAxMDYwNjA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwNjAxMDAwMTA2MDYwNjA2
+MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDAw
+MDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwIiksbG93Y29sX2ljb249ZmFsc2UsbW9kaWZpZWQ9
+IjIwMjUtMDQtMTMgMjE6MTk6MTAiLHJ1bnRpbWU9MTcsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
+PXt7bG9jYXRpb249Im1haW4ubHVhIzkiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImNo
+dW5rLmx1YSMzIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJsb2dnaW5nLmx1YSMxIix3
+b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ1dGlsLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9
+MX0se2xvY2F0aW9uPSJjb25zdGFudHMubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRp
+b249ImdmeC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0iZ2Z4LzEuZ2Z4Iix3
+b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvZGVidWcubWFwIix3b3Jrc3BhY2VfaW5k
+ZXg9M30se2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFjZV9pbmRleD00fX1dXQ==
+:: [eoc]
