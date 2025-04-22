@@ -2,6 +2,8 @@ Picotron Stargazer
 ==================
 
 A 2D sandbox game for the Picotron fantasy console!
+
+GIF of the week:
 ![code](https://github.com/user-attachments/assets/87e9221a-ed9d-4b0a-a052-83cab7eb17f1)
 
 Currently, this repository only includes the .p64 file, as a VCS-based development pipeline is not very easy to pull off with Picotron.
