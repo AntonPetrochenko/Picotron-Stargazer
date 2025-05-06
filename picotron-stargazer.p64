@@ -3,7 +3,7 @@ version 2
 
 :: entities/
 :: entities/base.lua
---[[pod_format="raw",created="2025-04-14 21:29:02",modified="2025-04-25 13:46:56",revision=1707]]
+--[[pod_format="raw",created="2025-04-14 21:29:02",modified="2025-05-06 09:35:15",revision=1885]]
 function build_entity()
 	return {
         x = 0, y = -64,
@@ -46,7 +46,7 @@ function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_
 			if (e.dx < 0) e.wa_left = true
 			if (e.dx > 0) e.wa_left = false
 			if (abs(e.dx)>0.1) then
-				e.wa_frame += abs(e.dx/2)
+				e.wa_frame += abs(e.dx/3)
 				if (e.wa_frame >= e.wa_limit) then
 					e.wa_frame = 0
 				end
@@ -59,7 +59,7 @@ function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_
 	end
 end
 :: entities/player.lua
---[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-04-24 21:37:03",revision=1915]]
+--[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-05-06 09:35:15",revision=2143]]
 include "entities/base.lua"
 
 
@@ -148,6 +148,8 @@ function build_player()
 		end
 		prints(e.x .. " " .. e.y, -32, -32)
 	end
+	base.prev_whole_x = flr(base.x/8)
+	base.prev_whole_y = flr(base.y/8)
 	base.update = function(e)
 		-- Player input
 		-- e.dx = (input & 1 and e.walk_speed) or (input & 2 and -e.walk_speed) or 0
@@ -169,6 +171,17 @@ function build_player()
 		end
 		
 		if (keyp("t")) trigger_swing()
+		
+		local whole_x = flr(e.x/8+0.5)
+		local whole_y = flr(e.y/8+0.5)
+		
+		if e.prev_whole_x != whole_x or e.prev_whole_y != whole_y then
+			chunk.place_light_in_world(whole_x, whole_y, 14)
+			chunk.break_light_in_world(base.prev_whole_x, base.prev_whole_y)
+		end
+	
+		e.prev_whole_x = whole_x
+		e.prev_whole_y = whole_y
 	end
 	
 	base.equipped_sprite = 16
@@ -176,56 +189,56 @@ function build_player()
 end
 :: entities/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTE0IDIxOjI4OjIzIixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiJdXQ==
+NS0wNiAwOTozNToxNiJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiIscmV2aXNpb249MjczM11dbHo0AD0EAADmOQAA_CZ7WzBdPXtibXA9cHh1
-AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
-MjY4NDY4ODdlLTE3LHpvb209MTV9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
-Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
-Zl89LoAucHcBZk8tAC5wfwBB8Ao-H3B_YE4ATjBeEE4QbiCuUI6AXpBegG6AFgD-Aj4wXiA_EF4w
-TgBOUI5wbpAefQFf-wMADlAODQcNNw0OUA59DlAO8AyEAEAbNoQAP5BHkIYAYBsmhgAv8AqHAGIf
-8FQAkKwEBAQ3Pxw8HxARWQADSQAfMIsABw8yABqyCgoEIAZgBgdwBgcGAM91F38VF4AXcBeQB1BK
-AAweNkoA8ho3IAY3QAYHDxVQBgcOBQ5AFwAOBQ4wBgcQDgUOIAYwDgUOEAdADgUOcAQAD2EAHvoJ
-FhcwFlcQFwAPFQUAFwAGIA4FIAcwDgVwAwAfMFgAHfEDEAcWBwZgNwZgDxUHBlAOBQ4HrAAwABcg
-sgAQF74AIDAHywAQQNYAT2AFDnBiAB0xUAaQXwHAgAYHdQYHfxUXcBdgBAAvByBKAB0zBQ8VPgEy
-DkAHmgABpgAhBgezABEGYAHPBgdQDgYHQCYXIBYnYgAeMzAPFUkBBlIBAWsB-wAGABYADgUABgcQ
-FzYXMDdZAB5QcA8VBWCeABFAqgASMLcAAhwCEwcqAt8OBQ5QFw5gBjdgJhcQYQAaAP0CH1XeCBUP
-IwIODzkJIV6ADl2QHjoJD1wADw0cCIknDxUXkCcOF1oAHxBaACCwWCoJoCoJBgeQORdYAIk3DxUH
-kDcOB1gAHwBYACAaaVgAIVeQWgD-Ag8QJw8VB4AOBw8QN4AeTQ4AWAAeH-AyAH70ACAgBPD-awbw
-DQYH8A4GBwgA-wZl8AcXbxXwBxfwDxfwDhfwEAfw-1ZZAAseN1gAoP-LBjfwCQY38As1BSHwDAAD
-IfALNwUi8AocAyHwCSoDIfAI2gMj8A4FAA9sAB_TwBYX8AoWV-AIQAUi8AdBBW7wCg4F8A4EAB-g
-YwAfELRJBWDwDTcG8A1LBSHwDEwFAGEAUA4AF-AJ8QMxF-AItQQh8AfCBCDwBtAAEA3UAA9vAB5D
-VwbwEJYBYA8GB-AGdQUAIX8VkAESDQYATwfw-2pYAAwPUgJeDzIAHwJdAS--8zUACx81mAAfDzIA
-----------------------------------------------------x1EICAQFBwIAEhcIAB8VDgAW
-HwVpAP-CP-8lMDMAHh8kMwAfHyMzAB8fIjMAHx8hMwAeH-AyAAtQPTE2fX0=
+NS0wNiAwOTozNToxNSIscmV2aXNpb249MzMwNl1dbHo0AD4EAAD0OQAA_CZ7WzBdPXtibXA9cHh1
+AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwReT04LjMyNjY3
+MjY4NDY4ODdlLTAxNyx6b29tPTE1fSxiAP8aGhmgGgkGBwmQKRcJgH8ZgBcPFRcOkBcOFw6QDxBH
+kAcNN5BdgC4QLjB_AGVvbXAuIC4gfgBBH0b8ABFPkC4t0P0AQx9HfwAUH8B-AEMfV38AET_gPkB6
+AWdfPS6ALnB6AWdPLQAucIAAQvAKPx9wfmBOAE4wXhBOEG4grlCOgF6QXoBugBYA-wI_MF4gPhBe
+ME4ATlCOcG6QHoABYP8DAA5QDg0HDTcNDlAOfQ5QDvAMhQBBGzaFAD_QR5CHAGEbJocAL-AKiABj
+H-BVAJKsBAQENz8cPB8QEVoAA0oAHzCMAAcPMgAasgoKBCAGYAYHcAYHBgDPdRd-FReAF3AXkAdQ
+SgAMHjZKAPIaNyAGN0AGBw8VUAYHDgUOQBcADgUOMAYHEA4FDiAGMA4FDhAHQA4FDnAEAA9hAB76
+CRYXMBZXEBcADxUFABcABiAOBSAHMA4FcAMAHzBYAB3xAxAHFgcGYDcGYA8VBwZQDgUOB6wAMAAX
+ILIAEBe_ACAwB8sAEEDWAE9gBQ5wYgAdMVAGkF8BwIAGB3UGB38VF3AXYAQALwcgSgAdMwUPFT4B
+Mg5AB5oAAaYAIQYHswARBmABzwYHUA4GB0AmFyAWJ2IAHjMwDxVJAQZSAQFrAf8ABgAWAA4FAAYH
+EBc2FzA3WQAeUHAPFQVgngARQKoAEjC3AAIcAhMHKgLfDgUOUBcOYAY3YCYXEGEAGgD9Ah9V6ggV
+DyMCDg9FCSFegA5dkB5GCQ9cAA8NJQiJJw8VF5AnDhdaAB8QWgAgsFgqCaAqCQYHkDkXWACJNw8V
+B5A3DgdYAB8AWAAgGmlYACFXkFoA-wIPECcPFQeADgcPEDeAHk0OAFgAHh-wMgB_9AAgIATw-2sG
+8A0GB-AOBgcIAP8GZfAHF28V8AcX8A8X8A4X8BAH8P9WWQALHjdYAKD-ywY38AkGN-ALNQUh8AwA
+AyHwCzcFIvAKHAMh8AkqAyHwCNoDI-AOBQAPbAAfk8AWF-AKFlfwCEAFIvAHQQVu8AoOBfAOBAAf
+4GMAHxC0SQVg8A03BvANSwUh8AxMBQBhAFAOABfwCfEDMRfwCLUEIfAHwgQg8AbQABAN1AAPbwAe
+Q1cG8BCWAWAPBgfwBnUFACF-FZABEg0GAE8H8P9qWAAMD1ICXg8yAB8CXQEv--M1AAsfNZgAHw8y
+AP---------------------------------------------------8dRCAgEBQcCABIXCAAfFQ4A
+Fh8FaQD-wj--JTAzAB4fJDMAHx8jMwAfHyIzAB8fITMAHh-wMgALUD0xNn19
 :: gfx/1.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiIscmV2aXNpb249Mjc0NV1dbHo0AH8DAABTNgAA8xR7WzBdPXtibXA9cHh1
+NS0wNiAwOTozNToxNSIscmV2aXNpb249MzM2NF1dbHo0AJgDAABTNgAA8xR7WzBdPXtibXA9cHh1
 AEMgCAgE8DAsZmxhZ3M9MCxwYW5feAgA2nk9MCx6b29tPTE2fSwyAFF7DxsLDgIAQQ8UDg0CACED
 DQIAL-0RTAAdL-8UfwAe-wEPFBQeDxUOHQ4ELh0OFB4NCgAHA1oAPzEyOFwAFvATGwsDAA4LAxAO
 AA8VAw4AHQALDg0DCw4ADQ4NAA0OAw4LDR8AUAADDgANHwAVAx8AEAMEAA9xAB9-jQH9EwH9AgQB
 HlAbCwMPFAYA8AQfFQ8bBA8UAw8bLxUECw8bDxQDBgAQFR4A0C8UDxsDDgsEDxQOCwPQAAApAGAO
 LxUDCw4nABAOJgBfDgMdDgN-AB3haQ8ZWgkOWg4JfikOORoKAC86fkUAHaNPFQAOAD4ADgBeCAAb
 HhAAH05SAB0v8TB-Ah_fFQ8VXxQfFf8UhAEe_CMADxQEDx8PDwgPGAIPFQUPFgYHDxcPDg8eAQ8Q
-DxEMDxwPHQ0PEg8TAw8bCw8aCgkPGQwACiUACD8ACFgAD5QAGl8QEATw8DIAsI8ICAQXUBfwJjUA
-HU8PIPEvNAAeTxX-FC8CAYEOGQUPlwByDy4GH3_BDyDxEw7xXwMejo8UDxj-FBMPmwMPoQF1DjsE
-D6oBq2-xCg8g8RUIAR8QCqkBHxUEAVEP3gO2D50BIF8DDyBRDp8BIRADpwIvDxWjAVQP5wO6D9IA
-Io-xFQ8gUR7xApwAfg7OAA-fA0oPMgD-Rw-WA1twCAgEPxg-FAQA8QIvGE8UHxi-FB8VTxQvFT8U
-PwQAD4AAHw8yAP---------------------------------------xoABiLfJSdOB24nbgduB04n
-vj4AHlAkBw4HTgQAAUIAL24HQgAe-wGfIwdeBw4HbgdeB34HThfOQAAeFSJAAD9eB27CAB9SnyEH
-Xhe8AB9ePgAfc5AHUAcAB0AEAE9QB-AF5AEfDzIA----0w9oBS4v-yW3KB5GDyQPJQQAFx8MADcP
-JR8MAA8cADUvDyTVAB4fJNUAHzYjDyQEABcfDAA3DyQfDAAPHAA1Lw8j1QAeHyPVAB82Ig8jBAAX
-HwwANw8jHwwADxwANS8PItUAHh8i1QAfNiEPIgQAFx8MADcPIh8MAA8cADUvDyHVAB4vITB5Mh8z
-IQAOMDNfDgAOEA4OABUfAKcsPFA9MTZ9fQ==
+DxEMDxwPHQ0PEg8TAw8bCw8aCgkPGQwACiUACD8ACFgAD5QAGl8QEATw8DIAsPAUCAgEED8SMA4Q
+DkAOAUABDx8KASABDxgKDx8PGAEQAQgKBwgHAH8HCggBIDEQ5QMgPyDxL5EAHV8PFf8ULyoBHw8y
+AOIPVQYif4EPIPETDvGGAx6OjxQPGP8UEw-CAw8KAREPMgDiD6ABIm-xCg8g8RVgBR8QCp8BHxUE
+AR8PMgDiD5oBI18DDyBRDpwBIRAD-AYvDxWgAf8YDzIAHwCgAX8VDyBRHvECnAAfDzIA--90cAgI
+BD8YPxQEAPECLxhPFB8YvxQfFU8ULxU-FD8EAA_AAB8PMgD-----------------------------
+----------8aAMYl3yUnTgduJ24HbgdOJ74_AB5QJAcOB04EAAFCAC9uB0IAHv8BnyMHXgcOB24H
+Xgd_B04XzkAAHhUiQAA-XgduwgAfUp8hB14XvAAfXj4AH3OQB1AHAAdABABPUAfwBeQBHw8yAP--
+-9MPaAUuL-8lnSgeRg8kDyUEABcfDAA3DyUfDAAPHAA1Lw8k1QAeHyTVAB82Iw8kBAAXHwwANw8k
+HwwADxwANS8PI9UAHh8j1QAfNiIPIwQAFx8MADcPIx8MAA8cADUvDyLVAB4fItUAHzYhDyIEABcf
+DAA3DyIfDAAPHAA1Lw8h1QAeLyEweTIfMyEADjAzXw4ADhAODgAVHwCNLDxQPTE2fX0=
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiJdXQ==
+NS0wNiAwOTozNToxNiJdXQ==
 :: map/
 :: map/debug.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEzIDE3OjA0OjExIixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiIscmV2aXNpb249MjAyOV1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
+NS0wNiAwOTozNToxNSIscmV2aXNpb249MjYwNF1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
 YSgiaTE2IiwxMzgsNTMsIjABAP--------------------------tTkxMDcEAA8gAA0PKAL-7g8g
 ABQPKAL--9wfMQIAAA8YAAEOMAAPFAADDBwADwEAwQ4IAg8gAAMP-ADDHzEQAAoPFAAADyAAAg8B
 AP-ODOQBFzECAA8YABEEHAAPAQD-zgzkAQ70AQ80AC81MTA0BAAPAQCxBFwGBAgADAwADwEAwQ-0
@@ -245,19 +258,19 @@ DwEA---------------------8jxCyIpLGhpZGRlbj1mYWxzZSxwYW5feD0tNTU0CwDyAXk9LTE0
 Mix0aWxlX2g9MTYKABB3CgCAem9vbT0yfX0=
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiJdXQ==
+NS0wNiAwOTozNToxNiJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiIscmV2aXNpb249MjU0Ml1dbHo0ALYAAAAzCgAA-zBweHUAAygAAAQABA9A
+NS0wNiAwOTozNToxNSIscmV2aXNpb249MzExM11dbHo0ALYAAAAzCgAA-zBweHUAAygAAAQABA9A
 EAIOAAGgASACoA4ADxAADfDKAQIDQA8PkAQFBgdADJAICQoLQAyQDwwPDQ8ODEAM8P8BAOv-KaoB
 EAYPIBABIAEgAfAAAhACDhABIA8hIAEwD0Dwww98D-8PHPDFD-gKD-8PgA-3Dw0B8AkBEAYOMgAG
 XygP--DGMAD------58f-wEArM-ID0AADxBA--_w8HALAA0BMQAblRAADwEA-9tQ-----94=
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NC0yNSAxMzo0Njo1NiJdXQ==
+NS0wNiAwOTozNToxNiJdXQ==
 :: chunk.lua
---[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-04-25 13:46:56",revision=3433]]
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-05-06 09:35:15",revision=4398]]
 --[[
   [x] Chunk allocation
   [x] Chunk loading -> Loads from debug map
@@ -290,7 +303,7 @@ WORLD_NAME = "test_world"
 local center_x = 0
 local center_y = 0
 
-function chunk.set_block_in_world(x,y,b)
+function chunk.set_tile_in_world(x,y,b)
 	local c = chunk.get_chunk_by_world_pos(x,y)
 	
 	if (c) then
@@ -298,9 +311,10 @@ function chunk.set_block_in_world(x,y,b)
 		local y_in_chunk = y%CHUNK_SIZE
 		c.tiles:set(x_in_chunk,y_in_chunk,b)
 		local tile = b == 0 and 0 or b + 256
-		RENDER_CHUNK_HEAP:set( c.tile_idx+x_in_chunk, y_in_chunk, tile )
+		update_displayed_tile(tile, c, x_in_chunk, y_in_chunk) 
 		c.changed = true
 	end
+	
 end
 
 function chunk.get_tile_in_world(x,y)
@@ -310,8 +324,23 @@ function chunk.get_tile_in_world(x,y)
 	return chunk_with_block.tiles:get(x%CHUNK_SIZE,y%CHUNK_SIZE)
 end
 
+function chunk.mutate_light_in_world(x,y,delta)
+	local x,y = flr(x), flr(y)
+	local cx, cy = x%CHUNK_SIZE,y%CHUNK_SIZE
+	local chunk_with_block = chunk.get_chunk_by_world_pos(x,y)
+	if (not chunk_with_block) return nil
+	chunk_with_block.changed = true
+	
+	local new_light_level = chunk_with_block.light:get(cx,cy)-delta
+	chunk_with_block.light:set(cx,cy,new_light_level)
+	
+	-- update visual chunk
+	local light_tile = 511-mid(0,8,new_light_level)
+	RENDER_CHUNK_HEAP:set( chunk_with_block.light_tile_idx+cx, cy, light_tile )
+end
+
 function chunk.set_center(x,y)
-	send_message(CHUNK_PROCESS, { event = "set_center"} )
+	send_message(CHUNK_PROCESS, { event = "msg" } )
 	center_x = x
 	center_y = y
 end
@@ -331,7 +360,8 @@ function chunk.build_chunk()
 	return {
 		tiles = userdata("i16",CHUNK_SIZE,CHUNK_SIZE),
 		bg = userdata("i16",CHUNK_SIZE,CHUNK_SIZE),
-		light = userdata("i16",CHUNK_SIZE,CHUNK_SIZE)
+		light = userdata("i16",CHUNK_SIZE,CHUNK_SIZE),
+		light_sources = {}
 	}
 end
 
@@ -370,34 +400,8 @@ function chunk.add_chunk(cx,cy,c)
 	local source_tiles = c.tiles
 	local source_bg = c.bg
 	local source_light = c.light
-	bar_start("Chunk adding")
-	for ix=0,CHUNK_SIZE-1 do
-		for iy = 0,CHUNK_SIZE-1 do
-			local tile = 256 + source_tiles:get(ix,iy)
-			if (tile == 256) tile = 0
-			if (tile == 258 and rnd(3)<1) then
-				tile += flr(rnd(6)) * 8 + (flr(rnd(8)) << 13)
-			end
-			
-			-- Foreground tile decided by this point
-			local is_foreground_transparent = tile == 0 or fget(tile, 7)
-			RENDER_CHUNK_HEAP:set( write_offset+ix, iy, tile )
-			
-			-- Picking background tile...
-			local bg_tile = is_foreground_transparent and 256+source_bg:get(ix,iy) or 0
-			if (bg_tile == 256) bg_tile = 0
-			if (bg_tile == 265 and rnd(3)<1) then
-				bg_tile += flr(rnd(6)) * 8 + (flr(rnd(8)) << 13)
-			end
-			RENDER_CHUNK_HEAP:set( bg_write_offset+ix, iy, bg_tile )
-						
-			-- Light is special. Tiles 511-n correspond to darkening levels.
-			local light_tile = 511-source_light:get(ix,iy)
-			RENDER_CHUNK_HEAP:set( light_write_offset+ix, iy, light_tile )
-		end
-	end
-	bar_end("Chunk adding")
-	-- Precalculate some stuff...
+	
+		-- Precalculate some stuff...
 	c.own_id = chunk_id
 	c.alloc_idx = alloc_idx
 	c.bg_alloc_idx = bg_alloc_idx
@@ -411,6 +415,55 @@ function chunk.add_chunk(cx,cy,c)
 	c.screen_y = cy * CHUNK_SIZE_IN_PIXELS
 	c.x = cx
 	c.y = cy
+	bar_start("Chunk adding")
+	for ix=0,CHUNK_SIZE-1 do
+		for iy = 0,CHUNK_SIZE-1 do
+			local tile = 256 + source_tiles:get(ix,iy)
+			
+			update_displayed_tile(tile, c, ix, iy)
+			
+						
+			-- Light is special. Tiles 511-n correspond to darkening levels.
+			local light_tile = 511-max(0,source_light:get(ix,iy))
+			RENDER_CHUNK_HEAP:set( light_write_offset+ix, iy, light_tile )
+		end
+	end
+	bar_end("Chunk adding")
+
+end
+
+function chunk.update_all_light_in_chunk(c)
+	local source_light = c.light
+	local light_write_offset = c.light_tile_idx
+	for ix=0,CHUNK_SIZE-1 do
+		for iy = 0,CHUNK_SIZE-1 do
+			local light_tile = 511-max(0,source_light:get(ix,iy))
+			RENDER_CHUNK_HEAP:set( light_write_offset+ix, iy, light_tile )
+		end
+	end
+end
+
+function update_displayed_tile(tile, chunk, ix, iy)
+	local write_offset = chunk.tile_idx
+	local bg_write_offset = chunk.bg_tile_idx
+	local source_bg = chunk.bg
+	
+	if (tile == 256) tile = 0
+	if (tile == 258 and rnd(3)<1) then
+		tile += flr(rnd(6)) * 8 + (flr(rnd(8)) << 13)
+	end
+	
+	-- Foreground tile decided by this point
+	local is_foreground_transparent = tile == 0 or fget(tile, 7)
+	RENDER_CHUNK_HEAP:set( write_offset+ix, iy, tile )
+	
+	-- Picking background tile...
+	local bg_tile = is_foreground_transparent and 256+source_bg:get(ix,iy) or 0
+	if (bg_tile == 256) bg_tile = 0
+	if (bg_tile == 265 and rnd(3)<1) then
+		bg_tile += flr(rnd(6)) * 8 + (flr(rnd(8)) << 13)
+	end
+	RENDER_CHUNK_HEAP:set( bg_write_offset+ix, iy, bg_tile )
 end
 
 function get_chunk_fname(cx, cy)
@@ -464,7 +517,12 @@ function chunk.render_loaded_chunks(base_x,base_y)
 				8            --tile_h]
 			)
 			if (key("tab")) then
-				print(c.debug_label or "" .. " Chunk " .. i, c.screen_x, c.screen_y, 7) 
+				print(c.debug_label or "" .. " Chunk " .. i, c.screen_x, c.screen_y, 7)
+				for ix=0,CHUNK_SIZE-1 do
+					for iy=0,CHUNK_SIZE-1 do
+						print(c.light:get(ix,iy), c.screen_x + ix * 8, c.screen_y + iy*8)
+					end
+				end 
 			end
 		end
 	end
@@ -473,6 +531,7 @@ function chunk.render_loaded_chunks(base_x,base_y)
 end
 
 function chunk.render_light(base_x,base_y)
+	-- if true then return end
 	if ( key("tab") and key("shift") ) map() return
 	bar_start("Rendering")
 	for i,c in pairs(LOADED_CHUNKS) do
@@ -499,23 +558,36 @@ end
 function chunk.load_chunk(cx,cy)
 	local filename = get_chunk_fname(cx, cy)
 	local type, size, path = fstat(filename)
+	local new_chunk = nil
 	yield()
 	if type then
 		-- Load from disk...
-		local new_chunk = chunk.build_chunk()
+		new_chunk = chunk.build_chunk()
 		local data = fetch(filename)
 		new_chunk.tiles = data.tiles
 		new_chunk.bg = data.bg
 		new_chunk.light = data.light
+		new_chunk.light_sources = data.light_sources
 		new_chunk.debug_label = "Loaded"
-		return new_chunk
 	else
 		-- Generate...
-		local new_chunk = do_world_generation(cx,cy)
+		new_chunk = do_world_generation(cx,cy)
 		new_chunk.changed = true
 		new_chunk.debug_label = "Generated"
-		return new_chunk
 	end
+	new_chunk.loaded_at_x = cx
+	new_chunk.loaded_at_y = cy
+	return new_chunk
+end
+
+local my_requests = {}
+function chunk.request_load(cx,cy)
+	local cid = cx .. "/" .. cy
+	for i,v in pairs(my_requests) do
+		if v == cid then return end
+	end
+	my_requests[#my_requests+1] = cid
+	send_message(CHUNK_PROCESS, { event = "request_load", payload = { cx = cx, cy = cy }  })
 end
 
 function chunk.start_loader_routine() 
@@ -529,8 +601,8 @@ end
 function aggro_loader()
 	local loader_area_start_x = flr(center_x/CHUNK_SIZE_IN_PIXELS) - 1
 	local loader_area_start_y = flr(center_y/CHUNK_SIZE_IN_PIXELS) - 1
-	local loader_area_end_x   = loader_area_start_x + 5
-	local loader_area_end_y   = loader_area_start_y + 4
+	local loader_area_end_x   = loader_area_start_x + 9
+	local loader_area_end_y   = loader_area_start_y + 7
 	
 	local rendered_area_start_x = loader_area_start_x
 	local rendered_area_end_x   = loader_area_end_x
@@ -547,16 +619,11 @@ function aggro_loader()
 					ix >= rendered_area_start_x and ix <= rendered_area_end_x and
 					iy >= rendered_area_start_y and iy <= rendered_area_end_y 
 			else
-				local new_chunk = chunk.load_chunk(ix, iy)
-				new_chunk.rendered = 
-					ix >= rendered_area_start_x and ix <= rendered_area_end_x and
-					iy >= rendered_area_start_y and iy <= rendered_area_end_y 
-				chunk.add_chunk(ix, iy, new_chunk)	
-				new_chunk.touched = true		
+				chunk.request_load(ix, iy)
+				--[[ Continue in recv... --]]
 			end
 		end
 	end
-	yield()
 	for i,c in pairs(LOADED_CHUNKS) do
 		if c.touched then
 			c.touched = false
@@ -564,6 +631,49 @@ function aggro_loader()
 			chunk.free_chunk(c)
 		end
 	end
+end
+
+function chunk.place_light_in_world(x,y,str)
+	local owner_chunk = chunk.get_chunk_by_world_pos(x,y)
+	if not owner_chunk then return end
+	owner_chunk.light_sources[#owner_chunk.light_sources+1] = {
+		x = x,
+		y = y,
+		str = str
+	}
+	tracked_rect(str,str,function (ix, iy, dist, idist)
+		chunk.mutate_light_in_world(x+ix, y+iy, idist)
+	end)
+end
+
+function chunk._place_light_in_world(x,y,str)
+	chunk.blit_light(x,y,8,8,8,8)
+end
+
+function chunk._break_light_in_world()
+
+end
+
+function chunk.break_light_in_world(x,y)
+	local owner_chunk = chunk.get_chunk_by_world_pos(x,y)
+	if not owner_chunk then return end
+	local found_sources = {} -- cba backwards iteration
+	for i,v in pairs(owner_chunk.light_sources) do
+		if v.x == x and v.y == y then
+			found_sources[#found_sources+1] = v
+			tracked_rect(v.str,v.str,function (ix, iy, dist, idist)
+				chunk.mutate_light_in_world(v.x+ix, v.y+iy, -idist)
+			end)
+		end
+	end
+	for i,v in pairs(found_sources) do
+		del(owner_chunk.light_sources, v)
+	end
+end
+
+function chunk._break_light_in_world(x,y)
+	local str = 8
+	chunk.blit_light(x,y,str,str,str,-8)
 end
 
 CHUNKS_TO_SAVE = {}
@@ -580,15 +690,24 @@ end
 function aggro_saver()
 	local c = deli(CHUNKS_TO_SAVE)
 	if c then
+		chunk.request_save(c)
+	end
+	return c
+end
+
+function chunk.request_save(c)
+	send_message(CHUNK_PROCESS, { event = "request_save", payload = c })
+end
+
+function chunk.save_to_disk(c)
 		local filename = get_chunk_fname(c.x,c.y)
 		local data = {
 			tiles = c.tiles,
 			bg = c.bg,
-			light = c.light	
+			light = c.light,
+			light_sources = c.light_sources,
 		}
 		store(filename, data)
-	end
-	return c
 end
 
 function save_all()
@@ -600,41 +719,106 @@ function save_all()
 	while aggro_saver() do cls() print("Saved chunk " .. cc ) cc+=1 flip() end
 end
 
-function chunk.recv_chunk()
-	cls()
-	stop("Recv!")
+function chunk.recv_chunk(evt)
+	-- error "Recv unimpl"
+	local new_chunk = evt.payload
+	del(my_requests, new_chunk.loaded_at_x .. "/" .. new_chunk.loaded_at_y) 
+	chunk.add_chunk(new_chunk.loaded_at_x, new_chunk.loaded_at_y, new_chunk)
+	new_chunk.touched = true
 end
 --===========--
-debug_map = fetch("map/debug.map")[1].bmp
 function do_world_generation(cx,cy,y)
 	local new_chunk = chunk.build_chunk()
 	new_chunk.tiles, new_chunk.bg, new_chunk.light = generate_terrain(cx,cy,y)
 	return new_chunk
 end
+
+
+light_gradient_cache = {}
+function chunk.blit_light(x,y,w,h,str,sign)
+	-- Prepare light diamond userdata
+	local lg_cache_name = w .. '/' .. h .. '/' .. str
+	
+	local lg = nil
+	-- Get from cache or create and cache
+	if light_gradient_cache[lg_cache_name] then
+		lg = light_gradient_cache[lg_cache_name]
+	else
+		lg = userdata("i16", w, h)
+		tracked_rect(w, h, function(ix, iy, d, id)
+			lg:set(ix, iy, id)
+		end)
+		light_gradient_cache[lg_cache_name] = lg
+	end
+	
+	-- Make slices and update chunks
+	
+	for ix = x-w/2, x+w/2+8, 8 do
+		for iy = y-h/2, y+h/2+8, 8 do
+			local c = chunk.get_chunk_by_world_pos(ix,iy)
+			if c then
+				dbg("Light chunk at " .. c.x .. '/' .. c.y) 
+				local slice = userdata("i16",8,8)
+				lg:blit(
+					slice, -- dest
+					0, -- src_x
+					0, -- src_y
+					0, -- dest_x
+					0, -- dest_y
+					8, -- width
+					8  -- height
+				)
+				local test_light = c.light + slice
+				c.light = test_light
+				chunk.update_all_light_in_chunk(c)
+			end
+		end
+	end
+end
 :: chunkservice.lua
---[[pod_format="raw",created="2025-04-25 11:19:16",modified="2025-04-25 13:46:56",revision=58]]
+--[[pod_format="raw",created="2025-04-25 11:19:16",modified="2025-05-05 12:05:55",revision=456]]
 include "chunk.lua"
 
 local MAIN_PID = env().argv[1]
 
-on_event("set_center", function()
-	crash()
-	send_message(MAIN_PID, { event = "load_chunk", payload = { msg = "Pong!" } } )
+on_event("msg", function(t)
+	--send_message(MAIN_PID, { event = "load_chunk", payload = { msg = "Pong!" } } )
 end)
 
+on_event("request_load", function(evt)
+	local args = evt.payload
+	local chunkdata = chunk.load_chunk(args.cx, args.cy)
+	send_message(MAIN_PID, { event = "load_chunk", payload = chunkdata })
+end)
+
+on_event("request_save", function(evt)
+	local chunkdata = evt.payload
+	chunk.save_to_disk(evt.payload)
+end)
+
+local seppuku = 100
+
+on_event("keepalive", function()
+	seppuku = 100
+end)
+function _update()
+	seppuku -= 1
+	if seppuku < 1 then
+		error("Keepalive ran out for chunkservice!")
+	end
+end
+
 :: constants.lua
---[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-04-25 13:46:56",revision=2636]]
+--[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-05-06 09:35:15",revision=3216]]
 
 GAME_VERSION_STRING = "Indev 0w0"
 TILE_SIZE = 8
-CHUNK_SIZE = 16
+CHUNK_SIZE = 8
 CHUNK_SIZE_IN_PIXELS = TILE_SIZE * CHUNK_SIZE
 SAVEGAME_DIRECTORY = "/appdata/picotron_stargazer"
 
 GRAVITY = 0.1
 MAX_FALL = 4
-
-
 
 SCREEN_WIDTH=480
 SCREEN_HEIGHT=270
@@ -676,7 +860,7 @@ COLOR_RAMPS = {
 
 
 :: entity.lua
---[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-04-24 21:12:05",revision=1643]]
+--[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-05-06 09:35:15",revision=1795]]
 
 include "constants.lua"
 include "chunk.lua"
@@ -685,9 +869,11 @@ include "chunk.lua"
 
 ENTITIES = {}
 function update_entities()
-	for e in all(ENTITIES) do
-		e:update()
-		move_entity(e)
+	if real_count(LOADED_CHUNKS) >= 80 then
+		for e in all(ENTITIES) do
+			e:update()
+			move_entity(e)
+		end
 	end
 end
 
@@ -749,7 +935,7 @@ function move_entity(e)
     end
 end
 :: generator.lua
---[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-04-25 13:46:56",revision=1192]]
+--[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-05-01 09:38:46",revision=1203]]
 include "noise.lua"
 include "constants.lua"
 
@@ -889,7 +1075,7 @@ function odbg(o,indent)
 	end
 end
 :: main.lua
---[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-04-25 13:46:56",revision=3365]]
+--[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-05-06 09:35:15",revision=4028]]
 -- Picotron Stargazer
 -- ~~ CREDITS ~~
 -- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
@@ -991,7 +1177,6 @@ end
 FRAME_COUNTER = 0
 function _draw()
 	start_bar_frame()
-	bar_start("Entire draw")
 	FRAME_COUNTER+=1
 	--if (stat(7) == 60 and FRAME_COUNTER%2==0) return
 	cls(63)
@@ -1032,7 +1217,6 @@ function _draw()
 		"\n CS: " .. (SAVER_STATUS and "OK" or "FAIL") ..
 		"   CL: " .. (LOADER_STATUS and "OK" or "FAIL")
 		,1,1)
-	bar_end("Entire draw")
 	perf_graph()
 	draw_debug_bars()
 
@@ -1050,13 +1234,13 @@ DEBUG_CAMERA_SPEED = 4
 local load_test = 50
 function _update()
 --	bar_start("Entire update")
-	if not key("tab") then
-		bar_start("Loader coroutine")
+	if not (key("tab") and key("p")) then
+		--bar_start("Loader coroutine")
 		LOADER_STATUS, LOADER_OUTPUT = coresume(chunk_loader)
-		bar_end("Loader coroutine")
-		--aggro_loader()
+		--bar_end("Loader coroutine")
+		-- aggro_loader()
 		
-		--SAVER_STATUS = coresume(chunk_saver)
+		SAVER_STATUS = coresume(chunk_saver)
 		--aggro_saver()
 	end
 
@@ -1371,7 +1555,7 @@ aXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihkaXJf
 Y29tcG9uZW50K3JldCkKZW5k
 :: noise.lua
 b64$LS1bW3BvZF9mb3JtYXQ9InJhdyIsY3JlYXRlZD0iMjAyNS0wNC0wOSAxOTozNDoyMyIsbW9k
-aWZpZWQ9IjIwMjUtMDQtMjUgMTM6NDY6NTYiLHJldmlzaW9uPTExMDVdXQotLS0tLS0tLS0tLS0t
+aWZpZWQ9IjIwMjUtMDUtMDEgMDk6Mzg6NDYiLHJldmlzaW9uPTExMTZdXQotLS0tLS0tLS0tLS0t
 LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLS1TaW1wbGV4IE5vaXNlCi0tIE9y
 aWdpbmFsIEphdmEgU291cmNlOiBodHRwOi8vc3RhZmZ3d3cuaXRuLmxpdS5zZS9_c3RlZ3Uvc2lt
 cGxleG5vaXNlL3NpbXBsZXhub2lzZS5wZGYKLS0gKG1vc3QpIE9yaWdpbmFsIGNvbW1lbnRzIGlu
@@ -1663,7 +1847,7 @@ dW5wYWNrKHNjYWxlZCkpKSkKICAgIGVuZAogICAgbG9jYWwgYXJncyA9IHsuLi59CiAgICBsb2Nh
 bCBkaXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihk
 aXJfY29tcG9uZW50K3JldCkKZW5k
 :: util.lua
---[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-04-25 13:46:56",revision=1524]]
+--[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-05-06 09:35:15",revision=2135]]
 
 local perf_rec = {}
 local perf_c = 1
@@ -1753,30 +1937,57 @@ end
 function indexof(t,iv)
 	for i,ov in pairs(t) do if iv == ov then return i end end
 end
+
+function tracked_rect(w,h,cb)
+	bar_start("Rect")
+	local short_side = w < h and w or h
+	local half_short_side = short_side/2
+	for ix=-w/2,w/2 do
+		for iy=-h/2,h/2 do
+			local dist = (ix < 0 and -ix or ix) + (iy < 0 and -iy or iy)
+			local inverse_dist = half_short_side - dist
+			inverse_dist = inverse_dist < 0 and 0 or inverse_dist
+			cb(ix,iy,dist,inverse_dist)
+		end
+	end
+	bar_end("Rect")
+end
+
+
 :: world_interaction.lua
---[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-04-21 00:22:22",revision=413]]
+--[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-05-06 09:35:15",revision=1075]]
 include "constants.lua"
 include "chunk.lua"
 
 WORLD_MOUSE_X = 0
 WORLD_MOUSE_Y = 0
-
+PREV_MOUSE_LEFT = false
+PREV_MOUSE_RIGHT = false
 function update_world_mouse(camera_x, camera_y)
 	local g_mouse_x, g_mouse_y, g_mouse_b, g_wheel_x, g_wheel_y = mouse()
 	local left_down = g_mouse_b & 0x1 > 0
 	local right_down = g_mouse_b & 0x2 > 0
 	local wheel_delta = sgn(g_wheel_y)
+	
+	local left_pressed = left_down and not PREV_MOUSE_LEFT
+	local left_released = not left_down and PREV_MOUSE_LEFT
+	
+	local right_pressed = right_down and not PREV_MOUSE_RIGHT
+	local right_released = not right_down and PREV_MOUSE_RIGHT
+	
+	PREV_MOUSE_LEFT = left_down
+	PREV_MOUSE_RIGHT = right_down
 	WORLD_MOUSE_X = flr((camera_x + g_mouse_x) / TILE_SIZE)
 	WORLD_MOUSE_Y = flr((camera_y + g_mouse_y) / TILE_SIZE)
 	
-	dbg(left_down and "Yay" or "Nay")
-	dbg(g_mouse_b)
-	if (left_down) then
-		chunk.set_block_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 1)
+	if (left_pressed) then
+		chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 16)
+		chunk.place_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 32)
 	end
 	
 	if (right_down) then
-		chunk.set_block_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 0)
+		chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 0)
+		chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
 	end
 end
 
@@ -1800,15 +2011,15 @@ MTUwNzAxMDEwNzAxMTUxNTEwMTAxMDEwMTAxMDE1MTUxNTA3MDEwMTA2MDcxNTE1MTAxMDAxMDEx
 MDEwMTUxNTA3MDYwMTAxMDYwNjA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwNjAxMDAwMTA2MDYwNjA2
 MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDAw
 MDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwIiksbG93Y29sX2ljb249ZmFsc2UsbW9kaWZpZWQ9
-IjIwMjUtMDQtMjUgMTM6NDY6NTYiLHJ1bnRpbWU9MTcsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
-PXt7bG9jYXRpb249Im1haW4ubHVhIzExNyIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0i
-Y29uc3RhbnRzLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJjaHVuay5sdWEj
-MjA1Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZW5lcmF0b3IubHVhIzE4Iix3b3Jr
-c3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ1dGlsLmx1YSM0NSIsd29ya3NwYWNlX2luZGV4PTF9
-LHtsb2NhdGlvbj0ibm9pc2UubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImVu
-dGl0aWVzL2Jhc2UubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImNodW5rc2Vy
-dmljZS5sdWEjNiIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3b3Jr
-c3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJnZngvMS5nZngiLHdvcmtzcGFjZV9pbmRleD0yfSx7
-bG9jYXRpb249Im1hcC9kZWJ1Zy5tYXAiLHdvcmtzcGFjZV9pbmRleD0zfSx7bG9jYXRpb249InNm
-eC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
+IjIwMjUtMDUtMDYgMDk6MzU6MTYiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
+PXt7bG9jYXRpb249Im1haW4ubHVhIzE0MSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0i
+Y2h1bmsubHVhIzM2MyIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iY29uc3RhbnRzLmx1
+YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ3b3JsZF9pbnRlcmFjdGlvbi5sdWEj
+MSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0idXRpbC5sdWEjOTMiLHdvcmtzcGFjZV9p
+bmRleD0xfSx7bG9jYXRpb249ImVudGl0aWVzL3BsYXllci5sdWEjMTE2Iix3b3Jrc3BhY2VfaW5k
+ZXg9MX0se2xvY2F0aW9uPSJlbnRpdGllcy9iYXNlLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0s
+e2xvY2F0aW9uPSJlbnRpdHkubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249Imdm
+eC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0iZ2Z4LzEuZ2Z4Iix3b3Jrc3Bh
+Y2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvZGVidWcubWFwIix3b3Jrc3BhY2VfaW5kZXg9M30s
+e2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFjZV9pbmRleD00fX1dXQ==
 :: [eoc]
