@@ -59,7 +59,7 @@ function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_
 	end
 end
 :: entities/player.lua
---[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-05-22 20:18:31",revision=2391]]
+--[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-05-22 21:21:49",revision=2401]]
 include "entities/base.lua"
 
 
@@ -193,11 +193,11 @@ function build_player()
 end
 :: entities/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTE0IDIxOjI4OjIzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSJdXQ==
+NS0yMiAyMToyMTo0OSJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSIscmV2aXNpb249MzUzMl1dbHo0AD0EAADmOQAA_CZ7WzBdPXtibXA9cHh1
+NS0yMiAyMToyMTo0OSIscmV2aXNpb249MzUzN11dbHo0AD0EAADmOQAA_CZ7WzBdPXtibXA9cHh1
 AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
 MjY4NDY4ODdlLTE3LHpvb209MTV9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
 Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
@@ -219,7 +219,7 @@ VwbwEJYBYA8GB-AGdQUAIX8VkAESDQYATwfw-2pYAAwPUgJeDzIAHwJdAS--8zUACx81mAAfDzIA
 HwVpAP-CP-8lMDMAHh8kMwAfHyMzAB8fIjMAHx8hMwAeH-AyAAtQPTE2fX0=
 :: gfx/1.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSIscmV2aXNpb249MzU5Ml1dbHo0AJgDAABTNgAA8xR7WzBdPXtibXA9cHh1
+NS0yMiAyMToyMTo0OSIscmV2aXNpb249MzU5OV1dbHo0AJgDAABTNgAA8xR7WzBdPXtibXA9cHh1
 AEMgCAgE8DAsZmxhZ3M9MCxwYW5feAgA2nk9MCx6b29tPTE2fSwyAFF7DxsLDgIAQQ8UDg0CACED
 DQIAL-0RTAAdL-8UfwAe-wEPFBQeDxUOHQ4ELh0OFB4NCgAHA1oAPzEyOFwAFvATGwsDAA4LAxAO
 AA8VAw4AHQALDg0DCw4ADQ4NAA0OAw4LDR8AUAADDgANHwAVAx8AEAMEAA9xAB9-jQH9EwH9AgQB
@@ -238,11 +238,11 @@ HwwADxwANS8PI9UAHh8j1QAfNiIPIwQAFx8MADcPIx8MAA8cADUvDyLVAB4fItUAHzYhDyIEABcf
 DAA3DyIfDAAPHAA1Lw8h1QAeLyEweTIfMyEADjAzXw4ADhAODgAVHwCNLDxQPTE2fX0=
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSJdXQ==
+NS0yMiAyMToyMTo0OSJdXQ==
 :: map/
 :: map/debug.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEzIDE3OjA0OjExIixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSIscmV2aXNpb249MjgzMF1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
+NS0yMiAyMToyMTo0OSIscmV2aXNpb249MjgzNV1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
 YSgiaTE2IiwxMzgsNTMsIjABAP--------------------------tTkxMDcEAA8gAA0PKAL-7g8g
 ABQPKAL--9wfMQIAAA8YAAEOMAAPFAADDBwADwEAwQ4IAg8gAAMP-ADDHzEQAAoPFAAADyAAAg8B
 AP-ODOQBFzECAA8YABEEHAAPAQD-zgzkAQ70AQ80AC81MTA0BAAPAQCxBFwGBAgADAwADwEAwQ-0
@@ -262,19 +262,19 @@ DwEA---------------------8jxCyIpLGhpZGRlbj1mYWxzZSxwYW5feD0tNTU0CwDyAXk9LTE0
 Mix0aWxlX2g9MTYKABB3CgCAem9vbT0yfX0=
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSJdXQ==
+NS0yMiAyMToyMTo0OSJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSIscmV2aXNpb249MzM0MF1dbHo0ALYAAAAzCgAA-zBweHUAAygAAAQABA9A
+NS0yMiAyMToyMTo0OSIscmV2aXNpb249MzM0NV1dbHo0ALYAAAAzCgAA-zBweHUAAygAAAQABA9A
 EAIOAAGgASACoA4ADxAADfDKAQIDQA8PkAQFBgdADJAICQoLQAyQDwwPDQ8ODEAM8P8BAOv-KaoB
 EAYPIBABIAEgAfAAAhACDhABIA8hIAEwD0Dwww98D-8PHPDFD-gKD-8PgA-3Dw0B8AkBEAYOMgAG
 XygP--DGMAD------58f-wEArM-ID0AADxBA--_w8HALAA0BMQAblRAADwEA-9tQ-----94=
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMiAyMDoxODozMSJdXQ==
+NS0yMiAyMToyMTo0OSJdXQ==
 :: chunk.lua
---[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-05-22 20:18:31",revision=4804]]
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-05-22 21:21:49",revision=4810]]
 --[[
   [x] Chunk allocation
   [x] Chunk loading -> Loads from debug map
@@ -957,7 +957,7 @@ function move_entity(e)
     end
 end
 :: generator.lua
---[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-05-22 20:18:31",revision=1285]]
+--[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-05-22 21:21:49",revision=1290]]
 include "noise.lua"
 include "constants.lua"
 
@@ -1051,7 +1051,7 @@ function noisetest()
 	end
 end
 :: logging.lua
---[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-05-22 20:18:31",revision=942]]
+--[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-05-22 21:21:49",revision=947]]
 include "util.lua"
 
 CURRENT_LOG = ""
@@ -1097,7 +1097,7 @@ function odbg(o,indent)
 	end
 end
 :: main.lua
---[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-05-22 20:18:31",revision=4299]]
+--[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-05-22 21:21:49",revision=4304]]
 -- Picotron Stargazer
 -- ~~ CREDITS ~~
 -- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
@@ -1833,7 +1833,7 @@ dW5wYWNrKHNjYWxlZCkpKSkKICAgIGVuZAogICAgbG9jYWwgYXJncyA9IHsuLi59CiAgICBsb2Nh
 bCBkaXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihk
 aXJfY29tcG9uZW50K3JldCkKZW5k
 :: util.lua
---[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-05-22 20:18:31",revision=2315]]
+--[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-05-22 21:21:49",revision=2320]]
 
 local perf_rec = {}
 local perf_c = 1
@@ -1944,7 +1944,7 @@ end
 
 
 :: world_interaction.lua
---[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-05-22 20:18:31",revision=1254]]
+--[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-05-22 21:21:49",revision=1259]]
 include "constants.lua"
 include "chunk.lua"
 
@@ -2000,14 +2000,14 @@ MTUwNzAxMDEwNzAxMTUxNTEwMTAxMDEwMTAxMDE1MTUxNTA3MDEwMTA2MDcxNTE1MTAxMDAxMDEx
 MDEwMTUxNTA3MDYwMTAxMDYwNjA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwNjAxMDAwMTA2MDYwNjA2
 MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDAw
 MDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwIiksbG93Y29sX2ljb249ZmFsc2UsbW9kaWZpZWQ9
-IjIwMjUtMDUtMjIgMjA6MTg6MzEiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
+IjIwMjUtMDUtMjIgMjE6MjE6NDkiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
 PXt7bG9jYXRpb249Im1haW4ubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImNo
-dW5rLmx1YSM0MjUiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImVudGl0aWVzL3BsYXll
-ci5sdWEjMTE1Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ3b3JsZF9pbnRlcmFjdGlv
-bi5sdWEjMSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2VuZXJhdG9yLmx1YSMxIix3
-b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ1dGlsLmx1YSM5NyIsd29ya3NwYWNlX2luZGV4
-PTF9LHtsb2NhdGlvbj0ibG9nZ2luZy5sdWEjMSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlv
-bj0iZ2Z4LzAuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJnZngvMS5nZngiLHdv
-cmtzcGFjZV9pbmRleD0yfSx7bG9jYXRpb249Im1hcC9kZWJ1Zy5tYXAiLHdvcmtzcGFjZV9pbmRl
-eD0zfSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
+dW5rLmx1YSMxMTQiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImVudGl0aWVzL3BsYXll
+ci5sdWEjOTkiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249IndvcmxkX2ludGVyYWN0aW9u
+Lmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZW5lcmF0b3IubHVhIzEiLHdv
+cmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249InV0aWwubHVhIzk3Iix3b3Jrc3BhY2VfaW5kZXg9
+MX0se2xvY2F0aW9uPSJsb2dnaW5nLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9u
+PSJnZngvMC5nZngiLHdvcmtzcGFjZV9pbmRleD0yfSx7bG9jYXRpb249ImdmeC8xLmdmeCIsd29y
+a3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0ibWFwL2RlYnVnLm1hcCIsd29ya3NwYWNlX2luZGV4
+PTN9LHtsb2NhdGlvbj0ic2Z4LzAuc2Z4Iix3b3Jrc3BhY2VfaW5kZXg9NH19XV0=
 :: [eoc]
