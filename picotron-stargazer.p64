@@ -59,7 +59,7 @@ function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_
 	end
 end
 :: entities/player.lua
---[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-05-23 00:59:25",revision=2570]]
+--[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-05-23 15:12:53",revision=2617]]
 include "entities/base.lua"
 
 
@@ -135,6 +135,7 @@ function build_player()
 	
 	base.width = 0.7
 	base.update = update
+-- uncoment for fun :) base.x = 999999999999999999
 	
 	local draw_swing, trigger_swing = swing_animator(base)
 	
@@ -195,11 +196,11 @@ function build_player()
 end
 :: entities/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTE0IDIxOjI4OjIzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSJdXQ==
+NS0yNCAwNDozNDoxMyJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSIscmV2aXNpb249MzY5Ml1dbHo0APkDAACXOQAA_CZ7WzBdPXtibXA9cHh1
+NS0yNCAwNDozNDoxMiIscmV2aXNpb249Mzc3MV1dbHo0APkDAACXOQAA_CZ7WzBdPXtibXA9cHh1
 AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
 MjY4NDY4ODdlLTE3LHpvb209MTV9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
 Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
@@ -220,7 +221,7 @@ EgCYAAJKAA5WAAISAABwAA9aACECOgATAEoAOAAeAA4AAwgAFRBqAD8ADgCpAh8PMgD---------
 AB4fJDMAHx8jMwAfHyIzAB8fITMAHh-wMgALUD0xNn19
 :: gfx/1.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSIscmV2aXNpb249Mzc3MV1dbHo0AFEFAAD4NwAA8xR7WzBdPXtibXA9cHh1
+NS0yNCAwNDozNDoxMiIscmV2aXNpb249Mzg1Ml1dbHo0AFEFAAD4NwAA8xR7WzBdPXtibXA9cHh1
 AEMgCAgE8DAsZmxhZ3M9MCxwYW5feAgA2nk9MCx6b29tPTE2fSwyAFF7DxsLDgIAQQ8UDg0CACED
 DQIAL-0RTAAdL-8UfwAe-wEPFBQeDxUOHQ4ELh0OFB4NCgAHD1oAHvATGwsDAA4LAxAOAA8VAw4A
 HQALDg0DCw4ADQ4NAA0OAw4LDR8AUAADDgANHwAVAx8AEAMEAANvAD8xMjhxABV-jQH9EwH9AqgA
@@ -247,11 +248,11 @@ AB82Ig8jBAAXHwwANw8jHwwADxwANS8PItUAHh8i1QAfNiEPIgQAFx8MADcPIh8MAA8cADUvDyHV
 AB4fIXopIHEhAA4ADgAeBgA-DhAODgAVHwArKDxQPTE2fX0=
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSJdXQ==
+NS0yNCAwNDozNDoxMyJdXQ==
 :: map/
 :: map/debug.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEzIDE3OjA0OjExIixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSIscmV2aXNpb249Mjk4MV1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
+NS0yNCAwNDozNDoxMiIscmV2aXNpb249MzA2Ml1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
 YSgiaTE2IiwxMzgsNTMsIjABAP--------------------------tTkxMDcEAA8gAA0PKAL-7g8g
 ABQPKAL--9wfMQIAAA8YAAEOMAAPFAADDBwADwEAwQ4IAg8gAAMP-ADDHzEQAAoPFAAADyAAAg8B
 AP-ODOQBFzECAA8YABEEHAAPAQD-zgzkAQ70AQ80AC81MTA0BAAPAQCxBFwGBAgADAwADwEAwQ-0
@@ -271,19 +272,21 @@ DwEA---------------------8jxCyIpLGhpZGRlbj1mYWxzZSxwYW5feD0tNTU0CwDyAXk9LTE0
 Mix0aWxlX2g9MTYKABB3CgCAem9vbT0yfX0=
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSJdXQ==
+NS0yNCAwNDozNDoxMyJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSIscmV2aXNpb249MzQ5MF1dbHo0ALYAAAAzCgAA-zBweHUAAygAAAQABA9A
-EAIOAAGgASACoA4ADxAADfDKAQIDQA8PkAQFBgdADJAICQoLQAyQDwwPDQ8ODEAM8P8BAOv-KaoB
-EAYPIBABIAEgAfAAAhACDhABIA8hIAEwD0Dwww98D-8PHPDFD-gKD-8PgA-3Dw0B8AkBEAYOMgAG
-XygP--DGMAD------58f-wEArM-ID0AADxBA--_w8HALAA0BMQAblRAADwEA-9tQ-----94=
+NS0yNCAwNDozNDoxMiIscmV2aXNpb249MzU3N11dbHo0ABABAADjCgAA8CNweHUAAygAAAQABA9A
+EAIOAAGgASACoA4ADxAADfDKAQIDQAyQBAUGB0APD5AICQoPCwkAvwwPDQ8ODw9AC-D-AQDr9hCq
+ARAGDw0QASABIAHwAAIQAg8gEAEgDyEgATAPaaACHQDwDzAPZyAPK-CfD3wP-w8c8MUP_AoP-w_A
+D-cPDQHwCUYAFyBGABUORQCdQPDDDygP--DGMQAfDjAA------_NH-8BAKxAyA9AAOoH8wonvyn-
+-yPA-SPO-SNfc2928CNfgfAlD9AwIABMLL8u-R8AEyocAPALMY8z-SaQ-Sae-SYfc3928CYPgfAn
+BSAP8CAhAG8QQP2w8HAKAGQf-wEA-9ZQ-----90=
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-NS0yMyAwMDo1OToyNSJdXQ==
+NS0yNCAwNDozNDoxMyJdXQ==
 :: chunk.lua
---[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-05-23 00:59:25",revision=5000]]
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-05-24 04:34:12",revision=5112]]
 --[[
   [x] Chunk allocation
   [x] Chunk loading -> Loads from debug map
@@ -312,6 +315,11 @@ ALLOCATION_TABLE = {}
 RENDER_CHUNK_HEAP = userdata("i16",CHUNK_SIZE*512,CHUNK_SIZE)
 WORLD_NAME = "test_world"
 
+
+FALLBACK_LOADER_BEHAVIOR = false
+function chunk.set_fallback_behavior()
+	FALLBACK_LOADER_BEHAVIOR = true
+end
 
 local center_x = 0
 local center_y = 0
@@ -640,8 +648,14 @@ function aggro_loader()
 					ix >= rendered_area_start_x and ix <= rendered_area_end_x and
 					iy >= rendered_area_start_y and iy <= rendered_area_end_y 
 			else
-				chunk.request_load(ix, iy)
-				--[[ Continue in recv... --]]
+				if not FALLBACK_LOADER_BEHAVIOR then
+					chunk.request_load(ix, iy)
+				else
+					--[[ Fine, I'll load it myself! ]]
+					local new_chunk = chunk.load_chunk(ix, iy)
+					chunk.recv_chunk({payload = new_chunk})
+				end
+
 			end
 		end
 	end
@@ -763,7 +777,11 @@ end
 function aggro_saver()
 	local c = deli(CHUNKS_TO_SAVE)
 	if c then
-		chunk.request_save(c)
+		if not FALLBACK_LOADER_BEHAVIOR then 
+			chunk.request_save(c)
+		else
+			chunk.save_to_disk(c)
+		end
 	end
 	return c
 end
@@ -806,7 +824,7 @@ function do_world_generation(cx,cy,y)
 	return new_chunk
 end
 :: chunkservice.lua
---[[pod_format="raw",created="2025-04-25 11:19:16",modified="2025-05-22 17:03:29",revision=581]]
+--[[pod_format="raw",created="2025-04-25 11:19:16",modified="2025-05-24 04:34:12",revision=646]]
 include "chunk.lua"
 
 local MAIN_PID = env().argv[1]
@@ -845,7 +863,7 @@ while true do
 end
 ]]
 :: constants.lua
---[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-05-23 00:59:25",revision=3301]]
+--[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-05-23 15:12:53",revision=3334]]
 
 GAME_VERSION_STRING = "Indev 0w0"
 TILE_SIZE = 8
@@ -896,7 +914,7 @@ COLOR_RAMPS = {
 
 
 :: entity.lua
---[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-05-22 23:29:30",revision=1927]]
+--[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-05-24 04:34:12",revision=1949]]
 
 include "constants.lua"
 include "chunk.lua"
@@ -971,7 +989,7 @@ function move_entity(e)
     end
 end
 :: generator.lua
---[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-05-23 00:59:25",revision=1444]]
+--[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-05-24 03:44:59",revision=1481]]
 include "noise.lua"
 include "constants.lua"
 
@@ -1527,7 +1545,7 @@ OTXIOcA1wTnANco5NcI5Nck5wDXAOcE1OTXCP8A1OTXAOcE1wTnANcU5wDXBOcA1wTk1wTnANco5
 NcA5NcA5wDXBOcA1wDnBNcY5NcE5NcA5NTnBNcY5NcI5wDXAOTXIOcE1wDnBNTnBNcE5wTU-wDU5
 NcQ5wTU5NcA5NcA5NcI5wDX9-fwAAAAAAAAAAQ==
 :: logging.lua
---[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-05-23 00:59:25",revision=1098]]
+--[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-05-24 04:34:12",revision=1154]]
 include "util.lua"
 
 CURRENT_LOG = ""
@@ -1564,6 +1582,8 @@ function odbg(o,indent)
 		elseif (type(v) == "userdata") then
 			local w,h,t = v:attribs()
 			dbg(indent .. i .. "	-> " .. w .. "x" .. h .. " of " .. t)
+		elseif (type(v) == "boolean") then
+			dbg(indent .. i .. " -> " .. (v and "b-true" or "b-false"))
 		else
 			dbg(indent .. i .. ' = ' .. v )
 		end
@@ -1573,7 +1593,7 @@ function odbg(o,indent)
 	end
 end
 :: main.lua
---[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-05-23 00:59:25",revision=4493]]
+--[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-05-24 04:34:12",revision=4609]]
 -- Picotron Stargazer
 -- ~~ CREDITS ~~
 -- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
@@ -1584,6 +1604,7 @@ end
   [x] Tracked in chunk.lua
  [x] Platformer physics and entities (Player character!)
  [x] Light
+ [ ] Structure generation
  [ ] World interaction
  [ ] Inventory and item usage
  [ ] Interactive blocks
@@ -1606,12 +1627,15 @@ include "generator.lua"
 include "entity.lua"
 include "entities/player.lua"
 include "world_interaction.lua"
+include "chunkservice.lua"
 
 
 local CAMERA_OFFSET_X = 0
 local CAMERA_OFFSET_Y = 0
 local CHUNK_X = 0
 local CHUNK_Y = 0
+
+local BBS_WARN = false
 
 function anitest(from,count,fskip)
 	vid(3)
@@ -1641,9 +1665,13 @@ function _init()
 	chunk.init()
 	chunk_loader = chunk.start_loader_routine()
 	chunk_saver  = chunk.start_saver_routine()
-	add_entity(build_player())
 	
-	CHUNK_PROCESS = create_process("chunkservice.lua", {argv={pid()}} )
+	CHUNK_PROCESS = nil 
+	if env().sandbox then
+		chunk.set_fallback_behavior() BBS_WARN = true 
+	else
+		CHUNK_PROCESS = create_process("chunkservice.lua", {argv={pid()}} )	
+	end 
 	
 	on_event("load_chunk", chunk.recv_chunk)
 	
@@ -1663,6 +1691,8 @@ function _init()
 		end
 		color_table:set(63, 32+k, 63)
 	end
+	
+	add_entity(build_player())
 end
 
 FRAME_COUNTER = 0
@@ -1691,11 +1721,17 @@ function _draw()
 	prints(
 		"Picotron Stargazer ".. GAME_VERSION_STRING .. " Seed: " .. WORLD_SEED ..
 		"\nPublic experimental build! Send feedback to cardboardbox.tech on bluesky!" ..
+		(not key "h" and 
+			("\nHold H for help!")
+			or
+			(
 		"\nWASD move, LMB break, RMB place, wheel to change tile\nHold ctrl to place lanterns and break backgrounds" ..
-		"\nPress Q to save the map on screen. Map offscreen is autosaved" ..
+		"\nPress Q to save the map on screen. Map offscreen is autosaved"
+		)) ..
 		"\n CS: " .. (SAVER_STATUS and "OK" or "FAIL") ..
 		"   CL: " .. (LOADER_STATUS and "OK" or "FAIL") ..
-		"   CC: " .. real_count(LOADED_CHUNKS)
+		"   CC: " .. real_count(LOADED_CHUNKS) ..
+		(BBS_WARN and "\nRunning sandboxed, using single thread! Expect some lag..." or "")
 		,1,1)
 	perf_graph()
 	draw_debug_bars()
@@ -2316,7 +2352,14 @@ dW5wYWNrKHNjYWxlZCkpKSkKICAgIGVuZAogICAgbG9jYWwgYXJncyA9IHsuLi59CiAgICBsb2Nh
 bCBkaXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihk
 aXJfY29tcG9uZW50K3JldCkKZW5k
 :: util.lua
---[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-05-23 00:59:25",revision=2473]]
+--[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-05-24 03:44:59",revision=2525]]
+
+function cofetch(r, cb)
+	coresume(cocreate(function() 
+		local res = fetch(r)
+		cb(res)
+	end))
+end
 
 local perf_rec = {}
 local perf_c = 1
@@ -2417,9 +2460,6 @@ function tracked_rect(w,h,cb)
 			local inverse_dist = half_short_side - dist
 			inverse_dist = inverse_dist < 0 and 0 or inverse_dist
 			cb(ix,iy,dist,inverse_dist)
-			if inverse_dist != 0 then
-				dbg(inverse_dist)
-			end
 		end
 	end
 	bar_end("Rect")
@@ -2427,7 +2467,7 @@ end
 
 
 :: world_interaction.lua
---[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-05-23 00:59:25",revision=1450]]
+--[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-05-24 03:44:59",revision=1487]]
 include "constants.lua"
 include "chunk.lua"
 
@@ -2512,15 +2552,12 @@ MTUwNzAxMDEwNzAxMTUxNTEwMTAxMDEwMTAxMDE1MTUxNTA3MDEwMTA2MDcxNTE1MTAxMDAxMDEx
 MDEwMTUxNTA3MDYwMTAxMDYwNjA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwNjAxMDAwMTA2MDYwNjA2
 MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDAw
 MDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwIiksbG93Y29sX2ljb249ZmFsc2UsbW9kaWZpZWQ9
-IjIwMjUtMDUtMjMgMDA6NTk6MjUiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
-PXt7bG9jYXRpb249Im1haW4ubHVhIzExOSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0i
-Y2h1bmsubHVhIzE2OCIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZW50aXRpZXMvcGxh
-eWVyLmx1YSM5NCIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0id29ybGRfaW50ZXJhY3Rp
-b24ubHVhIzUwIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZW5lcmF0b3IubHVhIzI2
-Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ1dGlsLmx1YSM0Iix3b3Jrc3BhY2VfaW5k
-ZXg9MX0se2xvY2F0aW9uPSJsb2dnaW5nLmx1YSMxNCIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2Nh
-dGlvbj0iY29uc3RhbnRzLmx1YSMxMSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4
-LzAuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJnZngvMS5nZngiLHdvcmtzcGFj
-ZV9pbmRleD0yfSx7bG9jYXRpb249Im1hcC9kZWJ1Zy5tYXAiLHdvcmtzcGFjZV9pbmRleD0zfSx7
-bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
+IjIwMjUtMDUtMjQgMDQ6MzQ6MTMiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
+PXt7bG9jYXRpb249Im1haW4ubHVhIzExIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJj
+aHVuay5sdWEjMSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iY2h1bmtzZXJ2aWNlLmx1
+YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJlbnRpdHkubHVhIzEiLHdvcmtzcGFj
+ZV9pbmRleD0xfSx7bG9jYXRpb249ImxvZ2dpbmcubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7
+bG9jYXRpb249ImdmeC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0iZ2Z4LzEu
+Z2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvZGVidWcubWFwIix3b3Jrc3Bh
+Y2VfaW5kZXg9M30se2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFjZV9pbmRleD00fX1dXQ==
 :: [eoc]
