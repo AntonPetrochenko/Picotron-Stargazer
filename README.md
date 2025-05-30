@@ -3,6 +3,10 @@ Picotron Stargazer
 
 A 2D sandbox game for the Picotron fantasy console!
 
+Check it out at:
+- [Lexaloffle BBS (sandboxed, slower)](https://www.lexaloffle.com/bbs/?tid=149137)
+- [Cardboard Box Server (unsandboxed, faster)](https://cardboardbox.tech/stargazer/)
+
 GIF of the ~~week~~ unspecified period of time:
 ![picotron-stargazer_12](https://github.com/user-attachments/assets/53380fa9-93fc-44fa-9096-8880e2c6079a)
 
