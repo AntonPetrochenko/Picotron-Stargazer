@@ -3,7 +3,7 @@ version 2
 
 :: entities/
 :: entities/base.lua
---[[pod_format="raw",created="2025-04-14 21:29:02",modified="2025-05-22 23:29:30",revision=2001]]
+--[[pod_format="raw",created="2025-04-14 21:29:02",modified="2025-06-06 00:33:43",revision=2020]]
 function build_entity()
 	return {
         x = 0, y = -64,
@@ -59,7 +59,7 @@ function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_
 	end
 end
 :: entities/player.lua
---[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-06-12 19:57:00",revision=2643]]
+--[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-06-06 00:33:43",revision=2729]]
 include "entities/base.lua"
 
 
@@ -178,8 +178,8 @@ function build_player()
 		if (keyp("t")) trigger_swing()
 		
 		if e.fc%5 == 0 then 
-			local whole_x = flr(e.x/8+0.5+ (e.wa_left and -1 or 1)) 
-			local whole_y = flr(e.y/8+0.5-1)
+			local whole_x = flr(e.x/8+0.5)
+			local whole_y = flr(e.y/8+0.5)
 			
 			if e.prev_whole_x != whole_x or e.prev_whole_y != whole_y then
 				chunk.place_light_in_world(whole_x, whole_y, 20)
@@ -196,11 +196,11 @@ function build_player()
 end
 :: entities/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTE0IDIxOjI4OjIzIixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCJdXQ==
+Ni0wNiAwMDozMzo0NCJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCIscmV2aXNpb249NDI5NF1dbHo0AAUEAADvOAAA_CZ7WzBdPXtibXA9cHh1
+Ni0wNiAwMDozMzo0MyIscmV2aXNpb249Mzk2Nl1dbHo0APkDAACXOQAA_CZ7WzBdPXtibXA9cHh1
 AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
 MjY4NDY4ODdlLTE3LHpvb209MTV9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
 Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
@@ -211,44 +211,47 @@ AAweNkoA8ho3IAY3QAYHDxVQBgcOBQ5AFwAOBQ4wBgcQDgUOIAYwDgUOEAdADgUOcAQAD2EAHvoJ
 FhcwFlcQFwAPFQUAFwAGIA4FIAcwDgVwAwAfMFgAHfEDEAcWBwZgNwZgDxUHBlAOBQ4HrAAwABcg
 sgAQF74AIDAHywAQQNYAT2AFDnBiAB0xUAaQXwHAgAYHdQYHfxUXcBdgBAAvByBKAB0zBQ8VPgEy
 DkAHmgABpgAhBgezABEGYAHPBgdQDgYHQCYXIBYnYgAeMzAPFUkBBlIBAWsB-wAGABYADgUABgcQ
-FzYXMDdZAB5QcA8VBWCeABFAqgASMLcAAhwCEwcqAt8OBQ5QFw5gBjdgJhcQYQAaAP0CH1XeCBUM
-IwJDLTAuNl4AEzReAB8wPAkPjicPFReQJw4XtwkPXAAeH1dcAA2PgA5dkB4QLiBdACGwWCoJoCoJ
-BgeQORdbAIk3DxUHkDcOB1sAHwBbACMaaVsAIVeQXQD-Ag8QJw8VB4AOBw8QN4AeTQ4AWwAhH-A1
-AIdfCAgE8DA1APEOcwEPNQBKDwkBIg81APEOcwEPNQBKDwkBIg81APEOcwEPNQB6ANQAPhMPE5gL
-D5oHCgA2AF8MDxNQDjgAIN8DDxNwDlAOUA4ADvADPgAhAFQMMTAOAEIAP3AOkEMAHRCQgAACPgAV
-EEYAP1AOIEgAIBEgiAAzEA4gTAARIAYAPzAOIFAAIRIAmAACSgAOVgACEgAAcAAPWgAhAjoAEwBK
-ADgAHgAOAAMIABUQagA-AA4AZAAaDnoCDzIA----------------------------------------
-------9YDnMmDzIA2C--JTMAHx8kMwAfHyMzAB8fIjMAHx8hMQE9UD0xNn19
+FzYXMDdZAB5QcA8VBWCeABFAqgASMLcAAhwCEwcqAt8OBQ5QFw5gBjdgJhcQYQAaAP0CH1XeCBUP
+IwIMDzgJEI4nDxUXkCcOF7MJD1gAGh9XWAANj4AOXZAeEC4gWQAdsFgqCaAqCQYHkDkXVwCJNw8V
+B5A3DgdXAB8AVwAfGmlXACFXkFkA-wIPECcPFQeADgcPEDeAHk0OAFcAHR-wMQB7jyAgBPD----z
+ZQAeDzEA-0APiwFELzE2MgD--7ifCAgE8BMPE-AMNgAeXwwPE1AOOAAg3wMPE3AOUA5QDgAO8AM_
+ACEA6QsxMA4AQgA-cA6QQwAdEJCAAAI_ABUQRgA-UA4gSAAgESCIADMQDiBMABEgBgA-MA4gUAAh
+EgCYAAJKAA5WAAISAABwAA9aACECOgATAEoAOAAeAA4AAwgAFRBqAD8ADgCpAh8PMgD---------
+-------------------------------------2VRCAgEBQcCABIXCAAfFQ4AFh8FaQD-wj--JTAz
+AB4fJDMAHx8jMwAfHyIzAB8fITMAHh-wMgALUD0xNn19
 :: gfx/1.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCIscmV2aXNpb249NDM5MF1dbHo0AFcEAACbNQAA8xR7WzBdPXtibXA9cHh1
-AEMgCAgE8DAsZmxhZ3M9MCxwYW5feAgA2nk9MCx6b29tPTE2fSwyAFF7DxsLDgIAQQ8UDg0CACED
-DQIAL-0RTAAdL-8UfwAe-wEPFBQeDxUOHQ4ELh0OFB4NCgAHD1oAHvATGwsDAA4LAxAOAA8VAw4A
-HQALDg0DCw4ADQ4NAA0OAw4LDR8AUAADDgANHwAVAx8AEAMEAANvAD8xMjhxABV-jQH9EwH9AqgA
-ISAPFAYA8AQfFQ8bBA8UAw8bLxUECw8bDxQDBgAQFR4A0C8UDxsDDgsEDxQOCwPQAAApAGAOLxUD
-Cw4nABAOJgBfDgMdDgN-AB3haQ8ZWgkOWg4JfikOORoKAC86fkUAHYKPFW8UDxVUDwUA-wF-FT8U
-DxUvFCQODxVUDg0kTgAdFPFGAh8xeQIXnxUPFV8UHxX-FIABH-AAGSkvFw8OGRoXHxcJKicOBABi
-DxgoKQ8ZBgDPHxgYGR8ZAi8YLxkEXAAeIBAsXACzHB8cFx8XDC8cJw8GAGIBLxAtDxIGAM8RHxAd
-HxIPICEvEgFhAB3wAAMvGyYPFh8bGxcWDisnBgQAYg8VJSMPEwYA7x8VFRMfEw8gLxUvEw8VXQAd
-APQA5BcPDh8YGBcfFw8YKCcPBgBSFSIkDxQGAGEfFRIUHxRjAB8UYwAf8QN1Lw8PFgUOLw8ODQ4F
-Dh11Di0JADBNDoUPAB8O9QMfwBYADxUjAA8WADMOAwsA-wYNEw0OUw4DDTMNQw4jADMNAyANIxDc
-Ax9PDyDxL5UCHV8PFf8UL8EAHf8SAFcAB1AHBhAHIAcGAAYwBwYwBwAHBiAGEAcGUAcARgcAvAAf
-9QLwAgoACkAKGVAPGWAFcAVQBV8DHzOXABaRECcwBwYHBgcgBgBAMCdQB0kAH2BLACH-CfAKCC8f
-IAgPDygPHxA4Dw8IMA4HUA4HIEoAH-EQIA8VDxZADg8VDg0wDR4NIAUNDg0eEA0VDQUNMA0FUAMA
-D1cAIP8ZED8gBRAOEQ8QBQ8VBQ4RHxAPFQ8QDxUOET8QHiEdAR5RDgAOMQ4gPkcCII_BDyDxEw7x
-AksCHY_PFA8Y-xQTD_AEIS-wMDIA-xhv8QoPIPEVfgYfEAqfAR8V0gAfD5oB-xlfAw8gUQ6cASEQ
-AxoILw8VoAH-Tl8VDyBRHtoEHF8QEATw8M4AHw8yAOX4IwAPFAQPHw8PCA8YAg8VBQ8WBgcPFw8O
-Dx4BDxAPEQwPHA8dDQ8SDxMDDxsLDxoKCQ8ZDAAKJQAIPwAIWAAPlAAd8BEQPxIwDhAOQA4BQAEP
-HwoBIAEPGAoPHw8YARABCAoHCAcAbgcKCAEgMS8HD1UBGA8yAN1APxg-FAQA8QIvGE8UHxi-FB8V
-TxQvFT8UPwQADk4AD2UDLB80MgD--------------------------------------5UOMB4PMgD-
---------olA9MTR9fQ==
+Ni0wNiAwMDozMzo0MyIscmV2aXNpb249NDA3MF1dbHo0AA8FAACiNwAA8xR7WzBdPXtibXA9cHh1
+AEMgCAgE8DAsZmxhZ3M9MCxwYW5feAgA2nk9MCx6b29tPTE2fSwyAP8B_wAPGxseG-4BDxQeHR79
+AUAAHS--FHMAHv8BDxQUHg8VDh0OBC4dDhQeDQoABw9aAB7wExsLAwAOCwMQDgAPFQMOAB0ACw4N
+AwsOAA0ODQANDgMOCw0fAFAAAw4ADR8AFQMfABADBAADbwA-MTI4cQAVf40B-RMB-QKoACEgDxQG
+APAEHxUPGwQPFAMPGy8VBAsPGw8UAwYAEBUeANAvFA8bAw4LBA8UDgsD0AAAKQBgDi8VAwsOJwAQ
+DiYAXw4DHQ4DfwAd4WkPGVoJDloOCX4pDjkaCgAvOn5FAB2CjxVvFA8VVA8FAP8BfxU-FA8VLxQk
+Dg8VVA4NJE4AHRTxRgIfMXkCF58VDxVfFB8V-xSAAR-wABkpLxcPDhkaFx8XCSonDgQAYg8YKCkP
+GQYAzx8YGBkfGQIvGC8ZBFwAHiAQLFwAsxwfHBcfFwwvHCcPBgBiAS8QLQ8SBgC-ER8QHR8SDyAh
+LxJyAx7wAAMvGyYPFh8bGxcWDisnBgQAYg8VJSMPEwYA7x8VFRMfEw8gLxUvEw8VXQAdAPQA5BcP
+Dh8YGBcfFw8YKCcPBgBSFSIkDxQGAGEfFRIUHxRjAB8UYwAf8QN1Lw8PFgUOLw8ODQ4FDh11Di0J
+ADBNDoUPAB8O9QMfwBYADxUjAA8WADMOAwsA-wYNEw0OUw4DDTMNQw4jADMNAyANIxDcAx9PDyDx
+L5UCHV8PFf8UL8EAHf8SAFcAB1AHBhAHIAcGAAYwBwYwBwAHBiAGEAcGUAcARgcAvAAf9QLwAgoA
+CkAKGVAPGWAFcAVQBV8DHzOXABaRECcwBwYHBgcgBgBAMCdQB0kAH2BLACH-CfAKCC8fIAgPDygP
+HxA4Dw8IMA4HUA4HIEoAH-EQIA8VDxZADg8VDg0wDR4NIAUNDg0eEA0VDQUNMA0FUAMAD1cAIP8Z
+ED8gBRAOEQ8QBQ8VBQ4RHxAPFQ8QDxUOET8QHiEdAR5RDgAOMQ4gPkcCII_BDyDxEw7xAksCHY_P
+FA8Y-xQTD_AEIW-wKQswCwAHAR9f8CMLQDs-ASBP8CkbIHAAIi8tGzYAEg-lCAQPMgBIb-EKDyDx
+FZQGHxAKtQEPEwUeL-AwMgD-GG-xAw8gUQ6cASEQAzAILw8VoAH-Tl8VDyBRHvAEHF8QEATw8M4A
+Hw8yAOX4IwAPFAQPHw8PCA8YAg8VBQ8WBgcPFw8ODx4BDxAPEQwPHA8dDQ8SDxMDDxsLDxoKCQ8Z
+DAAKJQAIPwAIWAAPlAAd8BEQPxIwDhAOQA4BQAEPHwoBIAEPGAoPHw8YARABCAoHCAcAbgcKCAEg
+MUUHD1UBGA8yAN1APxg-FAQA8QIvGE8UHxi-FB8VTxQvFT8UPwQADk4AD2UDLB80MgD---------
+-------------------------------------0UAXygvJTAzAB1GDyQPJQQAFx8MADcPJR8MAA8c
+ADUvDyTVAB4fJNUAHzYjDyQEABcfDAA3DyQfDAAPHAA1Lw8j1QAeHyPVAB82Ig8jBAAXHwwANw8j
+HwwADxwANS8PItUAHh8i1QAfNiEPIgQAFx8MADcPIh8MAA8cADUvDyHVAB4fIdUAHpEADyEADgAO
+AB4GAD8OEA4OABUfAGoAHQ-LJwxQPTE0fX0=
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCJdXQ==
+Ni0wNiAwMDozMzo0NCJdXQ==
 :: map/
 :: map/debug.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEzIDE3OjA0OjExIixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCIscmV2aXNpb249MzU2NF1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
+Ni0wNiAwMDozMzo0MyIscmV2aXNpb249MzI1MV1dbHo0ALkDAACncgAA-w97e2JtcD11c2VyZGF0
 YSgiaTE2IiwxMzgsNTMsIjABAP--------------------------tTkxMDcEAA8gAA0PKAL-7g8g
 ABQPKAL--9wfMQIAAA8YAAEOMAAPFAADDBwADwEAwQ4IAg8gAAMP-ADDHzEQAAoPFAAADyAAAg8B
 AP-ODOQBFzECAA8YABEEHAAPAQD-zgzkAQ70AQ80AC81MTA0BAAPAQCxBFwGBAgADAwADwEAwQ-0
@@ -268,11 +271,11 @@ DwEA---------------------8jxCyIpLGhpZGRlbj1mYWxzZSxwYW5feD0tNTU0CwDyAXk9LTE0
 Mix0aWxlX2g9MTYKABB3CgCAem9vbT0yfX0=
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCJdXQ==
+Ni0wNiAwMDozMzo0NCJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCIscmV2aXNpb249NDA3NV1dbHo0ABABAADjCgAA8CNweHUAAygAAAQABA9A
+Ni0wNiAwMDozMzo0MyIscmV2aXNpb249Mzc2M11dbHo0ABABAADjCgAA8CNweHUAAygAAAQABA9A
 EAIOAAGgASACoA4ADxAADfDKAQIDQAyQBAUGB0APD5AICQoPCwkAvwwPDQ8ODw9AC-D-AQDr9hCq
 ARAGDw0QASABIAHwAAIQAg8gEAEgDyEgATAPaaACHQDwDzAPZyAPK-CfD3wP-w8c8MUP_AoP-w_A
 D-cPDQHwCUYAFyBGABUORQCdQPDDDygP--DGMQAfDjAA------_NH-8BAKxAyA9AAOoH8wonvyn-
@@ -280,9 +283,9 @@ D-cPDQHwCUYAFyBGABUORQCdQPDDDygP--DGMQAfDjAA------_NH-8BAKxAyA9AAOoH8wonvyn-
 BSAP8CAhAG8QQP2w8HAKAGQf-wEA-9ZQ-----90=
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ni0xNyAxOTo0MjoxMCJdXQ==
+Ni0wNiAwMDozMzo0NCJdXQ==
 :: chunk.lua
---[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-06-17 19:42:10",revision=5765]]
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-06-06 00:33:43",revision=5422]]
 --[[
   [x] Chunk allocation
   [x] Chunk loading -> Loads from debug map
@@ -300,20 +303,16 @@ Ni0xNyAxOTo0MjoxMCJdXQ==
 --- OR
 --- Leverage Picotron's native crap <- went with this!
 
-local my_requests = {}
-
 include "constants.lua"
 include "logging.lua"
 include "generator.lua"
 include "util.lua"
-include "queue.lua"
 
 chunk = {}
 LOADED_CHUNKS = {}
 ALLOCATION_TABLE = {}
 RENDER_CHUNK_HEAP = userdata("i16",CHUNK_SIZE*512,CHUNK_SIZE)
 WORLD_NAME = "test_world"
-
 
 
 FALLBACK_LOADER_BEHAVIOR = false
@@ -349,6 +348,7 @@ function chunk.get_tile_in_world(x,y)
 	return chunk_with_block.tiles:get(x%CHUNK_SIZE,y%CHUNK_SIZE)
 end
 
+--[[
 function chunk.mutate_light_in_world(x,y,delta)
 	local x,y = flr(x), flr(y)
 	local cx, cy = x%CHUNK_SIZE,y%CHUNK_SIZE
@@ -360,14 +360,14 @@ function chunk.mutate_light_in_world(x,y,delta)
 	chunk_with_block.light:set(cx,cy,new_light_level)
 	
 	-- update visual chunk
-	local light_tile = 512-mid(1,8,new_light_level)
-	RENDER_CHUNK_HEAP:set( chunk_with_block.light_tile_idx+cx, cy, light_tile )
+
 end
+]]
 
 function chunk.set_center(x,y)
 	send_message(CHUNK_PROCESS, { event = "msg" } )
-	center_x = flr(x)
-	center_y = flr(y)
+	center_x = x
+	center_y = y
 end
 
 function set_world_name(name)
@@ -376,7 +376,6 @@ function set_world_name(name)
 end
 
 function chunk.init()
-	ADD_RENDER_GEN = make_queue()
 	mkdir(SAVEGAME_DIRECTORY)
 	mkdir(SAVEGAME_DIRECTORY .. "/" .. WORLD_NAME)
 	memmap(RENDER_CHUNK_HEAP,0x100000)
@@ -386,9 +385,9 @@ function chunk.build_chunk()
 	return {
 		tiles = userdata("i16",CHUNK_SIZE,CHUNK_SIZE),
 		bg = userdata("i16",CHUNK_SIZE,CHUNK_SIZE),
-		light = userdata("i8",CHUNK_SIZE,CHUNK_SIZE),
-		sky = userdata("u8",CHUNK_SIZE,CHUNK_SIZE),
-		light_sources = {}
+		light = userdata("i16",CHUNK_SIZE,CHUNK_SIZE),
+		light_sources = {},
+		overlay = userdata("f64",5,CHUNK_SIZE*CHUNK_SIZE)
 	}
 end
 
@@ -412,35 +411,27 @@ function allocate_drawable_chunk()
 end
 
 function chunk.add_chunk(cx,cy,c)
-	del(my_requests, c.loaded_at_x .. "/" .. c.loaded_at_y) 
 	local chunk_id = cx .. "_" .. cy
 	LOADED_CHUNKS[chunk_id] = c
 	local alloc_idx = allocate_drawable_chunk()
 	local bg_alloc_idx = allocate_drawable_chunk()
-	local light_alloc_idx = allocate_drawable_chunk()
 	-- Finally, write to the heap...
 	-- The heap is structured like a long-ass map, 8 in height and 1024 in length
 	-- This can store 128 map layers
 	-- TODO optimize this
 	local write_offset = alloc_idx * CHUNK_SIZE
 	local bg_write_offset = bg_alloc_idx * CHUNK_SIZE
-	local light_write_offset = light_alloc_idx * CHUNK_SIZE
 	local source_tiles = c.tiles
 	local source_bg = c.bg
 	local source_light = c.light
-	local source_sky = c.sky
 	
-		-- Precalculate some stuff...
+	-- Precalculate some stuff...
 	c.own_id = chunk_id
 	c.alloc_idx = alloc_idx
 	c.bg_alloc_idx = bg_alloc_idx
-	c.light_alloc_idx = light_alloc_idx
 	
 	c.tile_idx = write_offset
 	c.bg_tile_idx = bg_write_offset
-	c.light_tile_idx = light_write_offset
-	
-	c.touched = true
 	
 	c.screen_x = cx * CHUNK_SIZE_IN_PIXELS
 	c.screen_y = cy * CHUNK_SIZE_IN_PIXELS
@@ -450,44 +441,39 @@ function chunk.add_chunk(cx,cy,c)
 	for ix=0,CHUNK_SIZE-1 do
 		for iy = 0,CHUNK_SIZE-1 do
 			local tile = 256 + source_tiles:get(ix,iy)
-			
 			update_displayed_tile(tile, c, ix, iy)
-			
-						
-			local light_value = mid(0,source_light:get(ix,iy),7)
-			local sky_value   = mid(0,source_sky:get(ix,iy),7)
-			local final_light_value = min(light_value, sky_value)
-					     
-			local light_tile  = 512-(sky_value+(7*light_value))
-			RENDER_CHUNK_HEAP:set( light_write_offset+ix, iy, light_tile )
 		end
 	end
 	bar_end("Chunk adding")
+	defer(chunk.update_all_light_in_chunk, {c})
 end
 
 function chunk.update_all_light_in_chunk(c)
+	bar_start("Light update")
 	c.changed = true
-	if not c.light then c.light = userdata("i8",CHUNK_SIZE,CHUNK_SIZE) end
+	if not c.light then c.light = userdata("u8",CHUNK_SIZE,CHUNK_SIZE) end
+	local screen_x = c.screen_x
+	local screen_y = c.screen_y
 	local source_light = c.light
-	local source_sky   = c.sky
-	
-	local light_write_offset = c.light_tile_idx
+	local overlay = c.overlay
+	local colortest = flr(rnd(16))
 	for ix=0,CHUNK_SIZE-1 do
 		for iy = 0,CHUNK_SIZE-1 do
-			local light_value = mid(0,source_light:get(ix,iy),6)
-			local sky_value   = mid(0,source_sky:get(ix,iy),6)
-			--[[
-			local final_light_value = min(light_value, sky_value)
-			local extra_light_tile_offset = 
-				light_value > sky_value and
-					     -7 or 0
-			]]
+			local x_base = ix*8+screen_x
+			local y_base = iy*8+screen_y
 			
-					     
-			local light_tile = 512-(sky_value+(7*light_value))
-			RENDER_CHUNK_HEAP:set( light_write_offset+ix, iy, light_tile )
+			overlay:set(
+				0, ix*CHUNK_SIZE+iy, 
+				x_base, 
+				y_base, 
+				x_base+7, 
+				y_base+7, 
+				source_light:get(ix,iy) -- generated based on data from c.light
+			)
+			
 		end
 	end
+	bar_end("Light update")
 end
 
 function update_displayed_tile(tile, chunk, ix, iy)
@@ -520,7 +506,6 @@ end
 function chunk.free_chunk(c)
 	ALLOCATION_TABLE[c.alloc_idx] = false
 	ALLOCATION_TABLE[c.bg_alloc_idx] = false
-	ALLOCATION_TABLE[c.light_alloc_idx] = false
 	LOADED_CHUNKS[c.own_id] = nil
 	if c.changed then
 		CHUNKS_TO_SAVE[#CHUNKS_TO_SAVE+1] = c
@@ -563,6 +548,14 @@ function chunk.render_loaded_chunks(base_x,base_y)
 				8,           --[tile_w,      tile size
 				8            --tile_h]
 			)
+			if (key "tab" and key "l" ) then
+				print(c.debug_label or "", c.screen_x, c.screen_y, 7)
+				for ix=0,CHUNK_SIZE-1 do
+					for iy=0,CHUNK_SIZE-1 do
+						print(c.light:get(ix,iy), c.screen_x + ix * 8, c.screen_y + iy*8)
+					end
+				end 
+			end
 		end
 	end
 	bar_end("Rendering")
@@ -572,37 +565,21 @@ end
 function chunk.render_light(base_x,base_y)
 	-- if true then return end
 	if ( key("tab") and key("shift") ) map() return
-	bar_start("Rendering")
+	bar_start("Rendering light")
+	fillp(0b0101101001011010)
 	for i,c in pairs(LOADED_CHUNKS) do
 		if (c.rendered) then
-			map(
-				c.light_tile_idx,  --tile_x,       starting tiles
-			   0,         	 --tile_y, 
-				c.screen_x,  --[sx,          screen position
-				c.screen_y,  --sy], 
-				CHUNK_SIZE,  --[tiles_x,     how much to draw 
-				CHUNK_SIZE,  --tiles_y], 
-				0x00,        --[p8layers],   p8 layers...
-				8,           --[tile_w,      tile size
-				8            --tile_h]
-			)
+
+			rectfill(c.overlay)
+
 			if (key("tab")) then
-				prints(c.debug_label, c.screen_x, c.screen_y, 7) 
-				prints(c.x .. ' ' .. c.y, c.screen_x, c.screen_y+8, 7)
-			end
-			if (key "tab" and key "l" ) then
-				print(c.debug_label or "", c.screen_x, c.screen_y, 7)
-				for ix=0,CHUNK_SIZE-1 do
-					for iy=0,CHUNK_SIZE-1 do
-						if ix%4==0 then
-							print(c.sky:get(ix,iy) .. "/" .. c.light:get(ix,iy), c.screen_x + ix * 8, c.screen_y + iy*8)
-						end
-					end
-				end 
+				print(c.debug_label, c.screen_x, c.screen_y, 7) 
+				print(c.x .. ' ' .. c.y, c.screen_x, c.screen_y+8, 7)
 			end
 		end
 	end
-	bar_end("Rendering")
+	fillp(0b1111111111111111)
+	bar_end("Rendering light")
 end
 
 function chunk.load_chunk(cx,cy)
@@ -618,7 +595,6 @@ function chunk.load_chunk(cx,cy)
 		new_chunk.bg = data.bg
 		new_chunk.light = data.light
 		new_chunk.light_sources = data.light_sources
-		new_chunk.sky = data.sky
 		new_chunk.debug_label = "Loaded"
 	else
 		-- Generate...
@@ -631,7 +607,7 @@ function chunk.load_chunk(cx,cy)
 	return new_chunk
 end
 
-
+local my_requests = {}
 function chunk.request_load(cx,cy)
 	local cid = cx .. "/" .. cy
 	for i,v in pairs(my_requests) do
@@ -662,7 +638,7 @@ function aggro_loader()
 
 	for ix = loader_area_start_x, loader_area_end_x do
 		yield()
-		for iy = loader_area_start_y, loader_area_end_y do			
+		for iy = loader_area_start_y, loader_area_end_y do
 			local found_chunk = chunk.get_chunk(ix, iy)
 			if found_chunk then
 				found_chunk.touched = true
@@ -704,7 +680,7 @@ function chunk.place_light_in_world(x,y,str)
 	
 	local light_overlay = LIGHT_CACHE[str]
 	if not light_overlay then
-		light_overlay = userdata("i8", str, str)
+		light_overlay = userdata("u8", str, str)
 		tracked_rect(str, str, function(ix, iy, dist, idist)
 			light_overlay:set(ix, iy, -idist)
 		end)
@@ -727,7 +703,7 @@ function chunk.place_light_in_world(x,y,str)
 			local icx, icy = affected_cx+ricx, affected_cy+ricy
 			local c = chunk.get_chunk(icx, icy)
 			if c then
-				local slice = userdata("i8",CHUNK_SIZE,CHUNK_SIZE)
+				local slice = userdata("u8",CHUNK_SIZE,CHUNK_SIZE)
 				light_overlay:blit(
 					slice, 
 					center_corner - tile_x + ricx*CHUNK_SIZE,
@@ -770,7 +746,7 @@ function chunk.break_light_in_world(x,y)
 				local icx, icy = affected_cx+ricx, affected_cy+ricy
 				local c = chunk.get_chunk(icx, icy)
 				if c then
-					local slice = userdata("i8",CHUNK_SIZE,CHUNK_SIZE)
+					local slice = userdata("u8",CHUNK_SIZE,CHUNK_SIZE)
 					light_overlay:blit(
 						slice, 
 						center_corner - tile_x + ricx*CHUNK_SIZE,
@@ -816,9 +792,8 @@ function chunk.save_to_disk(c)
 		local filename = get_chunk_fname(c.x,c.y)
 		local data = {
 			tiles = c.tiles,
-			bg    = c.bg,
+			bg = c.bg,
 			light = c.light,
-			sky   = c.sky,
 			light_sources = c.light_sources,
 		}
 		store(filename, data)
@@ -833,20 +808,36 @@ function save_all()
 	while aggro_saver() do cls() print("Saved chunk " .. cc ) cc+=1 flip() end
 end
 
+local RECV_QUEUE = {}
 function chunk.recv_chunk(evt)
+	-- error "Recv unimpl"
 	local new_chunk = evt.payload
 	
-	ADD_RENDER_GEN(chunk.add_chunk, {new_chunk.loaded_at_x, new_chunk.loaded_at_y, new_chunk})
-	new_chunk.touched = true
+	RECV_QUEUE[#RECV_QUEUE+1] = {new_chunk.loaded_at_x, new_chunk.loaded_at_y, new_chunk}
 end
+
+chunk.work_recv_queue = cocreate(function() 
+	while true do
+		for i=0,0 do
+			local next_chunk = deli(RECV_QUEUE,1)
+			if next_chunk then
+				local lax,lay,c = unpack(next_chunk)
+				chunk.add_chunk(lax,lay,c)
+				c.touched = true
+				del(my_requests, c.loaded_at_x .. "/" .. c.loaded_at_y) 
+			end
+		end
+		yield()
+	end
+end)
 --===========--
 function do_world_generation(cx,cy,y)
 	local new_chunk = chunk.build_chunk()
-	new_chunk.tiles, new_chunk.bg, new_chunk.light, new_chunk.sky = generate_terrain(cx,cy,y)
+	new_chunk.tiles, new_chunk.bg, new_chunk.light = generate_terrain(cx,cy,y)
 	return new_chunk
 end
 :: chunkservice.lua
---[[pod_format="raw",created="2025-04-25 11:19:16",modified="2025-06-12 19:36:50",revision=813]]
+--[[pod_format="raw",created="2025-04-25 11:19:16",modified="2025-06-06 00:33:43",revision=822]]
 include "chunk.lua"
 
 local MAIN_PID = env().argv[1]
@@ -885,7 +876,7 @@ while true do
 end
 ]]
 :: constants.lua
---[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-06-17 19:42:10",revision=3723]]
+--[[pod_format="raw",created="2025-04-12 19:11:01",modified="2025-05-23 15:12:53",revision=3334]]
 
 GAME_VERSION_STRING = "Indev 0w0"
 TILE_SIZE = 8
@@ -926,11 +917,17 @@ SKY_COLORS = {
 BOTTOM_RIGHT_PIXEL_X=479
 BOTTOM_RIGHT_PIXEL_Y=269
 
-
+COLOR_RAMPS = {
+ -- {1,2,3,4...}
+ {0, 21, 19, 20, 21, 22, 23, 24, 25,  9, 27, 16, 18, 30, 24, 1, 19, 1, 1, 21, 1, 5, 30, 2, 24, 27,  3, 29, 13,  2,  4},
+ {0,  0, 21, 21,  0, 21, 30, 21, 24, 25, 19,  1,  1,  2,  2, 0,  1, 0, 0,  1, 0, 0,  2, 0,  2,  3, 19, 18, 18,  1, 20},
+ {0,  0,  0,  0,  0,  1,  1,  0, 21,  2,  1,  0,  0,  1, 21, 0,  0, 0, 0,  0, 0, 0,  1, 0, 21, 19,  1,  1,  1,  0, 21}
+ -- {0,0,0,0...}
+}
 
 
 :: entity.lua
---[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-06-12 19:36:50",revision=2115]]
+--[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-06-06 00:33:43",revision=1994]]
 
 include "constants.lua"
 include "chunk.lua"
@@ -939,9 +936,11 @@ include "chunk.lua"
 
 ENTITIES = {}
 function update_entities()
-	for e in all(ENTITIES) do
-		e:update()
-		move_entity(e)
+	if FRAME_COUNTER >= 180 then
+		for e in all(ENTITIES) do
+			e:update()
+			move_entity(e)
+		end
 	end
 end
 
@@ -1003,7 +1002,7 @@ function move_entity(e)
     end
 end
 :: generator.lua
---[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-06-17 19:18:27",revision=1938]]
+--[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-06-04 15:48:01",revision=1514]]
 include "noise.lua"
 include "constants.lua"
 
@@ -1021,18 +1020,10 @@ function noise(x,y)
 	+ 0.25*nf(4*x,4*y,n)
 end
 
-local USERDATA_6 = userdata('i8', CHUNK_SIZE, CHUNK_SIZE)
-for ix=0,7 do
-	for iy=0,7 do
-		USERDATA_6:set(ix, iy, 6)
-	end
-end
-
 function generate_terrain(cx,cy)
 	local terrain_data = userdata("i16",CHUNK_SIZE,CHUNK_SIZE)
 	local bg_data = userdata("i16",CHUNK_SIZE,CHUNK_SIZE)
-	local light_data = userdata("i8",CHUNK_SIZE,CHUNK_SIZE)
-	local sky_data = userdata("u8",CHUNK_SIZE,CHUNK_SIZE)
+	local light_data = userdata("u8",CHUNK_SIZE,CHUNK_SIZE)
 	for ix=0,CHUNK_SIZE-1 do
 		local world_x = cx*CHUNK_SIZE+ix
 		-- Generate height data for this position of the map
@@ -1044,7 +1035,7 @@ function generate_terrain(cx,cy)
 			local world_y = cy*CHUNK_SIZE+iy
 			local light_level = 0
 			if world_y > column_height then
-				light_level = min(6,world_y-column_height)
+				light_level = min(10,world_y-column_height)
 				bg_tile = 9
 				tile = 2
 				local cavern_noise = nf(world_x/64, world_y/64, WORLD_SEED)
@@ -1056,16 +1047,16 @@ function generate_terrain(cx,cy)
 				bg_tile = 9
 				tile = 1
 			end
-			
-			-- full dark
-			USERDATA_6:blit(light_data, 0, 0, 0, 0, 8, 8)
+			if world_y == column_height - 1 then
+				tile = 27+flr(rnd()*4)
+			end
 			
 			bg_data:set(ix,iy,bg_tile)
-			terrain_data:set(ix,iy,tile)
-			sky_data:set(ix,iy,light_level)
+			terrain_data:set(ix,iy,tile) 
+			light_data:set(ix,iy,light_level)
 		end
 	end
-	return terrain_data, bg_data, light_data, sky_data
+	return terrain_data, bg_data, light_data
 end
 
 function noisetest()
@@ -1107,647 +1098,242 @@ function noisetest()
 		flip()
 	end
 end
-:: init_routines.lua
---[[pod_format="raw",created="2025-06-12 19:46:34",modified="2025-06-17 19:42:10",revision=560]]
-include "lightmap_data.lua"
-
-COLOR_RAMPS = {
- -- {1,2,3,4...}
- {0, 21, 19, 20, 21, 22, 23, 24, 25,  9, 27, 16, 18, 30, 24, 1, 19, 1, 1, 21, 1, 5, 30, 2, 24, 27,  3, 29, 13,  2,  4},
- {0,  0, 21, 21,  0, 21, 30, 21, 24, 25, 19,  1,  1,  2,  2, 0,  1, 0, 0,  1, 0, 0,  2, 0,  2,  3, 19, 18, 18,  1, 20},
- {0,  0,  0,  0,  0,  1,  1,  0, 21,  2,  1,  0,  0,  1, 21, 0,  0, 0, 0,  0, 0, 0,  1, 0, 21, 19,  1,  1,  1,  0, 21}
- -- {0,0,0,0...}
-}
-
-function init_everything()
-	init_colortables()
-	set_lightmap(1)
-	fetch("/system/fonts/p8.font"):poke(0x4000)
-	fillp()
-end
-
-function init_colortables()
-	color_table = userdata("u8", 64, 64)
-	memmap(0x8000, color_table)
-	for i=0,63 do
-		for j=0,63 do
-			color_table:set(i,j,j)
-		end
-	end
-	for i=0,63 do
-		color_table:set(i,0,i)
-	end
-	for k=1,3 do
-		for i=1,31 do
-			color_table:set(i, 32+k, COLOR_RAMPS[k][i])
-		end
-		color_table:set(63, 32+k, 63)
-	end
-end
-
-
 :: label.qoi
-b64$cW9pZgAAAeAAAAEOBAH_Ka3--f39-f399f4dK1PBCs0oCsooCssoxgr_--HowQrBPwrLPwrW
-P8AKwT8K6T-BCsc-Cs8-wArHP8AKxj-ACs0-Css-CsA-wgrBPwrAP8IKwD-ACsA-wgrAP8AKwD-C
-CsA-wArCPwrFP8AK-f39xygKwCgKzCgK2Cj_uQA_xQo--hJTWcA-CsE5Cso-OQrUPwo5PwrAPzkK
-6T85wArGPzkKzT8KOT8KxT8KOT8KxD8KOT8KzD85Csk-wDkKwDnAPzkKP8A5CsA5wD85Pwo5Pwo-
-OcI-CjnACsA5wD85Pwo5PwrAP8A5CsM-Cjk-Cv39-cYoCsAoCsAowArAKMEKwSjBCsAowArAKAoo
-wAoowArAKMEKwSjBCsAoEsUKPzkKPzk-wArBP8EKwD-ACsA-wgo-Cj-ACsA-wArAP8EKxT85CsA5
-P8IKwD-ACsA-Cj-ACsA-wQrAP8AKwD-CCsA-wArAPwo-wArFPzkKP8EKwT-BOQo-wArAPwrAPwrE
-Pzk-wDk-CsE-Cj85P8A5CsM-OQrAOQo-wArBP8AKwT-BOQrKPzkKwj85Pwo-OQrCPzk-OQo-OT85
-CsE-OQrEPzk-OQo-OT8KPzkKwz85P8A5Cv39-cUowQrAKArAKAooCsAoCigKwCgKKArAKAoowArC
-KArAKArAKAooCsAoCsAoEsUKP8EKOQo-OQo-CjnBPwo5PwrAPznBP8AKOcA-Cjk-Cj85wD8KxT-A
-CsE-OcEKwDk-Cj-ACjnAPwo5PzkKwDk-CsA5wD85Pwo5Pwo-wAo5wArEPzkKPznAPwo-Cjk-OT8K
-OT8KPzkKPzkKwz-ACj85PzkKwD85P8AKPzkKxD-ACsA-Cjk-Cj8KOT8KPwo5PzkKPwrIPzkKwT8K
-OT85PzkKwT8KOQo-wTk-wQrAP8EKwj8KOQo-wAo5Pzk-OQrDP8AKPzkK-f39xSgKwCgKKMIKKArA
-KAooCsAoCijCCigKwygKwCgKwCgKKArAKArAKBLFCj85wQrAPzkKPzkKwT85Cj85Cj85CsA-OcAK
-wD85Cj85PzkKPzkKxTk-CsA-OQrBP8E5PznACsA-OQo-OQo-wTkKP8AKOT-COT85wArGPzkKPzkK
-Pzk-OQo-OT-COT85Cj85CsM-OcA-OT85Pwo-OT85wD85CsU5Pwo-wjk-wjk-OQo-OQrAOQrHPzkK
-wD8KOQo-wgrAPwo5CsE5PzkKOcA-Cj85wD8KwD8KOQo-Cjk-Cj-CCsM-OcA-OQr9-f3FKArAKAoo
-CsIoCsAoCigKwCgKKArCKArDKArAKArAKArAKMEKwCgSxQo-OQrCPzkKPzkKwT85Cj85Cj85CsA-
-OQrBPzkKPzk-OQo-OQrDPwrAPzkKPzkKwD8KOT85PzkKwj-BOT8KOT85Pwo5wAo-OcI-OQrHPzkK
-PzkKPzk-OQo-OT85wj85Pwo5CsM-OQo-OT85Pzk-OT85Cj85CsM-CsA-OT85wj85wj85Cj85Cj8K
-yD85CsA-OQrBOT85wAo-OQrDPzkKwT85PzkKPzkKPzkKwD85Cj85Cjk-OcAKwj85Cj85Cv39-cUo
-CsAoCsAowQooCsAoCsAowQrAKMEKKArCKMEKKArAKArCKArAKBLFCj85CsE-wQrAP8EKwD-ACjkK
-wD-ACj85CsI-wAo5PzkKPzkKxD-ACjkKwD-ACsA-wTk-OQrDOT85Cj-BOT-CCsA-wQo-OQrGP8EK
-PzkKPzkKP8E5Cj-BCj-ACjkKxT-ACjkKPwo-CjkKP8AKOQrEP8AKOQo-wQrAP8EKwD-BOQrAOQrG
-P8EKwD85CsI-OQrAPzkKwT-ACjk-wQo5Cj-ACjkKPzkKwT-ACjkKwD85CsA-CsE-wAo5Cv39-e0o
-wArBKBLFCsA5CsI5wQrAOcEKwDnACsI5wAo5CsM5wArAOQrAOQrFOcAKwjnACsA5wQo5CsI-wAo5
-CsA5wQo5wgrAOcEKOQrHOcEKOQrAOQrAOcEKwDnBCjnACsc5wArBOQo5CsE5wArGOcAKwTnBCsA5
-wQrAOcEKyjnBCsA5CsM5CsE5CsI5wArAOcEKwTnACsE5CsI5wArCOQrBOQrBOcAK-f39yygKwSgK
-wCjACsUowgrGKArBKMAKxCgSxQr9wznACv39-f398ygKwSgKKArAKArEKArIKMAKwCgKwCgKwygS
-xQr9-f39-f36KArBKAooCsIowQrAKArHKAooCsMoCigKwCjAEsUK-f39-f39_igKKAooCigKwigK
-wCgKKMEKxSgKKArCKArCKAooEsUKP8EKxT8Kwj-ACsE-CuQ-CtE-CsY-wArFPwrIPwrAP8AKwz8K
-wD8Kxz-ACs0-CsY-wArMPwo-Csw-Csg-Ct0-Cj8K1D8KPwrRPwrLPwrWPwrCP8AKzz8KyD8K-cwo
-CigKKAooCsIoCsAoCigKxyjCCsAoCsIoCsAoEsUKPznAPwrEPzkKwj85CsE5CuQ5CtA-OQrGPzkK
-xD85Csg5CsA-OQrCPzkKPzkKxT8KOT8KzD85CsQ-CjnACss-OT85Css-OQrHPzkK3D85PzkK0z85
-PzkK0D85Cso-OQrVPzkKwj85Cs4-OQrHPzkK-csowAoowAooCsAoCijBCsAoCskoCsAoCsIoCsAo
-wBLFCj85Cj85PwrAPwo-wQrBPzkKP8AKwT-BCsU-wArAPwrAPwo-wQrBP8AKwD8KP8AKP8AKwD-A
-Cj8KwT-ACsA-wQrAP8IKwD-ACsE-OQrEP8EKwD8KwD8KP8AKwT85CsA-wTkKPzkKxT85CsA5Cj-A
-CsA-wQrBP8E5CsQ-OQrBP8AKwT-ACsE-wTk-wQrBP8AKwT-BCj85Cj8KxD-CCsA-wArGP8EKwD-A
-CsA-Cj-ACsA-wTk-wQrBP8AKwT-ACsA-Cj-ACsA-wTk-wQrBP8AKwD8KwD8Kwz-CCsA-wArBP8EK
-P8EKxj-ACsA-wQrFP8EKwT85Cj8KwD8KwD-ACsE-wQo-OQo-Cj8KwD8KwD85Cv3LKArBKArAKMAK
-wCgKwigKySgKwCjCCsMoEsUKP8EKOT85Cj85PznAPwrAPzkKwD85Cj8KOcEKwz8KOT8KPzkKPzk-
-OcA-Cj8KOT8KP8AKOcAKPzkKPzk-Cj8KPwo5Pwo-OcA-CsA-OcEKwDk-CsA-OQrEPznAPwo-OQo-
-OQo-OQrAPzkKPwo5PzkKPzkKxj-ACsA-Cjk-Cj85wD8KPwo5PzkKwz-CCj8KOT8KPwo5Pwo-Cjk-
-OT85wD8KwTk-Cj8KOcE-OT8KOQrEPznBPwo5PwrEPwo5wQrAOT8KP8AKOcA-Cjk-OT85wD8KPwo5
-PwrBOT8KP8AKOcA-Cjk-OT85wD8KPwo5Pwo-OQo-OQrDPznBPwo5Pwo-CjnBPznAPwrEPwo5Pwo-
-OcA-CsQ-OcA-CsA-OQo-OQo-OT8KOT8KPwo5wT85Pwo5PzkKPzkKPzkK-dYoCtooEsUKPznBCj85
-Cj85PzkKPzkKPzkKwD85Cj85CsY-wjkKP8AKOT85Cj85P8I5PznACsE-OQo-OT85Pzk-wjk-OQo-
-OQo-OQrBP8E5Cj85CsQ-OQo-OT85Cj85Cj85CsA-OQo-OQo-OQo-OQrHOT8KP8I5PzkKPzk-OQo-
-OQrEPznBP8I5P8I5PzkKPzk-OQo-OQo-wTk-OQrBP8AKOQrFPzkKwD85Cj85CsM-OQrCP8E5PznA
-CsA-OQo-OT85Cj85PzkKPzkKP8E5PznACsA-OQo-OT85Cj85PzkKPzkKP8AKOQrDPzkKwD-COT85
-CsE-OQo-OQrDPzkKPzk-OQo-OQrDPzkKPzkKPzkKPzkKPzk-wjkKP8AKwD-ACjkKPzkKPzkKPzkK
--fMoEsUKPzkKwT85Cj85PzkKPzkKPzkKwD85Cj85CsY-OcI-Cjk-Cj-BCjk-OcI-OQrCPzkKPzkK
-OT85PznCPzkKPzkKPzkKwD8KOT85Cj85CsQ-OQo-OT85Cj85Cj85CsA-OQo-OQo-OQrAOQrFPwrA
-Pzk-OcI-OQo-OT85Cj85CsQ-OQrAPznCPznCPzkKPzk-OQo-OT8KOT85PzkKwT85PwrGPzkKwD85
-Cj85CsM-OQrBPwo5Pzk-OQrBPzkKPzk-OQo-OT85Cj85Pwo5Pzk-OQrBPzkKPzk-OQo-OT85Cj85
-Pwo5PwrEPzkKwD85wj85CsE-OQo-OQrDPzkKPzk-OQo-OQrDPzkKPzkKPzkKPzkKPzk-OcIKwDk-
-Cj85PwrBP8E5CsA5Cv3zKBLFCj85CsI-wTk-wQo5Cj-ACj-BCsA-wQrFP8EKPzkKPzk-OcEKwD-B
-Cj85CsE-wQo-OQrAPzkKP8EKPzkKPzkKwD-ACsA-wTkKP8AKxD-BCjkKP8E5P8EKwD-ACsA-wTkK
-PwrHP8AKOQo-wQo-OQo-OQo-wTkKxD85CsE-wQrAP8EKwD-BOT-BCjkKP8E5Cj-BCj85Cj8Kxj-A
-CsA-wAo5CsQ-wQrAP8E5PzkKwj-BOT-BCjkKP8AKOQo-wTk-OQrCP8E5P8EKOQo-wAo5PzkKPzkK
-PwrCP8AKwD-BCsA-wQo-OQo-OQrEP8AKOT85Cj85CsM-wQo5Cj-ACsA-wTkKP8EKP8EKOT85Cj8K
-wTk-OQo-Cv30KBLFCsA5CsM5wQo5wQrBOcAKOcEKwDnBCsU5wQo5CsA5PzkKwznBCjkKwjnBCjkK
-wTkKwDnBCjkKwDkKwTnACsA5wQrAOcAKxDnBCsE5wQo5wQrAOcAKwDnBCsA5Csc5wArBOcEKOQrA
-OQrAOcEKxTkKwjnBCsA5wQrAOcEKOcEKwTnBCsA5wQo5CsA5CsY5wArAOcAKxjnBCsA5wQo5CsM5
-wQo5wQrBOcAKwTnBCjkKwznBCjnBCsE5wArAOQrAOQrAOQrCOcAKwDnBCsA5wQo5CsA5CsU5wArA
-OQrAOQrEOcEKwTnACsA5wQrAOcEKOcEKwDkKwDkKP8AKOQrAOQr98ygSxQrrOQr9-f399znACv33
-KBLFCv39-f39-f3kKBLFCv39-f39-f3kKBLFCj8KwT8KwD-ACsE-wArAP8EK5D8Kwj8KwT8KP8EK
-xT8K0T8KzD-BCsA-CsE-Cj-BCso-wArfPwrMP8AKxj8K0D8K3D8Kwj8KwD-ACv39-dgoEsUKPzkK
-wD85Pwo5Pwo-Cjk-Cj85wD8K4z85CsE-wAo-wDk-OcA-CsQ-OQrQPzkKyz85wD8KP8AKP8A5PznA
-PwrKPzkK3j85Csw-OQrFPzkKzz85Cts-OQrCOQrAPzkK-f391ygSxQo-OQrAPzk-OQo-OT85CsA5
-PzkKPzkKwz-ACj8KwT-ACsA-CsA-CsA-wArKPzkKwT85Pwo-OT85Cj85CsM-wQrAPwo-wArAP8AK
-wT-ACsA-OQo-Csk-OQo-OT85Pwo-OT85Cj85CsM-wQrBPzkKwD-ACsE-wQrAP8AKyj8KwT8KP8EK
-wT-ACsE-wArBPzkKxD-CCsA-wArGP8EKP8EKwT-ACsA-wQrBP8EKwD-ACsU-wgo-wArBPzkKwD-A
-Cv39-dMoEsUKPzk-Cj85P8I5Cj-ACsA-OQo-OQrDPzk-Cj8KPwo5Pwo-OQo-OT8KOT8KyT85CsE-
-OT85Pzk-wQo5CsM-OcA-Cj-ACjnAPwo5PwrBOT8KPzk-CjkKyD-BCjk-OT85Pzk-wQo5CsM-OcA-
-CsA-OQrBOT8KPwo5wT8KOT8KyT85CsA-OT85wD8KPwo5Pwo-Cjk-CsA-OQrFPznBPwo5PwrEPwo5
-wT85wD8KwTk-Cj85wD8KPwo5Pzk-Cjk-CsU-OcEKPzkKwD85Cj8KOT8K-f390igSxQo-OT85Pzk-
-OcA-OQrAOT8KPzkKPzkKwz85Pzk-OT85Cj85PzkKPzk-wjkKyD85CsE-OQo5Pzk-OcA-CsQ-OQo-
-OT85wArAP8I5Cj-BOT-ACjkKyT85wD8KPzkKOT85PznAPwrEPzkKPzkKPzkKwD-BOT85CsE-wjkK
-yD85Pwo-OT85Cj85P8I5P8I5Cj85CsU-OQrAPzkKPzkKwz85CsE-OQo-OQo-wTk-OQo-OT85Cj85
-P8I5CsQ-OQrBPzkKwD85Cj-COQr9-f3RKBLFCj-ACj-AOT85Cj85PwrAPzk-OQo-OQrDPzkKOT85
-PzkKPzk-OT8KOT85wgrIPzkKwT85CsA-OT85Cj85CsM-OQo-OT85CsE-OcI-Cjk-OT85PwrKPzkK
-Pzk-OQrAPzk-OQo-OQrDP8EKOQo-OQo-Cjk-OT85CsE-OcIKyD85Pzk-OT85Cj85PznCPznCCj85
-CsU-OQrAPzkKPzkKwz85CsE-OQo-OT8KOT85PzkKPzkKP8E5PznCCsQ-OQrBPzkKwD85Cj85wgr9
--f3RKBLFCj85wAo-OT85Cj85Cj-ACjk-wQo5CsM-OQrAPzkKP8AKOT-ACjkKwD-BCsE-CsU-wgo-
-OQrAPzk-wQo5CsM-wQo5PzkKwj-BCsA-wTk-OQo-CsE-CsU-OQo-OT85CsA-OT-BCjkKwz85wQrA
-P8AKwD-BOQo-wQrAP8EKwT8Kxj8KPwo5PzkKPzkKP8EKwD-BCsA-wArGP8AKwD-ACjkKxD-BCj85
-Cj85Cj-BOT85Cj85CsA5PzkKP8EKxj-ACj-BCsA-wArAP8EK-f390igSxQrAOQrBOQo5CsA5CsA5
-wArAOcEKxTkKwTkKwDnACsA5wArCOcEKPwo5CsU5wgo5CsE5CjnBCsU5wQrAOQrDOcEKwDnBCjkK
-wDkKPwo5CsU5CsA5CjkKwTkKOcEKxD85CsM5wArAOcEKwDnBCsA5wQo-CjkKxjkKOQrAOQrAOQrA
-OcEKwDnBCsA5wArGOcAKwDnACsY5wQo5CsA5CsA5wQo5CsA5Cj-ACjkKwDnBCsY5wAo5wQrAOcAK
-wDnBCv39-dEoEsUK8DkK9TkK2zkK1jkK-co5wAr9-f3uKBLFCv39-f39-f3kKBLFCv39-f39-f3k
-KBLFCj8KwD8KxD-ACsM-Csk-CsM-CsI-wArAPwrHPwrQP8AK1D-ACss-Cuc-CsQ-CtE-Csc-Csw-
-Ct4-Cv39-esoEsUKPzkKPzkKxD85CsI-OQrIPzkKwzkKwD8KOcAKPzkKxj85CtA-OQrUPzkKyj85
-CuY-OQrDPzkK0D85CsY-OQrLPzkK3T85Cv39-eooEsUKPzkKPzkKP8AKwT85CsA-wTkKxD-BCj-B
-CsA-wArBPzkKwD-CCsQ-wgrAP8AKxT-BCsE-OQrAP8AKwT-BCsA-wArGPzkKwD-ACsA-wQrAP8IK
-wD-ACsA-Cj-ACj-BCsE-wQrFP8AKwD-BCsE-wTkKwz-BCsA-Cj-ACsA-wArBP8AKwD85Cj8KxD-B
-CsE-wArBP8EKPzkKPwrAP8EKPwo-wArAP8AKwD8KwD8KP8EKwT-BOQo-wQr9-f3mKBLFCj-COT8K
-OT8KwD85Cj8KOT85CsM-CjnBPznAPwrAPzkKP8IKwD85wQrEPznBPwo5PwrEPznAPwrAPzkKwTk-
-Cj8KOcE-Cjk-CsU-OQrBOT8KPznAPwrAPznBPwo5Pwo-wAo5wD85wD8KPwo5wQrFOT8KPznAPwo-
-Cjk-OQrDPznAPwo-wAo5wD8KOT8KwTk-Cj85Pwo5CsM-OcA-CsE5Pwo-CjnBPzk-Cjk-Cjk-OT-A
-CjnAPwo5Pwo-OQo-OT85wD8KPwo5Pzk-CjnBCv39-eUoEsUKPznAPzk-OQo-OQo-OQo-OQo-OQrE
-P8AKwD85Cj85Cj85CsA-OcEKPzkKxj85CsA-OQo-OQrDPzkKPzkKPzkKwD-BOT85CsE-wjkKxD85
-CsA-wTk-OQo-OQo-OQrAP8I5PznACsA-OQo-OQo-wArGP8E5PzkKPzk-OQo-OQrDPzkKPzk-OcAK
-wD-COQo-wTk-wAo5CsQ-OQo-OQo-wTk-OQrBP8AKOQo-OQo-OT85wArAPzkKPzk-OQo-OT85Cj85
-PzkKPzkKP8AK-f3h-v8ATcD_-4VXxAr6KBLFCj85Cj85PzkKPzkKPzkKPzkKPzkKxTk-Cj85Cj85
-Cj85CsA-OQrBPzkKxj85CsA-OQo-OQrDP8EKOQo-OQo-Cjk-OT85CsE-OcIKxD85Cj8KOT85PzkK
-PzkKPzkKwD85wj85CsE-OQo-OQrAOT8KxD8KOT85PzkKPzk-OQo-OQrDPzkKPzk-OQrBPznCPwo5
-Pzk-OT8KxT85Cj85Pwo5Pzk-OQrBPzk-CsE-wTk-OQrBPzkKPzk-OQo-OT85Cj85PzkKPzkKwDk-
-Cv394A3ALMQK_igSxQo-OQo-OQo-wAo5Cj-ACsA-wTkKwz-BCjk-OQo-OT-BCsA-OQrCP8AKxj-A
-CsA-wAo5CsM-OcEKwD-ACsA-wTkKP8EKwD-BCsU-wArAP8E5PzkKPzkKwD-ACsA-wQo-OQrBPzkK
-Pzk-wQo5CsQ-wTk-OQo-OQo-wTkKwz-BCjk-OQrCP8EKwD-BOT85Cj8KxD-BCjkKP8E5Cj-BCj85
-Cj8KwTk-OT85CsI-wAo5Cj-BOT85Cj85Cj-BOT-BCjkK-f3dDcD_-8yqwA3ELMAK_CgSxQrAOQrA
-OQrAOcAKwTnACsA5wQrEOcEKwDkKwDkKOcEKwDkKwznACsY5wArAOcAKxD85CsM5wArAOcEKwDnB
-CsA5wQrFOcAKwDnBCjkKwDkKwTnACsA5wQo5CsI5CsA5CjnBCsY5wQo5CsA5CsA5wQrEOcEKwDkK
-wznBCsA5wQo5CsA5CsQ5wQrBOcEKwDnBCjkKwDkKP8AKOQo5CsM5wArBOcEKOQrAOQrAOcEKOcEK
--f3eDcAUwA3ELMAK_CgSxQr9xjkK-f3ROcAK-f38DcYUwA0owArAKArMKArPKArCKArAKArLKMYK
--f39-f393A3GFMAoDQooCigKzCgKzygKwigKzigSxQr9-f39-f3gFMA-wArAKArCKMEKwCgKwCgK
-KMEKwCgKwCgKxSjACsEowQrAKMEKKMAKwCjBCsEowQrAKBLFCsU-wArBP8AKyz-ACsA-CsA-Cs8-
-wArAPwrNP8AKwD8KwD8K-f39-f3OFMA-wArAKArCKArAKAooCsAoCigKwCgKKAooCsgoCigKwCgK
-KArAKArAKArAKArAKAooCsAoCsAoEsUKxD8KOT8KPwo5PwrJPwo5Pwo-OQo-OQrNPwo5Pwo-OQrL
-Pwo5Pwo-OQo-OQr9-f39-c0UwD-ACsAoCsIoCsAoCigKwCgKKArAKAoowArHKMEKKArAKAooCsAo
-CsAoCsAoCsAoCigKwCgKwCgSxQrEPzkKwDk-OQrAOQrIPzkKPzk-OT8KOQrNPzkKwDk-OQrLPzkK
-Pzk-OT8KOQr9-f39-c0UwD-ACsAoCsAoCigKwCgKKArAKAooCsAoCigKKArFKArAKAooCsAoCigK
-wCgKwCgKwCgKwCgKwCjBCsAoEsUKxD85CsI-wArBPwrGPzkKPzk-wAo5Cs4-OQrBPzkKwj8Kxj85
-Cj85P8AKOQr9-f39-dUowArAKArAKArAKMEKKArAKAooCsAoCsUowQrAKMEKwCjBCijBCigKwCgK
-wigKwCgSxQrEPzkKwzk-CsE5CsU-OQo-OT85PwrPPzkKwT85CsM5CsU-OQo-OT85Pwr9-f39-f3O
-KMAKwSgSxQrEPzkKPwo-CsA-OQo-CsY-OQo-OT85Cj8Kzj85Cj8KPzkKwj8Kxj85Cj85PzkKPwr9
--f39-egoCsEoCsAowArFKMIKxSjACsEowArEKBLFCsU-wAo5Cj-ACjkKwDkKxj-ACjk-OQo-OQrO
-P8AKOT-CCsE5CsY-wAo5PzkKPzkK-f39-f3nKArBKAooCsAoCsQoCscoCsAoCigKwCgKwygSxQrG
-OcAKwTnACss5wArAOQrAOQrPOcAKwDnCCso5wArAOQrAOQr9-f39-ecoCsEoCigKwijBCsAoCsoo
-CigKKMAKKArAKMASxQr9-f39-f36KAooCigKKArCKArAKAoowQrHKArAKMAKKArBKAooEsUK-f39
--f39_igKKAooCigKwigKwCgKKArIKArBKArAKArAKArAKBLFCv39-f39-foowAoowAooCsAoCijB
-CsAoCscoCsIoCsAoCigKwCjAEsUK-f39-f39_igKwSgKwCjACsAoCsIoCscowgrAKMAKxCgSxQr9
--f39-f39xygK2igSxQr9-f39-f395CgSxQr9-f39-f395CgSxQr9-f39-f395CgSxQr9-f39-f39
-5CgSxQr9-f39-f395CgSxQr9-f39-f390CjBCssoCsEoxgr9-f39-f390CgKwCgKyigKwSj_ALJR
-xQr9-f39-f390CgKwCgKwCjACsEowQoowgooJsUK-f39-f39-dAowQrAKArAKAooCsMoCsEoJsUK
--f39-f39-dAoCsAoCijCCigKwygKwSgmxQr9-f39-f390CgKwCgKKArCKArDKArBKCbFCv39-f39
--f3QKArAKArAKMEKwCjBCsEowAooJsUK-f39-f39-eQoJsUK-f39-f39_igKwSgKwCjACsUowgrG
-KArCKArEKCbFCv39-f39-fooCsEoCigKwCgKxCgKyCjACsEowArEKCbFCv39-f39-fooCsEoCigK
-wijBCsAoCscoCigKwigKwCgKwCjAJsUK-f39-f39_igKKAooCigKwigKwCgKKMEKxSgKKArCKArC
-KAooJsUK-f39-f39_igKKAooCigKwigKwCgKKArHKMIKwSgKwSgKwCgmxQr9-f39-f36KMAKKMAK
-KArAKAoowQrAKArJKArCKArAKArAKMAmxQr9-f39-f36KArBKArAKMAKwCgKwigKySgKwSjBCsMo
-JsUK-f39-f39-ccoCtooJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39
--f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK
--f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQo
-JsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39
--eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39-f39-eQoJsUK-f39
--f39-eQoJsUK-f3V-n4lUxLB-v_sxcH_-3eoLRLBMcEdCv39-f37KCbFCv391RLADcA-wDHAEsAN
-wD-AMcAK-f39-fsoJsUK-f3VEg3BP8ExEg3BP8ExCv39-f37KCbFCv391RINwT-BMRINwT-BMQr9
--f39_yjGCv391f5FLTItwf6rUjbB-nQvKQMtwQrBG-4prf-9-f39-f393AMtwf6rUjbBGwMtwQrB
-G-4prf-9-f39-f393APALcD_q1I2wBvAA8AtwArAG8D_Ka3--f39-f39-dz_AAAAA8EbwQM1A8Eb
-wQMK-f39-f39-dT_JGOwCsExwR0tEsExwR0tEsExwR3_AIdRJsH_wsPHwf6iiHkK-f39-f39-c7_
-ZN-2wD-AMcD_uQA_wA3AP8AxwBLADcA-wDHAJsD_AOQ2wD-AO8AK-f39-f39-c02wT-BMRINwT-B
-MRINwT-BMSYjwT-BOwr9-f39-f39zTbBP8ExEg3BP8ExEg3BP8ExJiPBP8E7Cv39-f39-f3MKCDB
--oN2nMH_ZUaIAy3B-qtSNsEbAy3BCsEbA-5fV0-BD8E5-imt--39-f39-f3MKCDBEME6Ay3B-qtS
-NsEbAy3BCsEbAy7BD8E5-imt--39-f39-f3MKMAgwBDAOsADwC3A-qtSNsAbwAPALcAKwBvAA8Au
-wA-AOcD_Ka3--f39-f39-cw1KME6wSg1A8EbwQM1A8EbwQM1A8E5wQMK-f39-f39-cQgCsExwR0g
-CsExwR0gCsExwR0PJsE7wf6iiHkPJsE7wRIPJsE7wRIK-f39-f39-DbAP8AxwArANsA-wDHACsA2
-wD-AMcAmwCPAP8A7wCbAI8A-wDvAJsAjwD-AO8AK-f39-f39_zbBP8ExCjbBP8ExCjbBP8ExJiPB
-P8E7JiPBP8E7JiPBP8E7Cv39-f39-fs2wT-BMQo2wT-BMQo2wT-BMSYjwT-BOyYjwT-BOyYjwT-B
-Owr9-f39-f36KCDBEME6KCDBEME6KCDBEME6Ay7BD8E5Ay7BD8E5Ay7BD8E5Cv39-f39-fooIMEQ
-wTooIMEQwTooIMEQwToDLsEPwTkDLsEPwTkDLsEPwTkK-f39-f39_ijAIMAQwDrAKMAgwBDAOsAo
-wCDAEMA6wAPALsAPwDnAA8AuwA-AOcADwC7AD8A5wAr9-f39-f36NSjBOsEoNSjBOsEoNSjBOsEo
-NQPBOcEDNQPBOcEDNQPBOcEDCv39-f39-fL_-6MAxf7iawIhxQAhxQAhxQAhxQAhxQAhxQAhxQAK
--f39-f396v7-7CfEIQAfxCEAH8QhAB-EIQAfxCEAH8QhAB-EIQAfxCEACv39-f39-eofxAAhH8QA
-IR-EACEfxAAhH8QAIR-EACEfxAAhH8QAIQr9-f39-f3qAP3ACv39-f39-eohwQAhxQAhxQAhxQAh
-xQAhxQAhxQAhxQAhwgr9-f39-f3qH8AhAB-EIQAfxCEAH8QhAB-EIQAfxCEAH8QhAB-EIQAfwgr9
--f39-f3qH8AAIR-EACEfxAAhH8QAIR-EACEfxAAhH8QAIR-EACEfwgr9-f39-f3qAP3ACvQhwB-A
-Cv39-f399gPuCvshPzshH8AK-f39-f31AxvFAxvFAxvFAxvFAxvFAxvFCvshP8AhwQr9-f39-fUD
--qtSNsQbAwrEGwMKxBsDCsQbAwrEGwMKxBv_Ka3-_gDGCv39-f399AP_q1I2xBsDCsQbAwrEGwMK
-xBsDCsQbAwrEG-4prf-7Az-AAz-ACv39-f399QPuCvsDP8ADP8AK-f39-f31G8IDG8UDG8UDG8UD
-G8UDG8UDG8EK_z-DIAr9-f39-fX_q1I2wRsDCsQbAwrEGwMKxBsDCsQbAwrEGwMKwf4prf-7P8Ig
-Pwr9-f39-fX_q1I2wRsDCsQbAwrEGwMKxBsDCsQbAwrEGwMKwf4prf-7IMQK-f39-f3lIcUAIcUA
-IcUAIcUAIcUAIcUAIcUAIcUAIcUAIcUALuoDwS7AA8Eu4gr4P8EK2z-BCv39-d8fxCEAH8QhAB-E
-IQAfxCEAH8QhAB-EIQAfxCEAH8QhAB-EIQAfxCEAFMESLhIUwxIuEhTDEi4SFMMSLhIUwxIuEhTD
-Ei4SFMMSLhIUwxIuEhTDEi4SFMMSLhIUwxIuEhTACvc-Oz87PwrZPzs-Oz8K-f393h-EACEfxAAh
-H8QAIR-EACEfxAAhH8QAIR-EACEfxAAhH8QAIR-EACEUEhQSLhIUwRIUEi4SFMESFBIuEhTBEhQS
-LhIUwRIUEi4SFMESFBIuEhTBEhQSLhIUwRIUEi4SFMESFBIuEhTBEhQSLhIUwRIUEi4SFMAK9z87
-Pzs-Ctk-Oz87Pwr9-f3eAP3QLv3YCvg-wQrbP8EK-f393yHBACHFACHFACHFACHFACHFACHFACHF
-ACHFACHFACHCEhTBEhQSLhIUwRIUEi4SFMESFBIuEhTBEhQSLhIUwRIUEi4SFMESFBIuEhTBEhQS
-LhIUwRIUEi4SFMESFBIuEhTBEhQSLhIUwRIUEi4K_T8K3T8K-f394B-AIQAfxCEAH8QhAB-EIQAf
-xCEAH8QhAB-EIQAfxCEAH8QhAB-EIQAfwhIUwxIuEhTDEi4SFMMSLhIUwxIuEhTDEi4SFMMSLhIU
-wxIuEhTDEi4SFMMSLhIUwxIuEhTDEi4K_i4K3S4K-f393x-AACEfxAAhH8QAIR-EACEfxAAhH8QA
-IR-EACEfxAAhH8QAIR-EACEfwi792Ar5LgrdLgr9-f3gAP3QEi4SFMASFMASLhIUwBIUwBIuEhTA
-EhTAEi4SFMASFMASLhIUwBIUwBIuEhTAEhTAEi4SFMASFMASLhIUwBIUwBIuEhTAEhTAEi4SFMAS
-FMASLhIUwBIUwAr5LgrdLgr9-f3gI94hACEAIQAh-rkAPiEAIQAhACESIQAhACEAIRIhxQAhxQAh
-xQAK1jUoxQreNSjFCtA-wQrJIcUACsYhxQAhxQAj-egK-f3iJiMmIyYjJiMmIyYjJiMmIyYjJiMm
-IyYjJiMmIyYjJiMhHyEfIR8AwCEfIR8hHwDAIR8hHyEfAMAfxCEAH8QhAB-EIQAK1ijGCt4oxgrP
-Pzs-Oz8KyB-EIQAKxh-EIQAfxCEAJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYj
-JiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMm
-IyYjJiMmIyYjJiMK-f3iGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYfIR8hHyEAwB8h
-HyEfIQDAHyEfIR8hAMAfxAAhH8QAIR-EACEK1ijGCt4oxgrPPzs-Oz8KyB-EACEKxh-EACEfxAAh
-GyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYb
-JhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYK-f3iDxsPGw8b
-DxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsSABIAEgASABIAEgASABIAEgASABIAEgDXCtYoxgre
-KMYK0D-BCskAxgrGAM4PGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsP
-Gw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8b
-DxsPGwr9-eIb3iEAIRIhACEAIQAhEiEAIQAhACESIQAhACHBACHFACHFACHCCtYoxgreKMYK0T8K
-yiHBACHCCsYhwQAhxQAhwhv96Ar9-eIb3iEfAMAhHyEfIR8AwCEfIR8hHwDAIR8hH8EhAB-EIQAf
-xCEAH8IK1ijGCt4oxgrSLgrJH8AhAB-CCsYfwCEAH8QhAB-CG-3oCv394hveHyEAwB8hHyEfIQDA
-HyEfIR8hAMAfIR8hH8AAIR-EACEfxAAhH8IK1ijGCt4oxgrRLgrKH8AAIR-CCsYfwAAhH8QAIR-C
-G-3oCv394hveEgASABIAEgASABIAEgASABIAEgASABIA1wrWKMYK3ijGCtEuCsoAxgrGAM4b-egK
--f3SI84bAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwPBGwMbAxsDAMUSAMUSAMUSIQAhACEAIRIhxQAh
-xQAK1jUoxQrWI-3QGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-GwMj1gr9_CYjJiMmIyYjJiMmIyYjJiMDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGyHE
-ABIhxAASIcQAEiEfIR8hHwDAH8QhAB-EIQAK1ijGCtYmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMm
-IyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIwMb
-AxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxstGwMbAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbJiMmIyYjJiMmIyYj
-JiMmIyYjJiMmIyYjCv3qHwofCskbJhsmGyYbJhsmGyYbJhsmGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsDGwMbAxsDGwMhxBIAIcQSACHEEgAfIR8hHyEAwB-EACEfxAAhCtYoxgrWGyYbJhsmGyYbJhsm
-GyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYb
-JhsmGyYbJhsmGyYbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJgr96h8hwArJDxsPGw8bDxsPGw8bDxsPGwMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbEtcAEgASABIAzwrWKMYK0A0swQrADxsPGw8bDxsPGw8b
-DxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsP
-Gw8bDxsPGw8bDxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-Gw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGwr96wAKyhvPAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsDGwMbAwDBEgDFEgDFEgDCIQAhEiEAIQAhwQAhxQAhwgrWKMYKzw0UDcEsChv90QMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb1gr96y4KyhvOAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbAxshwAASIcQAEiHEABIhwx8AwCEfIR-BIQAfxCEAH8IK1ijG
-Cs8NwhQNChv90AMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGygbAxsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-1wr97C4KyRvPAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAyHAEgAhxBIAIcQSACHCHyEA
-wB8hHyEfwAAhH8QAIR-CCtYoxgrRFD8KwRv90QMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsDGwMb1gr96y4KyhvOAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsS1wASABIAEgDPCtYoxgrRFD8KwRv90CgbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDGwMb1wr94CPWGwMbAxsDGwMbAxsDGwMbA98AEgASABIALQASABIAEgAtABIA
-EgASAC0AxRIhACEAIQAhEiEAIQAhACESCtY1KMUKziPGG-3JAxsDGwMbA-3pGwMbAxsDGwMbAxsD
-GwMbAxsDGwMbAxsDI84K-dAmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMDGwMbAxsDGwMbAxsDGwMb
-A94AIQAhACESwAAhACEAIRLAACEAIQAhEsAhxAASIR8hHyEfAMAhHyEfIR8AwArWKMYKziYjJiMm
-IyYjG-3IAxsDGwMbAxsD9C0D8BsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbJiMmIyYjJiMmIyYjJiMm
-Iwr9wh8KHwrJGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGwMbAxsDGwMbAxsDGwMbA98hACEAIQAS
-wCEAIQAhABLAIQAhACEAEsAhxBIAHyEfIR8hAMAfIR8hHyEAwArWKMYKzhsmGyYbJhsmG-3JAxsD
-GwMbA-3cKAPKGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDGyYbJhsmGyYbJhsmGyYbJgr9wh8hwArJ
-DxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bAxsDGwMbAxsDGwMbAxsDGwPeLRItEi0SLRItEi0SLRIt
-Ei0SLRItEi0SyAASABIAEgASABIAEgASAArWKMYKzg8bDxsPGw8b-ckDGwMbAxsDGwP92igDzBsD
-GwMbAxsDGwMbAxsDGwMbAxsDGwMbDxsPGw8bDxsPGw8bDxsPGwr9wwAKyhvXAxsDGwMbAxsDGwMb
-AxsD3wASAC0AEgASABIALQASABIAEgAtABIAEgDBEgDCIQAhEiEAIQAhACESIQAhAArWKMYKzhvL
-AxvaAxvkAxIDGwMbA-3pGwMbAxsDGwMbAxsDGwMbAxsDwRsDGwMbzgr9wy4KyhvWAxsDGwMbAxsD
-GwMbAxsDGwPeACESwAAhACEAIRLAACEAIQAhEsAAIQAhwQASIcMfAMAhHyEfIR8AwCEfIR8K1ijG
-Cs4bygPAG9sDG_IDGwMbAxsDGwPwKAP0GwMbAxsDGwMbAxsDGwMbAxsDwRsDG88K-cQuCskb1wMb
-AxsDGwMbAxsDGwMbA98hABLAIQAhACEAEsAhACEAIQASwCEAIQAhwBIAIcIfIQDAHyEfIR8hAMAf
-IR8hCtYoxgrOG-3RAxsDGwMbA-3pGwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsDG84K-cMuCsob1gMb
-AxsDGwMbAxsDGwMbAxsD3i0SLRItEi0SLRItEi0SLRItEi0SLRItEsgAEgASABIAEgASABIAEgAK
-1ijGCs4b-dADGwMbAxsDGwP96RsDGwMbAxsDGwMbAxsDGwMbAxsDGwMbzwr9wCPOGwMbAxsDGwMb
-AxsDGwMbAxsDGwMbAxsD0CgDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAzUSxS0SxS0SxS0S
-xS0AEgASABIALQDFEgrWNSjFCsYjxhv9wQMbAxsDGwPGKAPHKAMoAygDKAMoAygDKAMoAygDKAMo
-AygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygDKAPWGwMbAxsDGwMbAxsDGwMbAyPDCvkmIyYjJiMmIyYj
-JiMmIyYjAxsDGwMbAxsDGwMbAxsDGwMSAxsDGwMbA84oAygDKAMoAygDKAMoAygDKAMoAygDKAMo
-AygDKAMoAwDEEi0AxBItAMQSLQDEEi0AIQAhACESwCHEABIK1ijGCsYmIyYjJiMmIxv9wAMbAxsD
-GwMbA84oAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKC0oAygDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoA9gbAxsD
-GwMbAxsDGwMbAxsmIyYjJgr5GyYbJhsmGyYbJhsmGyYbJhsDGwMbAxsDGwMbKBsDGwMbAxsDGwMb
-A8EoA8woAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAMQtEgDELRIAxC0SAMQtEiEAIQAh
-ABLAIcQSAArWKMYKxhsmGyYbJhsmG-gDG8QDGwMbAxsD0CgDKAMoAygDKAMoLSgDKAMoAygDKAMo
-AygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygD1hsDGwMbAxsDGwMbAxsDGwMbJhsmGwr5DxsPGw8bDxsP
-Gw8bDxsPGwMbAxsDGwMbAxsoGwMbAxsDGwMbAxsDGwPOKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMt3xItEi0SLRLHCtYoxgrADSzBCsAPGw8bDxsPG-3BAxsDGwMbAxsDzigDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMo
-AygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD2BsDGwMbAxsDGwMbAxsDGw8b
-DxsPCvkbzwMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD0CgDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygSwS0SxS0SxS0SxS0SwgASAC0AEgASAMESAMIK1ijGCg0UDcEsChv9yQMbAxsDGwPQKAMo
-AygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAM1AygDKAMoAygDKAPWGwMbAxsDGwMbAxsD
-GwMbAxvDCvkbzgMbAxsDGwMbAxsDGwMbAxsDGwMbA8EbA84oAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMoAwDAEi0AxBItAMQSLQDEEi0AwyESwAAhACHBABIhwgrWKMYKDcIUDQobyhIbzRIb
-6QMbAxsDGwMbA84oAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAyjB
-AygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-2BsDGwMbAxsDGwMbAxsDG8QK_RvPAxsDGwMbAxsDGwMbAxsDGwMbAxsDGwPFLQPIKAMoAygDKAMo
-AygDKAMoAygDKAMoAygDKAMoAygDKADALRIAxC0SAMQtEgDELRIAwiEAEsAhACEAIcASACHCCtYo
-xgrBFD8KwRv9xhIbwAMbAxsDGwPQKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMo
-AygDKAMoAygDKAPWGwMbAxsDGwMbAxsDGwMbAxvDCvkbzgMbAxsDGwMbAxsDGwMbAxsDGwMbAxsD
-GwPOKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMt3xItEi0SLRLHCtYoxgrBFD8KwRv9
-yAMbAxsDGwMbA84oAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKAMo
-wAPOKAPGGwMbAxsDGwMbAxsDGwMbxArpI84bAxsDGwMbAxsDGwMbAxsD1yjAAygDKAMowQMoAygD
-KN8SAxIDEgMSAxIDEgMSAxIDEgMSAxIDEgMSAxIDEgMSAxIDEgMSAxIDEsUtCtY1KMUjxhv3AxsD
-GwMbA8goAygDKAMoAygDKAMoAygDKAMoAygDKMc1KP3fAygDKAMoAygDKAMoAygDKAMoAygDKAMo
-A84bAxsDGwrpJiMmIyYjJiMmIyYjJiMmIwMbAxsDGwMbAxsDGwMbAxsD1igDKAMoAygDKAMoAygD
-KAMo3i0ALQAtAAMtwAAtAC0AAy3AAC0ALQADLcAALQAtAAMtwAAtAC0AAy0AxBItCtYoxiYjJiMm
-IyYjG8cSG_wDGwMbAxsDGwPGKAMoAygDKAMoAygDKAMoAygDKAMoAygDKP3pAygDKAMoAygDKAMo
-AygDKAMoAygDKAPQGwMbAwrpGyYbJhsmGyYbJhsmGyYbJhsDGwMSAxsDGwMbAxsDGwPYKAMoAygD
-KAMoAygDKAMo3wAtAC0ALcADAC0ALQAtwAMALQAtAC3AAwAtAC0ALcADAC0ALQAtwAMAxC0SCtYo
-xhsmGyYbJhsmG-cDGwMbAxsDyCgDKAMoAygDKAMoAygDKAMoAygDKAMo0jUo-dQDKAMoAygDKAMo
-AygDKAMoAyjANQMoAygDzhsDGwMbCukPGw8bDxsPGw8bDxsPGw8bAxsDGwMbAxsDGwMbAxsDGwPW
-KAMoAygDKAMoAygDKAMoAyjeAy0DLQMtAy0DLQMtAy0DLQMtAy0DLQMtAy0DLQMtAy0DLQMtAy0D
-LccK1ijGDxsPGw8bDxvcEhvYAxsDGwMbAxsDxigDKAMoAygDKAMoAygDKAMoAygDKAMoAyjQNSj9
-1gMoAygDKAMoAygDKAMoAygDNQMoAygD0BsDGwMK6RvPAxsDGwMbAxsDGwMbAxsDySgDzCgDKAMo
-AygDKAMoAygDKN8SAxIDEgMSAxIDEgMSAxIDEgMSAxIDEgMSAxIDEgMSAxIDEgMSAxIDEsEtEsIK
-1ijGG-3BAxsDGwMbA8gowQMoAygDKAMoAygDKAMoAygDKAMo-ekDKMEDKAMoAygDKAMoAygDKAMo
-AygDKAPLLQPAGwMbAxsK6RvOAxsDGwMbAxsDGwMbAxsDGwPIKMADyigDKAMoAygDKAMoAygDKAMo
-3i0AAy3AAC0ALQADLcAALQAtAAMtwAAtAC0AAy3AAC0ALQADLcAALQDBEi0AwgrWKMYb0wMb6AMb
-AxsDGwMbA8YoAyjBAygDKAMoAygDKAMoAygDKAMoAyj96QMowQMoAygDKAMoAygDKAMoAygDKAPQ
-GwMbAwrpG88DGwMbAxsDGwMbAxsDGwPYKAMoAygDKAMoAygDKAMo3wAtwAMALQAtAC3AAwAtAC0A
-LcADAC0ALQAtwAMALQAtAC3AAwAtAC0AwC0SAMIK1ijGG-3BAxsDGwMbA8goAygDKAMoAygDKAMo
-AygDKAMoAygDKP3pAygDKAMoAygDKAMoAygDKAMoAygDKAMoA84bAxsDGwrpG84DGwMbAxsDGwMb
-AxsDGwMbA9YoAygDKAMoAygDKAMoAygDKN4DLQMtAy0DLQMtAy0DLQMtAy0DLQMtAy0DLQMtAy0D
-LQMtAy0DLQMtxwrWKMYb-cADGwMbAxsDGwPFKMADKAMoAygDKAMoAygDKAMoAygDKAMoAyj9zzUo
-1wMoAygDKAMoAygDKAMoAygDKAMoAygD0BsDGwMK2SPOGwMbAxsDGwMbAxsDGwMbA9AoAygDKAMo
-AygDKAMoAygDKAMoAygDKNA1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1A94-Az8DPwM-
-AxIDEgMSAxIDCtYjxhveA8AbAxsDGwMbAxsDGwMbA9AoAygDKAMoAygDKAMoAyjYNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDXBKDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KNYDKAMoAygDKAMoAygDKAMoA8MK
-2SYjJiMmIyYjJiMmIyYjJiMDGwMbAxsDGwMbAxsDGwMbA84oAygDKAMoAygDKAMoAygDKAMoAygD
-KAMozjUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoLcQDwC3EA8AtxAPALcQDwC0oLSgt
-KAM-LQAtAC0AAy0K1iYjJiMmIyYjG94DGwMbAxsDGwMbAxsDGwMbAy0DzCgDKAMoAygDKAMoAygD
-KAMo1jUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo2AMoAygD
-KAMoAygDKAMoA8QK2RsmGyYbJhsmGyYbJhsmGyYbAxsDGwMbAxsDGwMbAxsD0CgDKAMoAygDKAMo
-AygDKAMoAygDKAMo0DUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUtxAPALcQDwC3EA8At
-xAPAPy3DA8AoLQAtAC3AAwrWGyYbJhsmGyYb3wMbAxsDGwMbAxsDGygbA9AoAygDKAMoAygDKAMo
-AyjYNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDXBKDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KNE1KMIDKAMo
-AygDKAMoAygDKAMoA8MK2Q8bDxsPGw8bDxsPGw8bDxsDGwMbAxsDGwMbAxsDGwMbA84oAygDKAMo
-AygDKAMoAygDKAMoAygDKAMozjUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoA98oA8Io
-PwMtAy0DLQMtCtYPGw8bDxsPG98DGwMbAxsDGwMbAxsDGwMbA84oAygDKAMoAygDKAMoAygDKNY1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1wSg1KDUoNSg1KDUoNSg1wSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSjYAygDKAMoAygDKAMo
-AygDxArZG88DGwMbAxsDGwMbAxsDGwPQKAMoAygDKAMoAygDKAMoAygDKAMoAyjQNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNQPePwPCKD8owAMSAxIDEgMK1hvnAxsDGwMbAxsDGwMbAxsD
-0CjBAygDKAMoAygDNQMo2DUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUowzUo0AMoAygDKAMoAygDKAMoAygDwwrZG84DGwMbAxsDGwMbAxsDGwMbA84oAygDKAMo
-AygDKAMoAygDKAMoAygDKAMozjUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoLcADwC3E
-A8AtxAPALcQDwC3DKAPAKC3APygAAy3AAC0ACtYb5gMbAxsDGwMbAxsDGwMbAxsDwygDyCgDNSjA
-AygDKAMoAzUDKAMo1jUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NcEoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSjDNSjSAygDKAMoAygDKAMoAygDxArZG88DGwMbAxsDGwMbAxsDGwPQKAMoAygDKAMoAygDKAMo
-AygDKAMoAyjQNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNS3AA8AtxAPALcQDwC3EA8At
-wj8tAyg-LcE-KC0DAC0ALQrWG_cDGwMbAxsDGy0bAxsDGwPQKAMoAygDKAMoAygDKAMo2DUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo1gMoAygDKAMoAygDKAMo
-AygDwwrZG84DGwMbAxsDGwMbAxsDGwMbA84oAygDKAMoAygDKAMoAygDKAMoAygDKAMozjUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoA98-Az8oPwM-KC0DLQMtAy0K1hvmAxsDGwMbAxsD
-GwMbAxsDGwPOKAMoAygDKAMoAygDKAMoAyjWNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KDUoNSjYAygDKAMoAygDKAMoAygDxArJI84bAxsDGwMbAxsDGwMbAxsD0CgD
-KAMoAygDKAMoAygDKNg1KDUoNSg1KDUoNSg1KDXfAzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUD
-NQM1AzUDNSg1KMA-KMA1AzUDNQM1CsED-qKIeQrEAxIKwSPGG90DG8YDKAMoAygDKAMoAygDKAMo
-AygDKAMoAyjINSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1-ekoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUozgMoAygDCskmIyYjJiMmIyYjJiMmIyYjAxsDGwMbAxsDGwMbAxsD
-GwPOKAMoAygDKAMoAygDKAMoAyjWNSg1KDUoNSg1KDUoNSg1KDXfLTUtNS01AzUtNS01LTUDNS01
-LTUtNQM1LTUtNS01AzUtNS01LSgDNS01LTUtNQMKwBIDEgMKwhIDEgMKwCYjJiMmIyYjG_T_uQA_
-GygDKAMoAygDKAMoAygDKAMoAygDKAMoAyjGNSg1KDUoNSg1wSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSg1KDUoNf3pKDUoNSg1KDUoNSg1KDUoNSg1KDUoNSjQAygDKArJGyYbJhsmGyYbJhsmGyYb
-JhsDGwMbAxsDGwMbAxsDGwPEKAPJKMA1AygDKAMoAygDKAMo2DUoNSg1KDUoNSg1KDUoNd8tNS01
-LTUDNS01LTUtNQM1LTUtNS01AzUtNS01LTUDNS01LTUtNQM1LTUtNS01AzUKwAP_ooh5wAMKwgMS
-wAMKwBsmGyYbJhsmG_YDKAMoAygDKAMoAygtKAMoAygDKAMoAyjINSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1-ekoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUozgMoAygDCskP
-Gw8bDxsPGw8bDxsPGw8bAxsDGwMbAxsDGwMbAxsDGwPOKAM1AygDKAMoAygDKAMoAyjWNSg1KDUo
-NSg1KDUoNSg1KDXfAzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUD
-NQMKLgMSAxLACsAuAxIDEsAKDxsPGw8bDxvnKAMoAygDKAMoAygDKAMoAygDKAMoAygDKMY1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNf3pKDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSjQAygDKArJG88DGwMbAxsDGwMbAxsDGwPQKAMoAygDKAMoAygDKAMo2DUoNSg1KDUoNSg1
-KDUoNd8DNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1AzUKAy7A
-Ay4DCsADLsADLgMKG_4DKAMoAygDKAMoAygDKAMoAygDKAMoAyjINSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1-ekoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoyzUowAMoAygD
-CskbzgMbAxsDGwMbAxsDGwMbAxsDzigDKAMoAygDKAMoAygDKAMo1jUoNSg1KDUoNSg1KDUoNSg1
-3y01AzUtNS01LTUDNS01LTUtNQM1LTUtNS01AzUtNS01LTUDNS01LTUtNQM1LTUtCsEDLgrEAy4K
-wRvoAxvDKAMoAygDKAMoAygDKAMoAygDKAMoAygDKMY1KDUoNSg1KDUoNSg1wSg1KDUoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1-ekoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KMs1KMIDKAMoCskbzwMbAxsD
-GwMbAxsDGwMbA8AtA80oAygDKAMoAygDKAMoAyjYNSg1KDUoNSg1KDUoNSg13y01AzUtNS01LTUD
-NS01LTUtNQM1LTUtNS01AzUtNS01LTUDNS01LTUtNQM1LTUtNQrBAy4KxAMuCsEb7gMoAygDKAMo
-AygDKAMoAygDKAMoAygDKMg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDX9
-6Sg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSjOAygDKAMKyRvOAxsDGwMbAxsDGwMbAxsDGwPOKAMo
-AygDKAMoAygDKAMoAyjWNSg1KDUoNSg1KDUoNSg1KDXfAzUDNQM1AzUDNQM1AzUDNQM1AzUDNQM1
-AzUDNQM1AzUDNQM1AzUDNQM1AzUDNQMKwQMuCsQDLgrBG_4oAygDKAMoAygDKAMoAygDKAMoAygD
-KAMoxjUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1-ekoNSg1KDUoNSg1
-KDUoNSg1KDUoNSg1KNADKAMoI8koNSg1KDUoNSg1KDUoNSg1A88oAygDKAMoAygDKAMoAyjQNSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDX94SPOG_41-f39zCg1KDUoNSg1KDUoNSg1KDUowyMmIyYjJiMm
-IyYjNSg1KDUoNSg1KDUoNSg1KAPOKAMoAygDKAMoAygDKAMoAyjONSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUoNf3gJiMmIyYjJiMmIyYjJiMmIxvuNf39-c0oNSg1KDUoNSg1KDUoNSjEJhsmGyYbJhsm
-GyYoNSg1KDUoNSg1KDUoNSg1A88oAygDKAMoAygDKAMoAyjQNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDX94RsmGyYbJhsmGyYbJhsmGyYb7jX9-f3MKDUoNSg1KDUoNSg1KDUoNSjDGw8bDxsPGw8bDxs1
-KDUoNSg1KDUoNSg1KDUoA84oAygDKAMoAygDKAMoAygDKM41KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSg1-eAPGw8bDxsPGw8bDxsPGw8b7zX9-f3NKDUoNSg1KDUoNSg1KDUoxBvJKDUoNSg1KDUoNSg1
-KDUoNQPPKAMoAygDKAMoAygDNQMo0DUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1-eEb-cA1-f39zCg1
-KDUoNSg1KDUoNSg1KDUowxvJNSg1KDUoNSg1KDUoNSg1KAPOKAMoAygDKAMoAygDNSjAAyjONSg1
-KDUoNSg1KDUoNSg1KDUoNSg1KDUoNf3gG-3ANf39-c0oNSg1KDUoNSg1KDUoNSjEG8koNSg1KDUo
-NSg1KDUoNSg1A88oAygDKAMoAygDKAMoAyjQNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDX94Rv9wDX9
--f3MKDUoNSg1KDUoNSg1KDUoNSjDG8k1KDUoNSg1KDUoNSg1KDUoA84oAygDKAMoAygDKAMoAygD
-KM41KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1-eAb-cA1-f39zSg1KDUoNSg1KDUoNSg1KMQ1KDUo
-NSg1KDUoNc8DKAMoAygDKAMoAygDKAMo0DUoNSg1KDUoNSg1KDUoNf35KDUoNSg1KDUoNSg1KDUo
-NSPeG841-f393Cg1KDUowDUoNSg1KDUoNSg1zigDKAMoAygDKAMoAygDKAMozjUoNSg1KDUoNSg1
-KDUoNSg1-fkoNSg1KDUoNSg1KDUoNSgmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIyYjJiMmIxvO
-Nf39-d0oNSg1wCg1KDUoNSg1KDXPAygDKAMoAygDKAMoAygDKNA1KDUoNSg1KDUoNSg1KDX9_Sg1
-KDUoNSg1KDUoNSg1KDUbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhsmGyYbJhvONf39-dwoNSg1
-KMA1KDUoNSg1KDUoNc4oAygDKAMoAygDKAMoAygDKM41KDUoNSg1KDUoNSg1KDUoNf35KDUoNSg1
-KDUoNSg1KDUoDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxsPGw8bDxvPNf39-d0oNSg1wCg1KDUo
-NSg1KDXPAygDKAMoAygDKAMoAygDKNA1KDUoNSg1KDUoNSg1KDX9_Sg1KDUoNSg1KDUoNSg1KDUb
-7jX9-f3cKDUoNSjANSg1KDUoNSg1KDXOKAMoAygDKAMoAygDKAMoAyjONSg1KDUoNSg1KDUoNSg1
-KDX9_Sg1KDUoNSg1KDUoNSg1KBvuNf39-d0oNSg1wCg1KDUoNSg1KDXPAygDKAMoAygDKAMoAygD
-KNA1KDUoNSg1KDUoNSg1KDX9_Sg1KDUoNSg1KDUoNSg1KDUb7jX9-f3cKDUoNSjANcEoNSg1KDUo
-Nc4oAygDKAMoAygDKAMoAygDKM41KDUoNSg1KDUoNSg1KDUoNf35KDUoNSg1KDUoNSg1KDUoG_41
--f393Sg1KDXaKM81KDUoNSg1KDUoNSg1KDX9-dsoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSPONf39-fwozjUoNSg1KDUoNSg1KDUoNSg1-f3bKDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNSg1KCYjJiMmIyYjJiMmIyYjJiM1-f39-CjPNSg1KDUoNSg1KDUoNSg1-f3bKDUoNSg1KDUo
-NSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUbJhsmGyYbJhsmGyYbJhsmNf39-fwozjUoNSg1KDUoNSg1
-KDUoNSg1-f3bKDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KA8bDxsPGw8bDxsPGw8bDxs1
--f39-CjPNSg1KDUoNSg1KDUoNSg1-f3bKDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUb
-zjX9-f38KM41KDUoNSg1KDUoNSg1KDUoNf392yg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSgbzjX9-f38KM81KDUoNSg1KDUoNSg1KDX9-dsoNSg1KDUoNSg1KDUoNSg1KDUoNSg1KDUoNSg1
-KDUoNRvONf39-fwoxTUoxjUoNSg1KDUoNSg1KDUoNSg1-f3bKDUoNSg1KDUoNSg1KDUoNSg1KDUo
-NSg1KDUoNSg1KBvONf39-fwoNSg1KDUoNSg1KDUoNSg1-f3bAygDKAMoAyg15ig1KDUoNSg1KDUo
-NSg1KDX9-f39wCg1KDUoNSg1KDUoNSg1KDX9-dooAygDKAMoAzXnKDUoNSg1KDUoNSg1KDUoNf39
--fwoNSg1KDUoNSg1KDUoNSg1-f3bAygDKAMoAyg15ig1KDUoNSg1KDUoNSg1KDX9-f39wCg1KDUo
-NSg1KDUoNSg1KDX9-dooAygDKAMoAzXnKDUoNSg1KDUoNSg1KDUoNf39-fwoNSg1KDUoNSg1KDUo
-NSg1-f3bAygDKAMoAyg15ig1KDUoNSg1KDXBKDUoNf39-f3AKDUoNSg1KDUoNSg1KDUoNf392igD
-KAMoAygDNecoNSg1KDUoNSg1wSg1KDX9-f38KDUoNSg1KDUoNSg1KDUoNf392wMoAygDKAMoNeYo
-NSg1KDUoNSg1KDUoNSg1-f39-cAoNSg1KDUoNSg1KDUoNSg1-f3aKAMoAygDKAM15yg1KDUoNSg1
-KDUoNSg1KDX9-f394T-ANdA-wDXBP8A1-eoozjX9-f39-dQ-OTXOPzU5PzU-NTk-Nf3pKM41-f39
--f3UPzk1wD-ANcE-wTXFOTU-OT85P8A5Nf3oKM41-f39-f3UPzk1wTk-NT81OT85NcU-NTk-wDU-
-OTX96CjONf39-f391D85NcA-wTk-OTU-OTXEPzU5NT85wD85Nf3oKM41-f39-f3UPzk1PzU5Pzk1
-P8E5NcM-NTk1wD85NT85Nf3oKM41-f39-f3UP8A1wD-BOTXAOT85NcM-wjXAP8A1OTX96CjONf39
--f391TnANcA5wTU-wDU5NcQ5wjXAOcA1-ekozjX9-f39-d45wDXGP8A1wT-ANf3pKDUoNSg1KDUo
-NSg1KDUoNSjGNf39-f393z81OT81PzU5PzX96Sg1KDUoNSg1KDUoNSg1KMc1-f39-f3MP8A1wD81
-wD81wD-BNcU5NT85Pzk1Pzk-NcA-Nf3jKDUoNSg1KDUoNSg1KDUoNSjANcAowjX9-f39-c05PzU-
-OTU-OT81OT85NcQ-wDU5NT-ANTk1OT81OTX94yg1KDUoNSg1KDUoNSg1KME1KMM1-f39-f3MP8E5
-Pzk1Pzk-OTU-OTXFOT81PzU5PzXAPzU5Nf3jKDUoNSg1KDUoNSg1KDUoNSjGNf39-f39yz81OT85
-Pzk-NTk1P8E5NcM-NcA-OT85NT85PzU5PzX95Cg1KDUoNSg1KDUoNSg1KMc1-f39-f3MP8E5P8A1
-OTXBOT85NcQ-wDU5NT-ANTk1OTXAOTX94ig1KDUoNSg1KDUoNSg1KDUoxjX9-f39-c05wTU5wDXB
-P8A1OTXFOcA1wTnANf3pKDUoNSg1KDUoNSg1KDUoxzX9-f39-dc5wDXGP8A1wT-ANf34KDUoNSg1
-KDUoNSg1KDUoNf39-f392T81OT81PzU5PzX9_Cg1KDUoNSg1KDUoNSg1KDX9-f39-cM-wDU-NcE-
-wDXAPzXAPzXFOTU-OT85NT85PzXAPzX98ig1wSg1KDUoNSg1KDUoNf39-f39xD85PzU-NcE5PzU-
-OTU-OTXEP8A1OTU-wDU5NTk-NTk1-fIoNSg1KDUoNSg1KDUoNSg1-f39-f3DPzk-OT85NT-BOTU-
-wDU5NcU5PzU-NTk-NcA-NTk1-fIoNSg1KDUoNSg1KDUoNSg1-f39-f3EPzk1OT85PzU5Pzk-NTk-
-NcQ-NcA-OT85NT85PzU5PzX98yg1KDUoNSg1KDUoNSg1KDX9-f39ww36NcA-OTXAPzk1P8E5Pzk1
-Pzk1xD-ANTk1P8A1OTU5NcA5Nf3xKDUoNSg1wSg1KDUoNSg1-f39-f3FOTXBOTXAOcE1OTXAOTXF
-OcA1wTnANf34KDUoNSg1KDUoNSg1KDUoNf39-f3DKPo11T-ANcE-wDXaPzXWPzXHP8A1wT-ANcU-
-wDXKPzXHP8A1wz81xD-DNcA-wDXAP8E1xz-ANdE-NcQ-NdI-Ncc-wDX9-f391z81OT81PzU5PzXL
-PzXCPzXGPzk11T85NcU-NTnANT81OT81wz81OT81yT85Ncc-OTXCPzk1xDk-OcE-NTk-NT85wD81
-xT81OcA10D85NcM-OTXSOTXFPzU5wDX9-f39wz-BNT81wD81PzU-wDXFOTU-OT85NT85PzXAPzXG
-Pzk1wT85NcQ-wjXAP8A1wD81P8A1wD-BNcA-wDXAP8I1xD85NcE-OT-AOTXCPzk-wDk1yD-BNcE-
-wDXBPzk1wD-BOTXFPzk1wD85NT85Pzk1Pzk1xD85NcE-wDXAPzU-wDXFP8E5NT-ANcA-wTXAPzXA
-PzXAP8E1xD-ANcA-wTXBPzk1wT-ANf39-f0-NTnBPzk1Pzk-wDU5wDXEP8A1OTU-wTk1OT81OTXE
-PzU5NcA-NTk1xT85wTXAOT81P8A1OcA-NTk-OT81OT81wD85wTXDP8E1wD-ANT85NcI-wDU-OTXI
-PznAPzU-NTk-NcA-OTU-NTk-OTXFPzk1wD-COT-BNTk1wz-CNT81OT81P8A1OcA1wz81OT85PzU5
-PzU-OcA-NT85NT85PzU5Pzk1xD85NT85wD81P8I1PzU5PzX9-fw-_jXAPzk1wT85NT85PznANcc5
-PzXBOT85NT81OTXFPzk1wT85NcY-OTXBP8E5PznANcA-OTU-OT-COTU-OTXFPznAPzU-OcA-OTXC
-PznAPzk1yD85NT85Pzk1Pzk1Pzk1Pzk1Pzk1xT85NcA-OcA-OT85wD81xT85wT85NT85PznANcU-
-OTU-OT-COT85NT85Pzk1Pzk-OTU-OTXEPzk1Pzk1Pzk1PznBPzk1Pzk1-f39_z85NcE-OTU-OT85
-NcY-NcA-OTXBPzk-NTk-NcQ-NTk1wD81OTXGPzk1wD81OT85Pzk1wj-BOT85wjU-OTXFPzk1Pzk-
-OTU-OTXCPzk1Pzk1yD85NT85Pzk1Pzk1Pzk1Pzk1Pzk1xT85NcA-OTU-OT85NT85NcQ-OTXAPzk1
-Pzk-OTXGPzk1Pzk-OcI-OTU-OT85NT85NT-BOTXEPzk1Pzk1Pzk1Pzk1wD85NT85Nf39-fw-wTXA
-P8E5Pzk1xz-ANTk1P8A1OTU5NcA5NcM-OTXBPzk1yD-ANcA-wTk-OTXDOT85NT-BNcE-wDXFP8A1
-OTU-wDU5NT81wT-ANTk1yD85NT85NT-ANTk1P8A1wD-BOTXFPzk1wD85NT85P8E1OTXEPzk1wT-A
-NTk-OTXHP8E5NT-BNT-BNTk1P8E5NcA5Pzk1wz-BNT85NT85NT85NcE-wDU5Nf39-f05wTXAOcE1
-OTXIOcA1wTnANco5NcI5Nck5wDXAOcE1OTXCP8A1OTXAOcE1wTnANcU5wDXBOcA1wTk1wTnANco5
-NcA5NcA5wDXBOcA1wDnBNcY5NcE5NcA5NTnBNcY5NcI5wDXAOTXIOcE1wDnBNTnBNcE5wTU-wDU5
-NcQ5wTU5NcA5NcA5NcI5wDX9-fwAAAAAAAAAAQ==
-:: lightmap_data.lua
---[[pod_format="raw",created="2025-06-17 17:31:54",modified="2025-06-17 19:42:10",revision=63]]
-
-include "logging.lua"
-
-local COLOR_PAIRS = {
-	0x0000, 0x0021, 0x2121, 0x2122, 0x2222, 0x2223, 0x2323
-}
-
-
-function make_dither_pattenrs()
-	fillp(0b0101101001011010)
-	local base_offset = #COLOR_PAIRS
-	local out_tiles = {}
-	for i,v in pairs(COLOR_PAIRS) do
-		local target_sprite = userdata("u8",8,8)
-		set_draw_target(target_sprite)
-		rectfill(0,0,7,7,v)
-		out_tiles[#out_tiles+1] = target_sprite
-	end
-	set_draw_target()
-	return out_tiles
-end
-
-function generate_lightmap(tile_table)
-	-- ordered as tables of torch light per sky light
-	-- will then be stuffed into a buffer where sky * torch = final
-	local lightmap_data = {
-		{
-			-- Global shadow 0, noon
-			{0,0,0,0,0,0,0},
-			{0,1,1,1,1,1,1},
-			{0,1,2,2,2,2,2},
-			{0,1,2,3,3,3,3},
-			{0,1,2,3,4,4,4},
-			{0,1,2,3,4,5,5},
-			{0,1,2,3,4,5,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{1,2,2,2,2,2,2},
-			{1,2,3,3,3,3,3},
-			{1,2,3,4,4,4,4},
-			{1,2,3,4,5,5,5},
-			{1,2,3,4,5,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{2,3,3,3,3,3,3},
-			{2,3,4,4,4,4,4},
-			{2,3,4,5,5,5,5},
-			{2,3,4,5,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{3,4,4,4,4,4,4},
-			{3,4,5,5,5,5,5},
-			{3,4,5,6,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{4,4,4,4,4,4,4},
-			{4,5,5,5,5,5,5},
-			{4,5,6,6,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{4,4,4,4,4,4,4},
-			{5,5,5,5,5,5,5},
-			{5,6,6,6,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{4,4,4,4,4,4,4},
-			{5,5,5,5,5,5,5},
-			{6,6,6,6,6,6,6},
-			-- Global shadow 6, night
-		},
-	}
-	
-	for time_table in all(lightmap_data) do
-		for torch_light_table in all(time_table) do
-			for i,v in pairs(torch_light_table) do
-				-- clobber values in lightmap_data using input table of tiles
-				local tile_index = v+1
-				torch_light_table[i] = tile_table[tile_index]
-			end
-		end
-	end
-	
-	return lightmap_data
-end
-
-
-local DITHER_TILES = make_dither_pattenrs()
-local LIGHTMAP_CUBE = generate_lightmap(DITHER_TILES)
-
-function set_lightmap(cube_idx)
-	local sane_cube_idx = mid(1,#LIGHTMAP_CUBE,cube_idx)
-	local time_table = LIGHTMAP_CUBE[sane_cube_idx]
-	-- Write tiles to memory!
-	for sky_light_idx, torch_light_table in pairs(time_table) do
-		local sky_light_offset = sky_light_idx-1
-		local row_str = ''
-		for torch_light_idx, light_tile_ref in pairs(torch_light_table) do
-			-- "it's writing time" and then he wrote all over the place
-			local torch_light_offset = torch_light_idx-1
-			local spr_num = 512-(torch_light_offset+(7*sky_light_offset))
-			
-			set_spr(spr_num,light_tile_ref)
-			row_str = row_str .. sky_light_offset .. "/" ..torch_light_offset .. ' ->' .. spr_num  .. ", "
-		end
-		dbg(row_str)
-	end
-end
-
-
-local TIME_OFFSET = 0
-function debug_light()
-	if keyp("y") then TIME_OFFSET += 1 end
-	if keyp("h") then TIME_OFFSET -= 1 end
-	if keyp("y") or keyp("h") then set_lightmap(TIME_OFFSET) end
-end
+b64$cW9pZgAAAeAAAAEOBAH_dC8p0-5FLTLAG8oDwBveA8Ab-dL_HStT4v4AAAAo2f4prf-mG9AD
+G8MK-f3CG8oDG8MowRvNKBvDA8AbwygbyyjGG-7-8ejBG8E-G8s-AxvKAxvIP8AbwT8b0AMbwv65
+AD4b0T-BG8c-G88-wBvHP8Abxj-AG8MoyD8oyz8owD-CKME-KMA1P8AowT-AKMA-wijAP8AowT-A
+KME-wArBP8AKxT-ACtcb1gr9-cIbywMbwigbwCgbzCgbwwMb0ij_-wBNxRs--hJTWcA-G8E5G8o-
+ORvUPxs5PxvAPzkb6T85wBvGPzkbzT8bOT8bxT8bOT8bwQMbwD8bOT8bwijIPzkoxDUowj-AOSjA
+OcA-OSg-wDkoPyg5Pyg-KDk-KD85wj8oOT8oPyg5Pyg-KDnACj8KOT8Kwz8KOT8K1hvDAxvCAxvL
+Cv39whvQKBvAKBvAKMAbwCjBG8EowRvAKMAbwCgbKMAbKMAbwCjBG8EowRvAKA3FGz85Gz85P8Ab
+wT-BG8A-wBvAP8IbPxs-wBvAP8AbwD-BG8U-ORvAOT-CG8A-wBvAPxs-wBvAP8EbwD-AG8A-whvA
+P8AbwD8bP8AbxT85Gz-BG8E-wTkbP8AbwD8bwD8bxD85P8A5PxvBPxs-OT-AORsDG8E-ORvAORs-
+wCjBP8AowT-BOSjENcAowj85KMI-OT8oPzkoPzkoPzk-OT-AOT85KMI5KD85KDkoPzk-OQrCOQo-
+OQrCPzk-wDkK1RvCA8AbwwMbygr9-cIb0CjBG8AoG8AoGygbwCgbKBvAKBsoG8AoGyjAG8IoG8Ao
+G8AoGygbwCgbwCgNxRs-wRs5Gz85Gz8bOcE-Gzk-G8A-OcE-wBs5wD8bOT8bPznAPxvFP8AbwT85
+wRvAOT8bP8AbOcA-Gzk-ORvAOT8bwDnAPzk-Gzk-Gz-AGznAG8Q-ORs-OcA-Gz8bOT85Pxs5Pxs-
+ORs-ORvDP8AbPzk-ORvAPzk-wBs-ORvEP8AbwD8bOT8oPyg5Pyg-KDk-OSg-KMg-OSjBPyg5Pzk-
+OSjAP8E5P8AoPzk-wSjCPyg5KMA-KDk-wQrBP8AKOQrCP8AKPzkK1RvUEhsK-f3CG9AoG8AoGyjC
+GygbwCgbKBvAKBsowhsoG8MoG8AoG8AoGygbwCgbwCgNxRs-OcEbwD85Gz85G8E-ORs-ORs-ORvA
+PznAG8A-ORs-OT85Gz85G8U5PxvAPzkbwT-BOT85wBvAPzkbPzkbP8E5Gz-AGzk-wjk-OcAbxj85
+Gz85Gz85PzkbPzk-wjk-ORs-ORvDPznAPzk-OT8bPzk-OcA-ORvFOT8bP8I5P8I5PzkoPzkowDko
+xz85KMA-KDkoP8IowTk-OT85wD85KDnAPyjAPyg5KMA-KDkoPznAPwrBOT8Kwz85wD85CtUb1gr9
+-cIb0CgbwCgbKBvCKBvAKBsoG8AoGygDG8EoG8MoG8AoG8AoG8AowRvAKA3FCj85CsI-OQo-OQrB
+PzkKPzkKPzkKwD85CsE-OQo-OT85Cj85CsM-CsA-OQo-OQrAPwo5Pzk-OQrCP8E5Pwo5Pzk-CjnA
+Cj85wj85Csc-OQo-OQo-OT85Cj85PznCPzk-CjkKwz85Cj85Pzk-OT85PzkKPzkKwz8KwD85PznC
+PznCPzkoPzkoPyjIPzkowD85KME5PznAKME-OT85KD85KME-OT8oOSjAPyg5KMA-OQo-OT8KwD85
+CsI-OQo-OQr9-fEb0CgbwCgbwCjBGygbwCgbwCjBG8AowRsoG8IowRsoG8AoG8IoG8AoDcUKPzkK
+wT-BCsA-wQrAP8AKOQrAP8AKPzkKwj-ACjk-OQo-OQrEP8AKOQrAP8AKwD-BOT85CsM5PzkKP8E5
+P8IKwD-BCj85CsY-wQo-OQo-OQo-wTkKP8EKP8AKOQrFP8AKOQo-Cj8KOQo-wAo5CsQ-wAo5Cj-B
+KMA-wTUoP8E5KMA5KMY-wSjAPzkowj85KMA-wCg5KD-AKDk-wSg5P8IoP8IowD-ACjkKP8AKOQo-
+CsE-wAo5Cv398Rv4KMAbwSgNxQrAOQrCOcEKwDnBCsA5wArCOcAKOQrDOcAKwDkKwDkKxTnACsI5
+wArAOcEKOQrCP8AKOQrAOcEKOcIKwDnBCjkKxznBCjkKwDkKwDnBCsA5wQo5wArHOcAKwTkKOQrB
+OcAKxjnACsE5wSjAOcEowDnBKMo5wSjAOSjDOSjBOcAowTnAKMA5wSjAOcIoOcIowDnACsE5wArB
+OQrBOcAK-f3yG8MDG88oG8EoG8AowBvFKMIbxSjAG8EowBvEKA3FCv3DOcAK-dQo-cAK-f39xBvV
+KBvBKBsoG8AoG8QoG8coG8AoGygbwCgbwygNxQr9-dso-cAK-f39xBvVKBvBKBsoG8IowRvAKBvK
+KBvCKBsoG8AowA3FCv392yjANSj7Cv39-cQb1SgbKBsoGygbwigbwCgbKMEbxygbwigbwigbKA3F
+Cj-BCsU-CsI-wArBPwrkPwrRPwrGP8AKxT8KyD8KwD-ACsM-CsA-Csc-wArNPwrBKMM-wCjFNSjE
+Pyg-KMw-KMg-KMwKzz8KPwrUPwo-CtE-Css-CtY-CsI-wArPPwrIPwrzGxIb0ygbKBsoGygbwigb
+wCgbKBvIKBvCKBvCKBvAKA3FCj85wD8KxD85CsI-OQrBOQrkOQrQPzkKxj85CsQ-OQrIOQrAPzkK
+wj85Cj85CsU-Cjk-Csw-OQrAKMI-KDnAKMs-OT85KMs-OSjHPzkowzUoxQrPPzk-OQrTPzk-OQrQ
+PzkKyj85CtU-OQrCPzkKzj85Csc-OQryG9UowBsowBsoG8AoGyjBG8AoG8coG8IoG8IoG8AowA3F
+Cj85Cj85PwrAPwo-wQrBPzkKP8AKwT-BCsU-wArAPwrAPwo-wQrBP8AKwD8KP8AKP8AKwD-ACj8K
+wT-ACsA-wQrAP8IKwD-ACsAoPzkoxD-BKMA-KMA-KD-AKME-OSjAP8E5KD85KMU-OSjAOSg-wCjA
+P8EowT-BOSjEPzkowT-AKME-wCjBP8E5P8EowT-AKME-wSg-OSg-KMQ-wijAP8Aoxj-BG8A-wBvA
+Pxs-wBvAP8E5P8EbwT-AG8E-wBvAPxs-wBvAP8E5P8EbwT-AG8A-G8A-G8M-whvAP8AbwT-BGz-B
+G8Y-wBvAP8EbxT-BG8E-ORs-G8A-G8A-wBvBP8EbPzkKPwo-CsA-CsA-OQriG84K1SjnDcUKP8EK
+OT85Cj85PznAPwrAPzkKwD85Cj8KOcEKwz8KOT8KPzkKPzk-OcA-Cj8KOT8KP8AKOcAKPzkKPzk-
+Cj8KPwo5Pwo-OcA-CsA-OcEKwDk-Cig-OSjEPznAPyg-OSg-OSg-OTUoPzkoPyg5PzkoPzkoxj-A
+KMA-KDk-KD85wD8oPyg5Pzkowz-CKD8oOT8oPyg5Pyg-KDk-OT85wD8owTk-KD8oOcE-OT8oOSjE
+PznBPyg5PyjEPxs5wRvAOT8bP8AbOcA-Gzk-OT85wD8bPxs5PxvBOT8bP8AbOcA-Gzk-OT85wD8b
+Pxs5Pxs-ORs-ORvDPznBPxs5Pxs-GznBPznAPxvEPxs5Pxs-OcA-G8Q-OcA-G8A-ORs-ORs-OT8b
+OT8bPxs5wT85Pwo5PzkKPzkKPzkK4hvOCtYo5g3FCj85wQo-OQo-OT85Cj85Cj85CsA-OQo-OQrG
+P8I5Cj-ACjk-OQo-OT-COT85wArBPzkKPzk-OT85P8I5PzkKPzkKPzkKwT-BOSg-OSjEPzkoPzk-
+OSg-OSg-OSjAPzkoPzkoPzkoPzkoxzk-KD-COT85KD85PzkoPzkoxD85wT-COT-COT85KD85Pzko
+PzkoP8E5PzkowT-AKDkoxT85KMA-OSg-OSjDPzkbwj-BOT85wBvAPzkbPzk-ORs-OT85Gz85Gz-B
+OT85wBvAPzkbPzk-ORs-OT85Gz85Gz-AGzkbwz85G8A-wjk-ORvBPzkbPzkbwz85Gz85PzkbPzkb
+EhvBPzkbPzkDPzkbPzkbPzk-wjkbP8AbwD-ACjkKPzkKPzkKPzkK4hvIA8AbwgrWKOYNxQo-OQrB
+PzkKPzk-OQo-OQo-OQrAPzkKPzkKxj85wj8KOT8KP8EKOT85wj85CsI-OQo-OQo5Pzk-OcI-OQo-
+OQo-OQrAPwo5PzkoPzkoxD85KD85PzkoPzkoPzkowD85KD85KD85KMA5KMU-KMA-OT85wj85KD85
+PzkoPzkoxD85KMA-OcI-OcI-OSg-OT85KD85Pyg5Pzk-OSjBPzk-KMY-OSjAPzkoPzkowz85G8E-
+Gzk-OT85G8E-ORs-OT85Gz85PzkbPzk-Gzk-OT85G8E-ORs-OT85Gz85PzkbPzk-Gzk-G8Q-ORvA
+PznCPzkbwT85Gz85G8M-ORs-OT85Gz85G8M-ORs-ORs-ORs-ORs-OT85whvAOT8bPzk-CsE-wTkK
+wDkK4hvIAxvDCtYo5g3FCj85CsI-wTk-wQo5Cj-ACj-BCsA-wQrFP8EKPzkKPzk-OcEKwD-BCj85
+CsE-wQo-OQrAPzkKP8EKPzkKPzkKwD-ACsA-wTkoP8AoxD-BKDkoP8E5P8EowD-AKMA-wTkoPyjH
+P8AoOSg-wSg-OSg-OSg-wTkoxD85KME-wSjAP8EowD-BOT-BKDkoP8E5KD-BKD85KD81KMU-wCjA
+P8AoOTUowz-BG8A-wTk-ORvCP8E5P8EbORs-wBs5Gz-BOT85G8I-wTk-wRs5Gz-AGzk-ORs-ORs-
+G8I-wBvAP8EbwD-BGz85Gz85G8Q-wBs5PzkbPzkbwz-BGzkbP8AbwD-BORs-wRs-wRs5PzkKPwrB
+OT85Cj8K4xvOCtYowzUo4A3FCsA5CsM5wQo5wQrBOcAKOcEKwDnBCsU5wQo5CsA5PzkKwznBCjkK
+wjnBCjkKwTkKwDnBCjkKwDkKwTnACsA5wSjAOcAoxDnBKME5wSg5wSjAOcAowDnBKMA5KMc5wCjB
+OcEoOSjAOSjAOcEoxTkowjnBKMA5wSjAOcEoOcEowTnBKMA5wSg5KMA5KMY5wCjAOcAoNcAowhs5
+wRvAOcEbORvDOcEbOcEbwTnAG8E5wRs5G8M5wRs5wRvBOcAbwDkbwDkbwDkbwjnAG8A5wRvAOcEb
+ORvAORvFOcAbwDkbwDkbxDnBG8E5wBvAOcEbwDnBGznBG8A5CsA5Cj-ACjkKwDkK4hvOCtYowjUo
+4Q3FCus5Cuko-dk1KOQb-f3CCsQ5wArmG84K1ijmDcUK-dko-f3CG-39wgruG84K1ijNNSjWDcUK
+-dko-f3CG-39wgrmG9YKzijmNSjMCj8KwD8KxD-ACsM-CsQ-CsA-CsY-wArOPwrHP8AKxj8Kyyj9
+3jUo3xv9-cIK5hvWCs4o7v7kDavFCj85Cj85CsQ-OQrCPzkKwz85Cj85CsQ-CjnACs0-OQrHPzkK
+xT85Csoo-cM1KMU1KPIb-eMSG9YDG8EK5hvWCs4o4zUoyA-FCj85Cj85Cj-ACsE-OQrAP8E5CsM-
+OQo-OQrEPzkKwT-ACsA-Cj-ACsQ-wQrBP8AKwT85Cj-BCsE-OQrKKP39whvzEhv9xwMbwArmG9YK
+zijYNSjTD8UKP8I5Pwo5PwrAPzkKPwo5PzkKwz-COQrDP8IKPwo5Pwo-wAo5wArDPznAPwo-Cjk-
+CsA-OQo-OcA-CsA-OQrKKNg1KP3fNSjDG-3VAxvFAxvgCuYbwAMbxQMbywrOKO4PxQo-OcA-OT85
+Cj85Cj85Cj85Cj85CsM-OcA-OQrEPznBPzkKPzk-OcAKxT85Cj85P8I5Cj85Cj85Cj85Cj85Csoo
+2DXAKPw1KN41KMIb-dQDwBvEA8Ab4ArmG8EDG8UDG8oKzijuD8UKPzkKPzk-OQo-OQo-OQo-OQo-
+OQrDPzkKPzkKxD85CsA-OQo-OT85CsY-OQo-OT85wgo-OQo-wQo5CsA5Csoo-f3CG-39wgrmG9YK
+zijuD8UKPzkKPzkKP8AKOQo-wArAP8E5CsM-OQo-OQrEPzkKwT-ACjk-OQrGPzkKPzkKP8EKwD-A
+Cj85wQrAPwrLKP39whvmAxv91wrmG8oowRvHCsQoCsco9QrAOQrAOQrAOcAKwTnACsA5wQrEOQrA
+OQrFOQrCOcAKwDkKxzkKwDkKwDnBCsA5wD85CsM5Csoo-f3CAxv9zwMb7QrmG8ooG8AoG8YKwijB
+CigKxSj1Cv3GOQrQKP39whvvEhv9zgrmG8ooG8AoG8AowBvAKMEKwCjCCijBCsAoCijv-mTf9sUK
+-dko_TUo9jUoyRv9-cIK5hvKKMH_AOQ2wCgjwCgjKCPAKCMoI8AoCijCCijACijLNSjgNsUK-dko
+_DUo_DUoyBv9-cIK5hvKKBvAKCMowiMoI8AoIygjwCgKKMIKKArAKMs1KOA2xQrFP8AKwT-ACss-
+wArAPwrAPwrPP8AKwD8KzT-ACsA-CsA-Cscoxj-AKME-wCjLP8AowT-AKP3dG9sDG8UDG-3aCuYb
+yAMbKBvAKCMoI8IoI8AoIygjwCgKKArAKAooCsAo7jbFCsQ-Cjk-Cj8KOT8KyT8KOT8KPzkKPzkK
+zT8KOT8KPzkKyz8KOT8KPzkKPzkKxijFPyg5Pyg-KDk-KMk-KDk-KD8oOT8o-dwb2gMbxQMbxBIb
+xwMb-coK5hvJAygbwCgjwCjBIygjwCgjKMIKKMIKKArAKO42xQrEPzkKwDk-OQrAOQrIPzkKPzk-
+OT8KOQrNPzkKwDk-OQrLPzkKPzk-OT8KOQrGKMU-OSjAOT85KMA5KMg-OSg-OT85P8A5KP3bG-39
+wgrmG83_ALJRwCPCJsIjwSjAJgooCsAoCsAo8DbFCsQ-OQrCP8AKwT8Kxj85Cj85P8AKOQrOPzkK
+wT85CsI-CsY-OQo-OT-ACjkKxyjFPzkowT85KMI-KMc-wCg5P8AoPzko-dsb-eADG8wDG84K5hvN
+JsAjwibCI8ImwArHKO42xQrEPzkKwzk-CsE5CsU-OQo-OT85PwrPPzkKwT85CsM5CsU-OQo-OT85
+PwrIKMU-OSjBPzkowzkoxT8oOT8oPznAPzko2RvWKOYb-cADG-0K5hvNJs4KKPY2xQrEPzkKPwo-
+CsA-OQo-CsY-OQo-OT85Cj8Kzj85Cj8KPzkKwj8Kxj85Cj85PzkKPwrHKMU-OSg-KD85KD8owD8o
+xj85KD85PzkoPzko2RvWKOYb-f3CCuYbzSbOCij2NsUKxT-ACjkKP8AKOQrAOQrGP8AKOT85Cj85
+Cs4-wAo5P8IKwTkKxj-ACjk-OQo-OQrGKMY-wCg5KD-AKDkowDkoxj-AKDkoP8AoOSjZG9Yo0jUo
+0RvyAxvFAxv9EhvBCuYbzSbOCij2NsUKxjnACsE5wArLOcAKwDkKwDkKzznACsA5wgrKOcAKwDkK
+wDkKxijHOcAowTnAKMs5wCjBOcAo2hvWKNM1KNAb8wMbxQMb-cIK5hvNJs4KKPA1KMM2xQr92SjY
+NSjjG9Yo5hv9-cIK5hvPJsIbwibCG8AKKPY2xQr92SjZNSjiG9Yo5hv9-cIK5hvPJsIbwibCG8AK
+KPY2xQr92Sj9wBvWKOYb-f3CCuYb3Qoo9jbFCv3ZKMU1KO01KMYb1ijmG-39wgrmG90KKPY2xQr9
+2Sj9wBveKN4b-dADG_0K5hvdKPc2xQr92Sj9wBveKN4b-f3CCuYb3Sj3NsUK-dko0DXAKM01KM81
+KMgb3ijeG-39wgrmG9Yo-cA2xQr92SjQNSjNNSjbG94o3hvgEhv93QrmG9Yo-cA2xQr92Sj9wBve
+KN4b-f3CCuYb1ij9wDbFCv3ZKP3AG94o3hv9-cIK5hvWKP3ANsUK-dko7zUozBveKN4b-f3CCuYb
+1ij9wDbFCv3ZKP3AG94o3hv94AMb3QrmG9Yo-cA2xQr92Sj9wBvmKNYb-f3CCuYb1ij2CsUoNsUK
+-dko-cAb5ijWG9wSG-3HEhvXCuYb1ij2CsUoNsUK-dkowjUo_RvmKMk1KMob-cQDG9UDwBvgCuYb
+0wMbwCj2CsUoNsUK-dkowzUo_BvmKMg1KMsb-cUDG9UDG_AK5hvWKPYKxSg2xQr92Sj9wBvmKNYb
+4AMb-d0K5hvWKOA1KNMKxSg2xQr92Sj9wBvmKNYb2AMbxQPAG-wDG9sK5hvWKOA1wCjSCsUoNsUK
+-dko-cAb5ijWG-39wgrmG88SG8Qo9grFKDbFCv3ZKP3AG_Yo1hv9-cIK5hvWKPYKxSg2xQr92Sj9
+wBvmAxvFKM4b9gMb-ccK5hvWKNY1KMw1CtUoNsUK-dko-cAb7ijOG-3xEhvMCuYb1ijmCtUoNsUK
+-dko-cAb7ijOG_IDwBvqA8Ab5wMbwArmG9Yo5grVKDbFCv3ZKP3AG8ASG_sozhvjAxvqAxvrCuYb
+1ijmCtUoNsUK-dko2DUo4xvbAxvQKM4byAMb3RIb-dUK5hvWKOYK1Sg2xQr92SjYNcAo4hvaAxvR
+KM4byQMb-ekDG8gK5hvWKMk1KNoK1Sg2xQr92Sj9wBvuKM4b-fkSG8QK5hvWKOYK1Sg2xQr92Sj9
+wBvuKM4b-f3CCuYb1ijmCtUoNsUK-f3bG_4ozgr9-f39xSg2xQr9-dsb7ijOCv39-f3FKDbFCv39
+2xvuKM4K-f39-cUoNsUK-f3bG_4ozgr9-f39xSg2xQr9-dsb7ijOCv39-f3FKDbFCv392xvuKM4K
+-f39-cUoNsUK-f3bG_4ozgr9-f39xSg2xQr9-dsb3QMbzijOCv39-f3FKDbFG-3BCtYb-cAK-f3C
+G-0DCv3AG-0oNsUb0BIb4hIbxwrWG-3ACv39whvPEhvsCv3AG8cSG-MoNsUbywPAG-AK1hvBAxvE
+AxvzCv39whvAAxv7Cv3AG8EDG-koNsUbzAMb8ArWG8ADG-sK-f3CG-3ACv3AG8ADG-ooNsUb-cEK
+1hvjAxvYCv39whv9wAr9wBv9KDbFG9QDG9oDG8sK1hviA8Ab2Ar9-cIb0wMb6Ar9wBvLAxvvKDbF
+G-3BCtYbzBIb7wr9-cIbxBIb9wr9wBv9KDbFG8YDG-YK1hvdAxveCv39whveAxvdCv3AG-0oNsUK
+1xv2CsYb-cAK-f3CG-0DCv3AG-0oNsUK1xv2CsYbEhv8Cv39whv9wAr9wBv9KDbFCtcb6AMbywrG
+G8kDG-IK-f3CG-3ACv3AG_ADG9gDGyg2xQrXG-YKxhvIAxvzCv39whv9wAr9wBv9KMYK1xv2CsYb
+-cAK-f3CG-3ACv3AG-3ACt4b9grGG8MDG-gK-f3CG-3ACv3AG9kSG_IK3hvsEhvHCsYb-cAK-f3C
+G-3ACv3AG_QSG9ASG8QK3hv2CsYb9gMbxQr9-cIb-cAK-cAb7QMbzgreG-39wgr9-cIb-cAK-cAb
+-cAK3hv9-cIK-f3CG98SG9wK-cAb-cAK3hvKEhvMAxvkAxv7Cv39whvCA8Ab_Ar9wBv4A8Abwgre
+G9gDG-3lCv39whvDAxv4Cv3AG-gDG8MK3hvoAxvgAxvwCv39whv9wAr9wBvrEhvQCt4b6QMb3gPA
+G-AK-f3CG_MDG9gK-cAb-cAK3hv9xhIb9wr9-cIb-cAK-cAb-cAK3hv2Axv9xwr9-cIb-cAK-cAb
+-cAK3hvuAxv9zwr9-cIDG-0K-cAb-cAK3hv9-cIK-f3CG-3ACv3AG-3ACt4b-f3CCv39whvJAxvO
+AxvhCv3AG_IDG9kK3hv9-cIK-f3CG8gDG9ADG_AK-cAb4wMb2AreG8gDG-3HAxvFAxvjCv39whv9
+wAr9wBv9wAreG8gDwBv9xwMbxQMb3RIbwgr9-cIb-cAK-cAb-cAK3hv9-cIK-f3CG-3ACv3AG-3A
+Ct4b-f3CCv39whvtAxvOCv3AG-3ACsUjCtYb-f3CCv39wgMb-Qr9wBv9wArFIwrWG-3eEhvQEhvM
+Cv39whv9wAr9wBv9wArFJgrWG-39wgr9-cIb-cAK-cAb4wMb2ArFJgrWG-39wgr9-cIb4xIb2Ar9
+wBv9wArFJgrWG-39wgr9-cIb2wMb4Ar9wBv9wArFGwrWG-3aAxvYAxvICv39whvaAxvhCv3AG-3A
+CsUbCtYb-f3CCv39whv9wAr9wBvfEhvcCsUbCtYb-f3CCv39whv9wAr9wBv9wAreG-3ACsYb9gr9
+-cIb-cAKxijlNQrOG-3ACt4b-cAKxhv2Cv39whv9wArGKOYKzhv9wAreG-3ACsYb2wMb2Ar9-cIb
+4wMb2ArGKOYKzhvYAxvjCt4b-cAKxhvQEhvjCv39whv9wArGKOYKzhvwEhvLCt4bwwMb3RIb2ArG
+G-YK-f3CG-3ACsYo5grOG-3ACt4bwgPAG-gKxhv2Cv39whv9wArGKOYKzhv9wAreG-3ACsYb1xIb
+3Ar9-cIb3xIb3ArGKOYKzhvcEhvfCt4b-QMKxhv2Cv39whv9wArGKOYKzhvmAxvVCtYjxhv9wArG
+G-YK-f3CPxs-Gz8bPxvnAxvNKPYKxhv9wArWI8Yb-cAKxhv2Cv39whsoGygbKMA-G-Yo9grGG-3A
+CtYmI8AmwCPAJhv9wArGG-YK-f3CPxvCKD8owBv1KMg1KOc1KMEKxhv6AxvBCtYmxhv9wArGG-YK
+-f3CGygbwCgbwD8oG-Uo8zUowArGG-sDG8AK1ibGG-3ACsYb8BIbwwr9-cI-G8AoPxvBPygb9Cj2
+CsYb4xIb2ArWGybAG8AmwBv9wQrGG-YK-f3CGygbwCgbwD8oG-Uo9grGG-3ACtYb-cgKxhv2Cv39
+wj8bwig-KMAb9SjMNSjnCsYb-cAK1hvNAxv2CsYb9gr92P7-7CfA-v_jAMAK4hs-Gz8bPyg-G-Yo
+9grGG-3ACv39-fsfwCH_wsPHPyEK4ygKKAooCigK-f39-f39_CHBP8AhCv39-f39-f3l-uJrAsYK
+-f39-f39-eU-wAM-wAMK-f39-f39-eY-wAM-wAMK-f39-f39-eb_JGOwP8MK-f39-f39-eY-ID-C
+Cv39-f39-f3mIMQK-f39-f3LG-3ACv3WA8EKwAPBCugjzhvmCv3AG-3AKMUK-dkb-cAK-f3KI84b
+5gr9wBv9wCjFCv3ZG-3ACv39yiYjwCbAI8AmwCPAJsAjwCYb5gr9wBv9wCjFCv3ZG-3ACv39yibO
+G_YK-cAb-cAoxQr92RvAAxvwAxvICv39yibOG_YK-cAb-cAoxQr92RvAA8Ab7gMbyQr9-cobJsAb
+wCbAG8AmwBvAJsAb5wr9wBv9wCjFCv3ZG-3ACv39yhv2Cv3AG-3AKMUK-dkb-cAK-f3DIwrCIwob
+9gr9wBv9wCjFCv3ZG-3ACv39wiPGG-YK-cAb-cAK-eAb-cAK-f3CI8Yb9gr9wBvnEhvUCv3gG8AD
+G88DwBvoCv39wiYjwCbAI8AmG-YK-cAb_QMbwgr94BvTAxvoCv39wibGG-YK-cAb_AMbwwr94Bvb
+AxvgCv39wibGG-YK-cAb4wMb2Ar94BvaAxvhCv39whsmwBvAJsAb9wr9wBviAxvGAxvQCv3gG8QS
+G-cK-f3CG-3ACv3AG-3ACv3gG80DG_4K-f3CG-3ACv3AG-3ACv3gG-3ACv39whv9wAr9wBveAxvd
+Cv3gG-3ACv39whvPEhvsCv3AG9cSG9USG8wK-eAb-cAK-f3CG-3ACv3AG-3ACv3gG-3ACv39whv9
+wAr9wBv9wAr94BvbAxvgCv39whv9wAr9wBv4AxvDCv3gG9oDwBvgCv39whvTAxvoCv3AG9sDG9UD
+G8MDG8IK-eAb-cAK-f3CG-3ACv3AG-3ACv3gG-3ACv39whv9wAr9wBv9wAr94BveAxvdCv39whv9
+wAr9wAMb-Qr94Bv9wAr9-cIb-cAK-cAb-cAK-eAb-cAK-f3CG-3ACv3AG_IDwBvYCv3gG-3ACv39
+whv9wAr9wBvjAxvFEhvQCv3gG-ADG8sK-f3CG9ADG_sK-cAb2AMb4wr94BvxAxvKCv39whvRAxvW
+EhvRCv3AG9gDwBviCv3gG-3ACv39whv9wAr9wBv9wAr94Bv2AxvFCv39whv9wAr9wBv9wAr94BvV
+AxvOAxvVCv39whvlAxvWCv3AAxvFAxvUAxveCv3gG-3ACv39whv9wAr9wBv9wAr94Bv9wAr9-cIb
+-cAK-cAb0gMb6Qr94Bv9wAr9-cIb-cAK-cAb0wMb6Ar94Bv9wAr9-cIb8wMbwgMbwwr9wBv9wAr9
+4Bv9wAr9-cIb8gPAG8MDG8IK-cAb-cAK-eAb-cAK-f3CG-3ACv3AG-3ACv3gG-3ACv39whv9wAr9
+wBv9wAr94Bv9wAr9-cIb-cAK5ijWCsYb9gr94Bv9wAr9-cIb-cAK5ijWCsYb9gr94BvwAxvHA8Ab
+wAr9-cIb2gPAG_AK5ijANcAo0grGG9oSG80SG8kK-eAb_wMbwAr9-cIb2wMb4ArmKMA1KNMKxhv2
+Cv3gG-3ACv39whv9wArmKNYKxhv2Cv3gG-3ACv39whv9wArmKNYKxhv2Cv3gG-QSG8cK-f3CG-kj
+G8IK5ijWCsYb9gr94Bv9wAr9-cIbIxvCIxvAI8AbwSMbwCPAG8EjG8AjG8IjG8AjG8IjGwMjG8Ij
+G8AjG8IjG8AjwhvBCuYo1grGG-YK-eAb-cAK-f3CI-3ACtYozjUo1QrGG-YK-eAb1xIb5Ar9-cIj
+-cAK1ijMNSjXCsYb9gr94Bv9wAr9-cImI8AmwCPAJsAjwCbAI8AmwCPAJsAjwCbAI8AmwCPAJsAj
+wCbAI8AmwCPAJsAjwCbAI8AmwCPAJsAjwCbAI8AmCtYo5grGG-YK-eAb-cAK-f3CJv3ACtYo5grG
+G-YK-eAbwAMb_wr9-cIm-cAK1ijmCsYb9gr94BvBAxvOEhvGAxvUEhvJCv39whsmwBvAJsAbwCbA
+G8AmwBvAJsAbwCbAG8AmwBvAJsAbwCbAG8AmwBvAJsAbwCbAG8AmwBvAJsAbwCbAG8AmwBsK1ijI
+NSjbCsYb9gr94Bv9wAr9-cIb-cAK1ijmCsYb9gr94Bv9wAr9-cIb-cAK1jUo5QrGG-YK-f39-f39
+-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f39-f3a
+KNYb-cgo1jUozRv92AMb3Sj9wBvGCv392ijWG_cSG9wo5hv9_Cj9wBvGCv392ijWG8ISG9wSG90D
+G8Io5hvREhvnAxvKA8Ab1gPAG9Ao-cAbxgr9-doo1hv9wgMbwyjmG-3KAxvYAxvQKP3AG8YK-f3a
+KNYb-cgo5hvwEhv9xSjANSj7G8YK-f3aKNYb6wMb2CjmG-34KP3AG8YK-f3aKNYb-cgo5hv3Ehv8
+KP3AG8YK-f3aKNYb-cgo5gMb-fco-cAbxgr9-dob-fgoxTUozhv98Cj9wBvOCv390hv94RIb1CjW
+G-3wKP3AG84K-f3SG-gDwBvOA8Ab6CjWG-3MAxvhKP3AG84K-f3SG-gDG9ADG_go1hv9zQMb4Cj9
+wBvOCv390hvbEhviAxvVAxvNAxvLKNYb-fAo-cAbwwMbyAr9-dIb-cMDG9UDG8cDG8IDwBvKKNYb
+-fAo-cAbwgPAG8gK-f3SG-34KNYb-fAo-cAbzgr9-dIb-fgo1hvWAxv91yj2NSjFG84K-f3SG-39
+wijOG-3wKP3AG84K-f3SG-3eEhvfKM4b-fAo-cAbzgr9-dIb-eIDG9sozhv98Cj9wBvOCv390hv9
+-cIozhv98Cj9wBvOCv390hv9-cIozhvDEhvFAxv94ij9wBvAAxvLCv390hv92gMb4yjOG8oDwBv9
+4ij9wBvAA8Abygr9-dIb-eYSG9cozhv98Cj9wBvOCv390hv1Axv9xwMozhv98Cj9wBvOCv390hvu
+AxvVAxv1KM4b-fAo-cAb1gr9-cob-f3CKM4b-fAoxzUo9BvWCv39yhv9-cIozhv92gMb0yj9wBvA
+AxvTCv39yhv9-cIozhv98Cj9wBvWCv39yhv90gMb6yjOG-3wKNg1KOMb1gr9-cob-dMDG_oozhv9
+8CjLNSjjNSjKG9YK-f3KG-39wijOG-3eEhvPKP3AG8QSG88K-f3KG-39wijOG_4DG-0o-cAb1gr9
+-cob4z-AG9A-wBv9xSjWG-3oKPYKxhvWCv39yhvkPzkbzj8bOT8b-cQo1hv96CjXNSjcCsYbxxIb
+zAr9-cob5D85G8A-wBvBP8EbxD85Gz85G9QDG_oo1hv96Cj2CsYb1gr9-cob5D85G8E5Pxs-Gzk-
+ORvEP8AbORvTAxvrKNYb-ego9grGG9YK-f3KG_Q-ORvAP8E5PzkbPzkbwz8bOT8b-cQo1hv96Cj2
+CsYb1gr9-cob5D85Gz8bOT85Gz-BORvDPzkbPzkb-cMo1hv96CjbNSjYCsYbywMbyAr9-cob5D-A
+G8A-wTkbwDk-ORvEP8AbORv9wyjWG-3oKPYKxhvWCv39yhvFAxvdOcAbwDnBGz-AGzkbxTnAG9ED
+G_4o1hv9zwMbxQMbzij2CsYb1gr9-cob7jnAG8Y-wBvCPxv9KNYb-eADG8UozTUo3grOG94K-f3C
+G8cSG_0-Gzk-G8A-wDkb9RIbxCjWG-3oKO4KzhsSG9wK-f3CG_Q-wBvAPxvAPxvAP8EbxTkbPzkb
+wD85Az8bwD8b9yjWG-oDwBvoKNA1wCjaCs4b3gr9-cIb5Tk-Gz85Gz85Pxs5PzkbxT8bORvAPzkb
+wDk-Gzkb9ijWG_MSG9UDG_go0DUo2wrOG94K-f3CG_MDP8E5PzkbPzk-ORs-ORvEPxs5G8E-ORvA
+Pxs5G-co1hvrAxvqAxvLKO4KzhveCv39whvLAxvUAz8bOT85Pzk-GzkbP8E5G8M-Gzkbwj85Gz8b
+OT8b9AMbwCjWG_oDwBvqA8AbyijuCs4bwwMb2Ar9-cIb5D-BOT-AGzkbwTk-ORvDP8IbwD-BG8A5
+GxI5G-Yo1hv96CjuCs4b3gr9-cIb5TnBGznAG8E-wBs5G8Q5whvAOcEb_yjWG-3oKO4KzhveCv39
+whvvOcAbxj-AG8I-G-QDG8Uo1hv96CjuCs4b3gr9-cIb_D8bOT8bwD-AORv7KNYb5BIb-cEo7grO
+G8QSG9cK-f3CG8IDwBvMA8AbzT-AGz8bAxs-wBvAPxvAPxvFORs-OT8bPzkbPxvAPxv2KNYb2AMb
+-c0o6TUowgrOG8kDG88DG8AK-f3CG8MDG80DG80-OT8bPxvBOT8bPzkbPzkbxT8bOT85PzkbwDk-
+Gzkb9SjWG9MSG_oSG9ASG9Ao6DUowwrOG8gDG9MK-f3CG_M-OT85PzkbP8E5Gz-AGzkbxD8bORs-
+whvAPxs5G-Yo1hv96CjuCs4b3gr95z-X-joXFOP_f3h0-gkpLCIRNhE2IhE2ETYiETYixDYiESLB
+ETYRwDYiETYi9v4OFSnWIuD_IhYZIv3FJ_4-ziLAOCLbP-3n-n8AJvoiwDYRIsA2ESI2wRE2ESI2
+ESLDNsIiwTYRIsARIsARIvUn1iLc-lwAH-46FxT9ySfuP84i1-5cAB-_OhcUxD-9-cIizz8ixj8i
+wT-AIsE-wCIRIsERIsA-wBEiP8IiwD-AIsARwiLBPyLGP8AiwT8i6T8iwSfFPyfOIsM-Isk-IsM-
+ItA-Is0-Isw-Iss-Is4nyz8n4D-OIt4--ecn0j8n0z8nxT-AJ8A-J8A-Jz8iwD8ixD8iwD8iwj8i
+PyLAPzbAIsE2wD8ixj8iwD8iwT8iyTYi1jYiwz8iwTbAP8E2wD-FNsA-yjY-xzbAP8M2P8Q2wz-A
+NsA-wTbAP8c2wD-RNj-ENj-SNj-HNsA--f393CLAPyI-Ij-AIsA-wCLBP8EixD8iPyLAPyLAPyI-
+Ij-AIj8iwD8iwj8iwj8iPyI-wCIRNiI2IhE-IsE-IsA-IsI-IjYiPyLANiLDP8E2ET-BIj8iP8Ai
+wD-AIsE-wCLAP8EiNhE-wSI-wTY-ET-ANj-GNj8RNj-VET-CNj-GNhE-whE2P8ARwD-GNj8RP9kR
+P9o2PxE--f393CLAPyI-wCLBPyLAPyI-IsA-IsA4IsE-Ij8iwT-AIsA-wCI-Nj82Ij8iwDY-NiI2
+wD8iwD-AIj8RIjYRIhEiPxE2Ij82Ij8iwT8iwDYRPyLANhEiwT8iwDbAPzYiwDY-wCI2Ij82Ij82
+PzYiPzY-IsA-Nj82IsE-IsA-ET-CETY-ET-CNhE2wBE-yDY-Nj-CNj-BNhE-wTbAET-GET-ANj-A
+Nj82ET-AET-FET-BNsA-wDY-NsA-xjbAP8A2P8E2wD-HNj-HNj-ANj82P8E2ET-BNsA--f392CLA
+PyI-IsI-wiI-IsA-IsE4IsA-wiI-IsA-Ij8iwD8iET-ANhEiPxE2wCI-ESLAPyLAPyI2IhEiwDY-
+ESIRNj-AIsE-IsA2IhE-IjYiESLCP8AiNj8RwCLAPzYiNsA-wiI-wiI-NiI-NhE-wCLAPyLAPzY-
+wjY-wBE-wjbAPzYRP8g2PxE-whE2P8A2ET-BETYRP8YRP8A2PzbAPzbBPxE-wzY-NsA-wRE2PzbA
+PxE-xDY-ETY-Nj-ANj82ET82P8ARP8ARNj-ANhE-xDY-wDY-ET-CNsA-wRE2P-39-dciwD8iPyLC
+PyLCPyLAPyLGPyLAPyLAPyI-IsA-ET8iwD8RPzYRNhHAPyLBPyLAPzYiESLANiI-IsA2PxEiPyI-
+IsE2ESI-IjYRIsU-Nj8iwTY-NhE2ET8iwDYRPzYRNsA-NhE-NhEiwD8iPyLAPxE-Nj-AEcA-ET-C
+NhHANhE-yDY-wRE2ET82ET-AET82P8A2ET-GET-BEcA-ETYRwD-HEcE2P8A2PzYRwD-GET82PzbA
+PzYRNhE-NhE-ET-AETYRPzYRP8Q2P8A2P8A2ET82EcE2P8A2P-39-DbDP8E2wD-BNj82xD-ANsA-
+wTY-NsM-wTbAP8E2xj82wT-ANsE-wDYRPyLAPxE-whEiPyLCP8A2OBEiwDYiET8iNiI-NiI-Ij-C
+IhEiPzYiESLCP8EiNhE-wSI-NhE2ESI-wTbAP8ERPxHAPzY-wSLAPyLAPxE-wTYRPzY-wzYRPzYR
+P8s2P8U2ET82ET82ET-FNhE-wDYRP8ARNhE-wBE-xDYRP8ERPzYRP8g2ET-CEcA-wRE-wTYRPzY-
+wDY-NhE-xDY-wDY-wDYRPzYRP8ERPzYRP-39-dYi5DbBIsA2wRE2ESLGNsIiNsI-IhEiwBEiwzYR
+Ij8iNhEiyDbAIsA2wRE2ESLDETYRIjbBIsE2wCLFNsA-ET82wD8RPzY-wTbAPxE-yDYRPzYRPzbA
+PxE-NsA-wDbBET-FNhE-wDYRPzYRNsE-ET-ENhE-wTbAPxE2ET-HNsERPzbBPzbBPxE-NsERP8AR
+NhE-wzbBPzYRPzYRPzYRP8E2wD8RP-39-dYi5RHBIsARwSIRIscRwiIRwiLJESLCESLJEcAiwBHB
+IhEiwjbAIhEiwBHBIsERwCLEPxHAP8ERwD-BET-BEcA-yhE-wBE-wBHAP8ERwD-AEcE-xhE-wRE-
+wBE-EcE-xhE-whHAP8ARP8gRwT-AEcE-EcE-wRHBPzbAPxE-xBHBPxE-wBE-wBE-whHAP-39-AAA
+AAAAAAAB
 :: logging.lua
---[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-06-17 19:18:27",revision=1342]]
+--[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-06-04 15:47:07",revision=1194]]
 include "util.lua"
 
 CURRENT_LOG = ""
@@ -1761,7 +1347,7 @@ function drawlog(x,y)
 	local split_log = split(CURRENT_LOG,"\n")
 	local c = 0;
 	for i = max(1,#split_log-20),#split_log do
-		prints(split_log[i],x,48+y+c*10)
+		prints(split_log[i],x,32+y+c*10)
 		c += 1;
 	end
 end
@@ -1795,7 +1381,7 @@ function odbg(o,indent)
 	end
 end
 :: main.lua
---[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-06-17 19:42:10",revision=5230]]
+--[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-06-06 00:33:43",revision=4857]]
 -- Picotron Stargazer
 -- ~~ CREDITS ~~
 -- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
@@ -1842,9 +1428,6 @@ include "entity.lua"
 include "entities/player.lua"
 include "world_interaction.lua"
 include "chunkservice.lua"
-include "queue.lua"
-include "init_routines.lua"
-include "lightmap_data.lua"
 
 
 local CAMERA_OFFSET_X = 0
@@ -1890,8 +1473,25 @@ function _init()
 		CHUNK_PROCESS = create_process("chunkservice.lua", {argv={pid()}} )	
 	end 
 	
-	init_everything()
 	on_event("load_chunk", chunk.recv_chunk)
+	
+	color_table = userdata("u8", 64, 64)
+	memmap(0x8000, color_table)
+	for i=0,63 do
+		for j=0,63 do
+			color_table:set(i,j,j)
+		end
+	end
+	for i=0,63 do
+		color_table:set(i,0,i)
+	end
+	for k=1,3 do
+		for i=1,31 do
+			color_table:set(i, 32+k, COLOR_RAMPS[k][i])
+		end
+		color_table:set(63, 32+k, 63)
+	end
+	
 	add_entity(build_player())
 end
 
@@ -1901,6 +1501,7 @@ function _draw()
 	FRAME_COUNTER+=1
 	cls(63)
 	camera(CAMERA_OFFSET_X,CAMERA_OFFSET_Y)
+
 	chunk.render_loaded_chunks()
 	draw_entities(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
 	chunk.render_light()
@@ -1931,29 +1532,11 @@ function _draw()
 		"\n CS: " .. (SAVER_STATUS and "OK" or "FAIL") ..
 		"   CL: " .. (LOADER_STATUS and "OK" or "FAIL") ..
 		"   CC: " .. real_count(LOADED_CHUNKS) ..
+		"   DF: " .. (DEFER_STATUS and "OK" or "FAIL") ..
 		(BBS_WARN and "\nRunning sandboxed, using single thread! Expect some lag..." or "")
 		,1,1)
 	perf_graph()
-	draw_debug_bars()
-	
-	local a,b = work_queues()
-	
-	print(a .. '/' .. b, 64,64)
-	
-	if key("tab") and key("o") then
-
-		-- Debug overlay stuff goes here
-		cls(7)
-		print("welcome to cardboard-box-branded top secret debug overlay!",1,1,1)		
-		for ix=0,6 do
-			print(ix,64+ix*8,56)
-			for iy=0,6 do
-				if ix==0 then print(iy,56,64+iy*8,1) end
-				spr(512-ix-iy*7,64+ix*8,64+iy*8)
-			end
-		end	
-	
-	end
+	--draw_debug_bars()
 
 end
 
@@ -1964,13 +1547,11 @@ DEBUG_CAMERA_SPEED = 4
 local load_test = 50
 function _update()
 
-	CAMERA_OFFSET_X = ENTITIES[1].x-240
-	CAMERA_OFFSET_Y = ENTITIES[1].y-135
-	chunk.set_center(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
-
 	if not (key("tab") and key("p")) then
 		LOADER_STATUS, LOADER_OUTPUT = coresume(chunk_loader)
+		LOADER_STATUS = coresume(chunk.work_recv_queue)
 		SAVER_STATUS = coresume(chunk_saver)
+		DEFER_STATUS = coresume(deferred_queue)
 	end
 
 	if	key("q") then
@@ -1978,11 +1559,14 @@ function _update()
 	end
 	
 	update_world_mouse(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
-	if FRAME_COUNTER > 150 then
+	if true then
 		update_entities()
 	end
 
-	debug_light()
+
+	CAMERA_OFFSET_X = ENTITIES[1].x-240---120
+	CAMERA_OFFSET_Y = ENTITIES[1].y-135---67-
+	chunk.set_center(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
 
 end
 :: noise-all.lua
@@ -2571,44 +2155,8 @@ ICAgICAgICBlbmQKICAgICAgICByZXQgPSByZXQgKyAoaS9wb3dlcikqKG1hdGguYWJzKGZ1bmMo
 dW5wYWNrKHNjYWxlZCkpKSkKICAgIGVuZAogICAgbG9jYWwgYXJncyA9IHsuLi59CiAgICBsb2Nh
 bCBkaXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihk
 aXJfY29tcG9uZW50K3JldCkKZW5k
-:: queue.lua
---[[pod_format="raw",created="2025-06-08 15:17:51",modified="2025-06-12 19:57:00",revision=185]]
-include "logging.lua"
-
-local QUEUES = {}
-
-function work_queues()
-	local running_queues = 0
-	for i,q in pairs(QUEUES) do
-		local s, err = coresume(q)
-		if s then running_queues += 1 end
-		if err then error(err) end
-	end
-	return running_queues, #QUEUES
-end
-
-function make_queue()
-	local actions = {}
-	
-	local r = cocreate(function()
-		while true do
-			local next_action = deli(actions, 1)
-			if next_action then
-				r = next_action.f(unpack(next_action.argv))
-				--error(tostr(next_action.args))
-			end
-			yield()
-		end
-	end)
-	local a = function(func, argv)
-		actions[#actions+1] = { f = func, argv = argv }
-	end
-	
-	QUEUES[#QUEUES+1] = r
-	return a
-end
 :: util.lua
---[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-06-12 19:57:00",revision=2664]]
+--[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-06-06 00:33:43",revision=2573]]
 
 function cofetch(r, cb)
 	coresume(cocreate(function() 
@@ -2635,7 +2183,7 @@ function perf_graph()
 	if stat(7) < 60 then lag_counter += 1 end
 	m = flr(m*10)
 	local avg = flr(acc / 6)
-	prints("lag " .. lag_counter,62, SCREEN_HEIGHT - 32)
+	prints("lag " .. lag_counter .. '/' .. FRAME_COUNTER,62, SCREEN_HEIGHT - 32)
 	prints("avg " .. avg .. "%",62,SCREEN_HEIGHT - 24)
 	prints("max " .. m .. "%",62,SCREEN_HEIGHT - 16)
 	prints("cur " .. flr(stat(1)*100) .. "% // target " .. stat(7) .. "  hold TAB for debug info",62,SCREEN_HEIGHT - 8)
@@ -2721,9 +2269,22 @@ function tracked_rect(w,h,cb)
 	bar_end("Rect")
 end
 
+DEFERRED_ACTIONS = {}
+function defer(a, args)
+	DEFERRED_ACTIONS[#DEFERRED_ACTIONS+1] = {action = a, args = args}
+end
+deferred_queue = cocreate(function() 
+	while true do
+		local nxt = deli(DEFERRED_ACTIONS, 1)
+		if nxt then
+			nxt.action(unpack(nxt.args))
+		end
+		yield()
+	end
+end)
 
 :: world_interaction.lua
---[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-06-17 19:18:27",revision=1523]]
+--[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-06-06 00:33:43",revision=1504]]
 include "constants.lua"
 include "chunk.lua"
 
@@ -2794,9 +2355,7 @@ function draw_world_mouse()
 	fillp(0b1010010110100101)
 	rect(rx+1, ry+1, rx+TILE_SIZE, ry+TILE_SIZE, 1)
 	rect(rx, ry, rx+TILE_SIZE-1, ry+TILE_SIZE-1, 7)
-	
 	fillp()
-		print(rx .. "/" .. ry, rx,ry-8, 7)
 end
 :: .info.pod
 b64$LS1bW3BvZCxiYnNfaWQ9Il9kZXYyMjc5IixjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUwOjMx
@@ -2810,13 +2369,15 @@ MTUwNzAxMDEwNzAxMTUxNTEwMTAxMDEwMTAxMDE1MTUxNTA3MDEwMTA2MDcxNTE1MTAxMDAxMDEx
 MDEwMTUxNTA3MDYwMTAxMDYwNjA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwNjAxMDAwMTA2MDYwNjA2
 MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDAw
 MDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwIiksbG93Y29sX2ljb249ZmFsc2UsbW9kaWZpZWQ9
-IjIwMjUtMDYtMTcgMTk6NDI6MTAiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
-PXt7bG9jYXRpb249Im1haW4ubHVhIzQ5Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJj
-aHVuay5sdWEjMTc2Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJjb25zdGFudHMubHVh
-IzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImluaXRfcm91dGluZXMubHVhIzM2Iix3
-b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJsaWdodG1hcF9kYXRhLmx1YSMxMjEiLHdvcmtz
-cGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImdmeC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHts
-b2NhdGlvbj0iZ2Z4LzEuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvZGVi
-dWcubWFwIix3b3Jrc3BhY2VfaW5kZXg9M30se2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFj
-ZV9pbmRleD00fX1dXQ==
+IjIwMjUtMDYtMDYgMDA6MzM6NDQiLHJ1bnRpbWU9MTgsc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
+PXt7bG9jYXRpb249Im1haW4ubHVhIzE2OSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0i
+Y2h1bmsubHVhIzQyNSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iY2h1bmtzZXJ2aWNl
+Lmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJlbnRpdGllcy9wbGF5ZXIubHVh
+IzEiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249InV0aWwubHVhIzEiLHdvcmtzcGFjZV9p
+bmRleD0xfSx7bG9jYXRpb249ImVudGl0aWVzL2Jhc2UubHVhIzEiLHdvcmtzcGFjZV9pbmRleD0x
+fSx7bG9jYXRpb249IndvcmxkX2ludGVyYWN0aW9uLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0s
+e2xvY2F0aW9uPSJlbnRpdHkubHVhIzkiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249Imdm
+eC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0iZ2Z4LzEuZ2Z4Iix3b3Jrc3Bh
+Y2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvZGVidWcubWFwIix3b3Jrc3BhY2VfaW5kZXg9M30s
+e2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFjZV9pbmRleD00fX1dXQ==
 :: [eoc]
