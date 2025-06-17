@@ -20,7 +20,7 @@ The .p64 file can be browsed with any text editor to reveal the Lua source code,
 - [x] Platformer physics and entities (Player character!)
 - [x] World generation I
 - [-] Light engine (Torches! Lanterns! Glowing objects!)
-  - Partial. Now needs a day-night cycle thingamajig.
+  - Partial. Need to solve sky light updates from player placed tiles
 - [ ] World interaction
 - [ ] Inventory and item usage
 - [ ] Interactive blocks
