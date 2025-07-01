@@ -8,7 +8,7 @@ Check it out at:
 - [Cardboard Box Server (unsandboxed, faster)](https://cardboardbox.tech/stargazer/)
 
 GIF of the ~~week~~ unspecified period of time:
-![picotron-stargazer_19](https://github.com/user-attachments/assets/f2fa4599-c168-4fcc-8cce-f3651c537bce)
+![picotron-stargazer](https://github.com/user-attachments/assets/20b3fec0-4dfa-4280-b453-a14445c56304)
 
 
 Currently, this repository only includes the .p64 file, as a VCS-based development pipeline is not very easy to pull off with Picotron.
@@ -19,8 +19,10 @@ The .p64 file can be browsed with any text editor to reveal the Lua source code,
 - [x] CHUNKS: Unbounded tile-based terrain loading. Infinite worlds!
 - [x] Platformer physics and entities (Player character!)
 - [x] World generation I
-- [-] Light engine (Torches! Lanterns! Glowing objects!)
-  - Partial. Need to solve sky light updates from player placed tiles
+- [x] Light engine (Torches! Lanterns! Glowing objects!)
+  - It works!
+- [ ] Cellular automata
+  - Mostly done?
 - [ ] World interaction
 - [ ] Inventory and item usage
 - [ ] Interactive blocks
