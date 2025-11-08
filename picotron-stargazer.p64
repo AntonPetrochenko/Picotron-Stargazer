@@ -7,7 +7,7 @@ version 2
 :: net/
 :: sfx/
 :: chunk.lua
---[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-10-14 17:54:21",revision=6891]]
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-11-08 07:36:06",revision=6893]]
 --[[
   [x] Chunk allocation
   [x] Chunk loading -> Loads from debug map
@@ -1074,7 +1074,7 @@ function make_entity_lib()
 end -- of module
 PUBLISH("entity", make_entity_lib())
 :: game.lua
---[[pod_format="raw",created="2025-07-14 18:07:08",modified="2025-11-04 18:50:12",revision=108]]
+--[[pod_format="raw",created="2025-07-14 18:07:08",modified="2025-11-08 08:29:11",revision=110]]
 function make_game(chunk, ticking_lib, queue_lib, e_lib)
 	
 	local game = {}
@@ -1156,6 +1156,7 @@ function make_game(chunk, ticking_lib, queue_lib, e_lib)
 		CAMERA_OFFSET_X = entity_lib.p.x-240
 		CAMERA_OFFSET_Y = entity_lib.p.y-135
 		chunk.set_center(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
+		debug_light()
 	end
 	
 	function game.draw()
@@ -1164,8 +1165,8 @@ function make_game(chunk, ticking_lib, queue_lib, e_lib)
 		start_bar_frame()
 		FRAME_COUNTER+=1
 		if CAMERA_OFFSET_Y < 140 then
-			spr(255,-(CAMERA_OFFSET_X/2)%480,-CAMERA_OFFSET_Y/2-40)
-			spr(255,-(CAMERA_OFFSET_X/2)%480-480,-CAMERA_OFFSET_Y/2-40)
+			--spr(255,-(CAMERA_OFFSET_X/2)%480,-CAMERA_OFFSET_Y/2-40)
+			--spr(255,-(CAMERA_OFFSET_X/2)%480-480,-CAMERA_OFFSET_Y/2-40)
 		end
 		camera(CAMERA_OFFSET_X,CAMERA_OFFSET_Y)
 		chunk.render_loaded_chunks()
@@ -1773,7 +1774,7 @@ if SKIP_MAIN_MENU then
 	_draw = draw_game
 end
 :: packetreader.lua
---[[pod_format="raw",created="2025-10-18 20:39:43",modified="2025-11-04 19:29:24",revision=5]]
+--[[pod_format="raw",created="2025-10-18 20:39:43",modified="2025-11-08 08:55:56",revision=10]]
 
 local function mkmod()
 	local mod = {}
@@ -1792,7 +1793,16 @@ local function mkmod()
 			
 			local data = sock:read()
 			if (data and #data>0) then
-				accumulator = 
+				accumulator = accumulator .. data
+			end
+			if not current_packet_length then
+				if #accumulator > 3 then
+					local l1,l2,l3 = ord(accumulator,1),ord(accumulator,2),ord(accumulator,3)
+					current_packet_length = l1 | (l2 << 8 ) | (l3 << 16) 
+				end
+			end
+			if current_packet_length then
+				
 			end
 		end
 		
@@ -1802,7 +1812,14 @@ local function mkmod()
 		
 		reader.send = function(self, data)
 			local out_pod = pod(data)
-			local packet = #data.."$"..out_pod()
+			local lfull = #out_pod
+			if (#out_pod > 0xffffff) then
+				throw "Packet too long!"
+			end
+			local l1 = lfull & 0xff
+			local l2 = (lfull >> 8) & 0xff
+			local l3 = (lfull >> 16) & 0xff
+			local packet = chr(l3) .. chr(l2) .. chr(l1) .. out_pod
 			sock:write(packet)
 		end
 	
@@ -2543,14 +2560,14 @@ function load_world(wname)
 	end
 end
 :: .info.pod
---[[pod,bbs_id="_dev2279",created="2025-04-09 19:50:31",icon=userdata("u8",16,16,"00000001010101010101010101000000000001070707070707070707070100000001071515150a0a0a0a15151507010001071515150a0a0906070a1515150701010715151509090907070915151507010107151519191919191919191515070101071515150707010707011515150701010715151507070107070115151507010107151515100707070707151515070101071515150710070707071515150701010701151510101010101015151507010106071515101001011010151507060101060607070707070707070707060601000106060606060606060606060601000000010606060606060606060601000000000001010101010101010101000000"),lowcol_icon=false,modified="2025-11-04 19:29:24",runtime=23,sandbox=false,workspaces={{location="main.lua#39",workspace_index=1},{location="game.lua#122",workspace_index=1},{location="chunkservice.lua#49",workspace_index=1},{location="packetreader.lua#19",workspace_index=1},{location="gfx/0.gfx",workspace_index=2},{location="gfx/1.gfx",workspace_index=2},{location="gfx/2.gfx",workspace_index=2},{location="map/debug.map",workspace_index=3},{location="sfx/0.sfx",workspace_index=4}}]]
+--[[pod,bbs_id="_dev2279",created="2025-04-09 19:50:31",icon=userdata("u8",16,16,"00000001010101010101010101000000000001070707070707070707070100000001071515150a0a0a0a15151507010001071515150a0a0906070a1515150701010715151509090907070915151507010107151519191919191919191515070101071515150707010707011515150701010715151507070107070115151507010107151515100707070707151515070101071515150710070707071515150701010701151510101010101015151507010106071515101001011010151507060101060607070707070707070707060601000106060606060606060606060601000000010606060606060606060601000000000001010101010101010101000000"),lowcol_icon=false,modified="2025-11-08 08:55:56",runtime=23,sandbox=false,workspaces={{location="main.lua#39",workspace_index=1},{location="game.lua#92",workspace_index=1},{location="chunkservice.lua#49",workspace_index=1},{location="packetreader.lua#21",workspace_index=1},{location="chunk.lua#24",workspace_index=1},{location="world_interaction.lua",workspace_index=1},{location="entities/player.lua",workspace_index=1},{location="lightmap_data.lua",workspace_index=1},{location="gfx/0.gfx",workspace_index=2},{location="gfx/1.gfx",workspace_index=2},{location="gfx/2.gfx",workspace_index=2},{location="map/debug.map",workspace_index=3},{location="sfx/0.sfx",workspace_index=4}}]]
 :: entities/.info.pod
---[[pod,created="2025-04-14 21:28:23",modified="2025-11-04 19:29:24"]]
+--[[pod,created="2025-04-14 21:28:23",modified="2025-11-08 08:55:56"]]
 :: gfx/.info.pod
---[[pod,created="2025-04-09 19:52:53",modified="2025-11-04 19:29:24"]]
+--[[pod,created="2025-04-09 19:52:53",modified="2025-11-08 08:55:56"]]
 :: gfx/0.gfx
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-Ny0wNiAxOToxNTozMSIscmV2aXNpb249NTA2NF1dbHo0AJcLAABXoQAA_CZ7WzBdPXtibXA9cHh1
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0x
+MS0wOCAwODoyODozMyIscmV2aXNpb249NTA2NV1dbHo0AJoLAABXoQAA_CZ7WzBdPXtibXA9cHh1
 AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
 MjY4NDY4ODdlLTAxNyx6b29tPTd9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
 Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
@@ -2602,7 +2619,7 @@ DmkTDwIAoA6HFQ9QA8IOtBMPrgFFD3EC1Q9aA0sO-RMPsgFGD3cC1w9iA0wORBQPtgFHD30C2Q9q
 A00OiRQPugFID4MC2w9yA04OzBQPvgFJD4kC3Q96A08ODRUPAgBJD44C3w_BA1AOTBUPAgBKD5MC
 4A_HA1EOiBUPAgBLD5gC4g_OA1IOwhUPAgBMD54C5A_WA1MO_hUPAgBND6QC5g_eA1QOMBYPAgBO
 D6oC6A_mA1UPZBZfLwwOsALqDq4DDwIA-yMOtgIPtgN0DwIA-8oOvAMPAgD-Jg__A-----------
------------------ywbDl9oTDYuMTbOmmUtMTEuODMBAKA3LHpvb209MX19
+-----------------ywbDl9oZS01OS44MwEAA21oRTQuMTYBAKAzLHpvb209MX19
 :: gfx/1.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
 OS0wNyAxNjoxNDo0OCIscmV2aXNpb249NTE3OV1dbHo0ABYGAABZNwAA8Rh7WzBdPXtibXA9cHh1
@@ -2635,8 +2652,8 @@ UBAAQAIXQAcQAJAEBzAX8BMX8AU9AEETF-AGCADwGgfwBwcQF-AHhyAH8AgHAAfwBidwFwAH8Agn
 B_AHCgADBQD-AiEHsBfwIidgJ-Amd-D---8WUQELHzOCAR8PMgD--1QOlx8PMgD---------olA9
 MTR9fQ==
 :: gfx/2.gfx
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA5LTA3IDE2OjI2OjA2Iixtb2RpZmllZD0iMjAyNS0w
-OS0wNyAxNjoyNjowNiIscmV2aXNpb249MF1dbHo0AA8IAABGPAAA8iF7WzBdPXtibXA9cHh1AEMg
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA5LTA3IDE2OjI2OjA2Iixtb2RpZmllZD0iMjAyNS0x
+MS0wOCAwNzozNDo0MiIscmV2aXNpb249MV1dbHo0AC8JAABuPQAA8iF7WzBdPXtibXA9cHh1AEMg
 4EAE8P---4MU8M0EHxkE8AwU8K0EDhoOBPAKBB4E8KwMABIJBwBVoRRwBD4OAPAeoAQeRCAEPgQw
 NGBEMBQOGg4UEBQQJFBEQBQQNPB9BA4aTgQQBD4EIAQ_FDAEDACALhouFB4ULgQOAIAgBB4UPgTw
 fEsAQToOBABTAFAQBA46HgYAokoOFA56HhoeKg4OAAEgAKAeOg4E8HsEDnoObQAAEwBwag4UDmoO
@@ -2671,8 +2688,13 @@ HrgDASMIAAwAMDAUTo8IRmpeBDAcABEU_QUBSAAGJACwYAT_AgSwBF4EYASOAgC0AqJeBFAUbhT_
 AARAEwCRFP4JBC76AA4UGQBhBHAE7hTAMQAAyAACMQARcAgAMt4EUBQAghT_CRQ_yh4UGQBQgATO
 BPDeByCABGcDAV4KIQSQCAAzrhRwFABAAAT_CAUAMwMEAB4AcKAkbiTwAgT1BoAeBMAEHgRABOEE
 ZB4EQBRuFBQAQCAE-gYFADMCBBAeAPAH4GTwBhTAFOAUYBTQFHBk0BTgFED0BoIG8w4EMBTQFPCp
-FM4E8MLE8O0sZmxhZ3M9MCxwYW5feAgAx3k9MCx6b29tPTJ9LHILXxAQBPDwMQALHzgxAP------
----------------------------------------------------------7hQbT04fX0=
+FM4E8MLE8O0sZmxhZ3M9MCxwYW5feAgAx3k9MCx6b29tPTJ9LHILEEByC-AsV4fwC3fwCWfwCAcg
+ByAH8AWHAAfwBycABzAX8AKXEAfwBVdQB-ABhzAH8ANnUAfwAJdAB-ACZ2AH4IcYAPMId2AH4Hdg
+B-ABZ3AH4AfQB-ABBwAnUEcLAPEJcHfgB4BH8AEHYIfgB2Bn8AIHUIfwAAdQCgD3MnfwAgdAV-AE
+F0Bn8AMHMFfwBhcgR-AGFwBX8AkXECfwCUfwDEfw--8wF-AFJ-AVF-AIB-AVB-AKB-AUB-ALB-AT
+BgAFEgAhChcGAAEqABQJBgBRFgfwBxcGAPAQB-AYB-AGB-AZB-ADJ-AaF-AAF-AeB5BX8CA3IDfw
+KG8AK-_SRAEzLTE0RgHyBTMuMTA4NjI0NDY4OTUwNGUtMDE1WQEZM1kBXxAQBPDwigELHzgxAP--
+-------------------------------------------------------------4dQbT04fX0=
 :: label.qoi
 b64$cW9pZgAAAeAAAAEOBAH_Ka3--f39-f39_f4dK1PBCijACsAowArAKMEKKMEKKMEKKMAKwSjA
 CsgoxgrD-v-x6MEKwD-ACsA-wAo-wQo-wQrAP8AKP8AKyD-BCj-BCj-BCsA-wAo-wQo-wQo-wQo-
@@ -3258,7 +3280,7 @@ OTXDOTXBOTXGOTXAOTU5NTk1OTU5wTU5wTXAOTXEOcE1OcE1wDk1wDnBNcc5NTk1OcA1wDnBNTnB
 NcQ5NcA5NTk1OcE1wzk1wTnANcA5NTk1wznBNTnBNTnBNcA5wDU5wTXDOcE1OTU5NTk1wTnANf39
 -f39-f39-f39-f39-f39-f3LAAAAAAAAAAE=
 :: map/.info.pod
---[[pod,created="2025-04-09 19:52:53",modified="2025-11-04 19:29:24"]]
+--[[pod,created="2025-04-09 19:52:53",modified="2025-11-08 08:55:56"]]
 :: map/debug.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA2LTMwIDE5OjM3OjE0Iixtb2RpZmllZD0iMjAyNS0w
 Ny0wNiAxOToxNTozMSIscmV2aXNpb249MzE3XV1sejQAYQQAAKZyAADyEnt7Ym1wPXVzZXJkYXRh
@@ -3283,7 +3305,7 @@ FTHoAA8EAD8GAgAPAQD-rhkxAgAfMgQANA8cAgoPNAL-vQQCAB8yBAAUBgIADwEA-94fMQIAGA8B
 AP---------------------I8QsiKSxoaWRkZW49ZmFsc2UscGFuX3g9LTg4NgsA0nk9MCx0aWxl
 X2g9MTYKABB3CgCgem9vbT0wLjV9fQ==
 :: net/.info.pod
---[[pod,created="2025-07-14 16:32:53",modified="2025-11-04 19:29:24"]]
+--[[pod,created="2025-07-14 16:32:53",modified="2025-11-08 08:55:56"]]
 :: noise-all.lua
 b64$LS1bW3BvZF9mb3JtYXQ9InJhdyIsY3JlYXRlZD0iMjAyNS0wNC0yNCAxNjoxNDo0NSIsbW9k
 aWZpZWQ9IjIwMjUtMDQtMjQgMTY6MTQ6NDUiLHJldmlzaW9uPTBdXQotLS0tLS0tLS0tLS0tLS0t
@@ -3871,7 +3893,7 @@ dW5wYWNrKHNjYWxlZCkpKSkKICAgIGVuZAogICAgbG9jYWwgYXJncyA9IHsuLi59CiAgICBsb2Nh
 bCBkaXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihk
 aXJfY29tcG9uZW50K3JldCkKZW5k
 :: sfx/.info.pod
---[[pod,created="2025-04-09 19:52:53",modified="2025-11-04 19:29:24"]]
+--[[pod,created="2025-04-09 19:52:53",modified="2025-11-08 08:55:56"]]
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
 Ny0wNyAxNzo0OToyMiIscmV2aXNpb249NDc4Nl1dbHo0ACsBAADwCgAA8CNweHUAAygAAAQABA9A
