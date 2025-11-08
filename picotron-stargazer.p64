@@ -2,426 +2,12 @@ picotron cartridge // www.picotron.net
 version 2
 
 :: entities/
-:: entities/base.lua
---[[pod_format="raw",created="2025-04-14 21:29:02",modified="2025-07-01 19:56:46",revision=2008]]
-function build_entity()
-	return {
-        x = 0, y = -64,
-        dx = 0, dy = 0,
-        grounded = true,
-        width = 0.8,
-        height = 0.8,
-        walk_speed = 1,
-        jump_force = -2.4,
-	}
-end
-
-function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_offset, y_offset)
-	e.wa_frame = 0
-	e.wa_limit = frame_limit
-	
-	e.wa_start_frame = start_frame
-	e.wa_idle_frame = idle_frame
-	e.wa_air_frame = air_frame
-	
-	e.wa_x_offset = x_offset
-	e.wa_y_offset = y_offset
-	
-	e.wa_left = false
-	return function(e)
-		if abs(e.dx) < 0.05 then
-			e.dx = 0
-		end
-		if (not e.grounded) then
-			if (e.dy > 0.5) then
-				if (e.dy > 3.5) then
-					spr(e.wa_air_frame+2,x_offset, y_offset, e.wa_left)
-				else
-					spr(e.wa_air_frame+1,x_offset, y_offset, e.wa_left)
-				end
-			else
-				spr(e.wa_air_frame,x_offset, y_offset, e.wa_left)
-			end
-		else
-			if (e.dx < 0) e.wa_left = true
-			if (e.dx > 0) e.wa_left = false
-			if (abs(e.dx)>0.1) then
-				e.wa_frame += abs(e.dx/3)
-				if (e.wa_frame >= e.wa_limit) then
-					e.wa_frame = 0
-				end
-				spr(flr(e.wa_start_frame+e.wa_frame), x_offset, y_offset, e.wa_left)
-			else
-				e.wa_frame = 0
-				spr(e.wa_idle_frame, e.wa_x_offset, e.wa_y_offset, e.wa_left)
-			end
-		end
-	end
-end
-:: entities/player.lua
---[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-07-07 17:23:25",revision=3080]]
-include "entities/base.lua"
-
-
-local anchoring = {
-	-- POINTING ORDER: left left-up up right-up right
-	--
-	{} 	
-}
-local swing_frames_right = {
-	 {24, {0,  0, 13, 0.5, 0.5}}, -- L
- 	 {25, {0,  3,  5, 0.5, 0.5}}, -- L U
- 	 {26, {0, 10,  1, 0.5, 0.5}}, --   U
- 	 {27, {0, 18,  3, 0.5, 0.5}}, -- R U
- 	 {28, {0, 19, 13, 0.5, 0.5}}, -- R
-}
-
-local swing_frames_left = {
- 	 {24, {0, 16, 13, 0.5, 0.5}}, -- R
- 	 {25, {0, 13,  5, 0.5, 0.5}}, -- R U
- 	 {26, {0,  6,  1, 0.5, 0.5}}, --   U
- 	 {27, {0, -2,  3, 0.5, 0.5}}, -- L U
-	 {28, {0, -3, 13, 0.5, 0.5}}, -- L
-}
-
-function recalc_frame_data()
-	__re(swing_frames_right)
-	__re(swing_frames_left)
-end
-
-local function swing_animator(e)
-	e.swing_timer = 0
-	e.swinging = false
-	return function()
-		-- Draw swing
-		local data_source = e.wa_left and swing_frames_left or swing_frames_right
-		e.swing_timer += 0.4
-		if e.swing_timer < #swing_frames_right then
-			local frame_number = flr(e.swing_timer)+1
-			local frame_data   = data_source[frame_number]
-			
-			local frame_number_chr          = frame_data[1]
-			local frame_data_pickaxe        = frame_data[2]
-			local s_number                  = frame_data_pickaxe[1]
-			local frame_data_pickaxe_x      = frame_data_pickaxe[2]
-			local frame_data_pickaxe_y      = frame_data_pickaxe[3]
-			local frame_data_anchor_x       = frame_data_pickaxe[4]
-			local frame_data_anchor_y       = frame_data_pickaxe[5]
-			
-	
-			local s        = get_spr(s_number)
-			local s_width  = s:width()
-			local s_height = s:height()
-			
-			local spr_x_offset = -s_width * frame_data_anchor_x
-			local spr_y_offset = -s_height * frame_data_anchor_y
-
-			--spr(s_number, -5+frame_data_pickaxe_x+spr_x_offset, -8+frame_data_pickaxe_y+spr_y_offset)
-			circfill(-5+frame_data_pickaxe_x,-8+frame_data_pickaxe_y,1)
-			spr(frame_number_chr,-5,-8,e.wa_left)
-		else
-			e.swinging = false
-		end
-	end,
-	function ()
-		-- Trigger swing
-		e.swing_timer = 0
-		e.swinging = true
-	end
-end
-
-function build_player()
-	local base = build_entity()
-	
-	base.width = 0.7
-	base.update = update
-	base.walk_speed = 3
--- uncoment for fun :) base.x = 999999999999999999
-	
-	local draw_swing, trigger_swing = swing_animator(base)
-	
-	local wa = walking_animator(base, 1, 2, 6, 9, -5, -8)
-	base.draw = function(e)
-		if (e.swinging) then
-			draw_swing()	
-		end
-		if not e.swinging then
-			wa(e)
-		end
-		if key "tab" then
-			prints(e.x .. " " .. e.y, -32, -32)
-		end
-	end
-	base.prev_whole_x = flr(base.x/8)
-	base.prev_whole_y = flr(base.y/8)
-	base.fc = 0
-	base.update = function(e,camera_offset_y)
-		local light_enabled = camera_offset_y > 100
-		e.fc += 1
-		-- Player input
-		-- e.dx = (input & 1 and e.walk_speed) or (input & 2 and -e.walk_speed) or 0
-		e.dx *= 0.8
-		if (key("a")) then 
-			e.dx -= e.walk_speed*0.2
-		elseif (key("d")) then 
-			e.dx += e.walk_speed*0.2
-		end
-		
-		-- Jumping
-		if e.grounded and key("w") then
-			e.dy = e.jump_force
-			e.grounded = false
-		end 
-		
-		if not (key("w") or e.grounded) and e.dy < -1 then
-			e.dy = -1
-		end
-		
-		if (keyp("t")) trigger_swing()
-		
-		if e.fc%5 == 0 then 
-			local whole_x = flr(e.x/8+0.5+ (e.wa_left and -1 or 1)) 
-			local whole_y = flr(e.y/8+0.5-1)
-			
-			if e.prev_whole_x != whole_x or e.prev_whole_y != whole_y then
-				if light_enabled then
-					chunk.place_light_in_world(whole_x, whole_y, 12)
-				end
-				chunk.break_light_in_world(base.prev_whole_x, base.prev_whole_y)
-			end
-		
-			e.prev_whole_x = whole_x
-			e.prev_whole_y = whole_y
-		end
-	end
-	
-	base.equipped_sprite = 16
-	return base
-end
-:: entities/.info.pod
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTE0IDIxOjI4OjIzIixtb2RpZmllZD0iMjAyNS0w
-Ny0xNCAxODozODoyMCJdXQ==
 :: gfx/
-:: gfx/0.gfx
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-Ny0wNiAxOToxNTozMSIscmV2aXNpb249NTA2NF1dbHo0AJcLAABXoQAA_CZ7WzBdPXtibXA9cHh1
-AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
-MjY4NDY4ODdlLTAxNyx6b29tPTd9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
-Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
-Zl89LoAucHcBZk8tAC5wfwBB8Ao-H3B_YE4ATjBeEE4QbiCuUI6AXpBegG6AFgD-Aj4wXiA_EF4w
-TgBOUI5wbpAefQFf-wMADlAODQcNNw0OUA59DlAO8AyEAEAbNoQAP5BHkIYAYBsmhgAv8AqHAGIf
-8FQAkKwEBAQ3Pxw8HxARWQADSQASMDYALjE1iwAPMgAasgoKBCAGYAYHcAYHBgDPdRd-FReAF3AX
-kAdQSgAMHjZKAPIaNyAGN0AGBw8VUAYHDgUOQBcADgUOMAYHEA4FDiAGMA4FDhAHQA4FDnAEAA9h
-AB76CRYXMBZXEBcADxUFABcABiAOBSAHMA4FcAMAHzBYAB3xAxAHFgcGYDcGYA8VBwZQDgUOB6wA
-MAAXILIAEBe_ACAwB8sAEEDWAE9gBQ5wYgAdMVAGkF8BwIAGB3UGB38VF3AXYAQALwcgSgAdMwUP
-FT4BMg5AB5oAAaYAIQYHswARBmABzwYHUA4GB0AmFyAWJ2IAHjMwDxVJAQZSAQFrAf8ABgAWAA4F
-AAYHEBc2FzA3WQAeUHAPFQVgngARQKoAEjC3AAIcAhMHKgLfDgUOUBcOYAY3YCYXEGEAGgD9Ah9V
-3ggVDuIHczU0Mjg1NzEGAANqACYyLhMAPzI4NlUJFoQnDxUXkCcOF3UAT4AuPdB0ADwfV3QADn8O
-XZAeEC4gdgA6sFgqCaAqCQYHkDkXdACJNw8VB5A3Dgd0AB8AdAA8Gml0ACFXkHYA-wIPECcPFQeA
-DgcPEDeAHk0OAHQAOh-wTgDSTAgIBPCWAkMtMC42QgASNDQALzEwNQDODlcBDzUAeg-UAAImMTI3
-AEItMjQ4OgA-MC41OwDmD5EBFQ81AGQO2gAPNQDkDnMBDzUAegDUAD4TDxN9DA9-CAoANgBfDA8T
-UA44ACDfAw8TcA5QDlAOAA7wAz4AIQA5DTEwDgBCAD9wDpBDAB0QkIAAAj4AFRBGAD9QDiBIACAR
-IIgAMxAOIEwAESAGAD8wDiBQACESAJgAAkoADlYAAhIAAHAAD1oAIQI6ABMASgA4AB4ADgADCAAV
-EGoAPwAOAGQAGj8BAQQxAP-----------------------------------------------5zFKOAB
-AAB4AAAABPz-AQA1XQcMAgAAFwAUZQwAESkHABRsGQBjsAf8BQcMAgAj-H0JAAUqABLsJgATrAsA
-AgIAEEwVAABhACP8BxIAIvwvRwBj-P--qgesFQABPAAQWwUAEwESACL8TQcAV---pgcMAgAk-Acr
-AASaAEMMB-xVCQABMAAUoAsAEg8HADVZBwwCACD8XwUApHEPEPz-zw4MDvzrAAA5ADkmBwwCAED8
-Cg4MJABD-8sODAoAE58bABGMBgAj-AUZAAAbADfHDgwOABCcHwA3Fg4MAgCJ-A4H-P_kDgwCADD8
--5cqADsXDgwCAK38DQfsB-z-kQ4MAgBf-P_9DgwCAAAn-AoTAQTVAD_KDgwCAAJf-P_5DgwCAARH
--AsHDEMADoQACEcAP7UODAIACBL8QwA-lA4MAgAKX-z-sQ4MJAAOP68ODCYAED_tDgwoABI-qw4M
-KgAUbxsO-H0ODAIAFFD8Pg78yQgAP3sODAIAFiD8PAUAAkMCT-x5DgwCABgi-DoHADLFDgwJAD93
-DgwCABok-DgJABPDCQBvDA78dQ4MAgAcI-w2CQBlDA78wQ4MAgBP-HMODAIAHkX8NA4MAgAi-DKJ
-Ajd4DgwCAE-8cQ4MAgAgR-wyDgwCABz8SwNP-G8ODAIAIkn8MA4MAgBC-C8HDLkADk0BT-xtDgwC
-ACRL-C4ODAIAH-zLAwFP-GsODAIAJk38LA4MAgAi-BS5BQBjBE-8cA4MAgAAT-xpDgwCAChP-CoO
-DAIAAB-8ZAQFT-xnDgwCACpP-CgODAIAAiD8EeUAMQMHDKIGD0wBCH-8KQf8Kw4MAgAsT-wmDgwC
-AAQf-BoFCU-8Yw4MAgAuT-wkDgwCAAZi-BAHDAfMyAI-eg4MRwAKACQADsIBDwIAIU-8Ig4MAgAI
-H-zkBQ1P-F8ODAIAMk-8IA4MAgAKJvwPDwgP8gUPIPwhKAA-KQ4MAgA0T-weDgwCAAx--FkO-D8O
-DAIADk-8Ww4MAgA2T-wcDgwCAA4h-A43ARIsPQEAcgRP-D0ODF4AEg5qAg8CAC1P-BoODAIAECL8
-VQcAPzsODAIAEk-8Vw4MAgA6T-wYDgwCABID-gpEDAf8LRIAPzkODAIAFCT8A-8EDq0CDwIALgsY
-Cw8rAAoTUQkAbwwO-DcODAIAFk-8Uw4MAgA_T-wUDgwCABZF-E8ODAIAT-w1DgwCABgj-AI5DQYC
-AA7uAg8CADJP-BIODAIAGEf8TQ4MAgAj-DMJAA8VARkPAgBCT-wQDgwCABpJ-EsODAIAT-wxDgwC
-ABwBIAMHowEEaAMPAgA-T-wODgwCABxN-EkODJEKAwkADykBHQ8CAEY--AwOAgAfTfxHDgwCAA59
-AQ8mARYPAgBIA0IQDzcAHj9FDgwCAAAOaAoPMgEYDwIASk-8CA4MAgAiT-xDDgxXCwIPdwYoDj4B
-DwIAPk-8Bg4MAgAkT-xBDgwCAAQj-CcJAA9KASUPAgBOT-wEDgwCACYPhgoKI-wlCQAPVgEnDwIA
-UE-8Ag4MAgAoD98KDCP8IwkAD2IBKQ8CAFJP-AAODAIAKg9ACw4j-CEJAA9uASsPAgBUP9wODAIA
-LA_cCxAj-B8JAA95AS0PAgBWP7wODAIALg-3CxIj-B0JAA_FAS8PAgBYP5wODAIAMA9cDBQj-BsJ
-AA_RATEPAgBaP3wODAIAMg_uDBYj-BkJAA_dATMPAgBcP1wODAIANA8TDRgOwRoPqQEsDwIAXgCB
-GQ-BADYPaQ0ZI-wVCQAPtQE3DwIAYA7wEw-FABYPzg0vI-wTCQAPwQFiD0cBiA8xDh0j-BEJAA-L
-AWYPAgA4Px4MDgIAOQ_SDiAj-A8JAA-VAWoPngKFD-EOJCP8DQkAD98Bbg_qAoUPTg8mI-wLCQAf
-DOkBcQ_2AoUPqQ8oTvwJDgwCAA-zAWkPwgKFDwIQKk78Bw4MAgAP-QFtD84ChQ9aECwHBScPAgBB
-DgkSD9oCrg_wEC5O-AMODAIADxECdQ-mAoUPBBEwTvwBDgwCAA8bAnkP8gKFD1YRMj7sDgwCAA8k
-An0P-QKFD6URND7MDgwCAA8tAoEPCAOFD-IRNj6sDgwCAA83AoUPFAOFDz0SOD6MDgwCAA9BAokP
-IAOFD4gSOj5sDgwCAA9LAo0PLAOFD9MSPD5MDgwCAA9VApEPOAOFDx4TPj4sDgwCAA9fApUPRAOF
-DmkTDwIAoA6HFQ9QA8IOtBMPrgFFD3EC1Q9aA0sO-RMPsgFGD3cC1w9iA0wORBQPtgFHD30C2Q9q
-A00OiRQPugFID4MC2w9yA04OzBQPvgFJD4kC3Q96A08ODRUPAgBJD44C3w_BA1AOTBUPAgBKD5MC
-4A_HA1EOiBUPAgBLD5gC4g_OA1IOwhUPAgBMD54C5A_WA1MO_hUPAgBND6QC5g_eA1QOMBYPAgBO
-D6oC6A_mA1UPZBZfLwwOsALqDq4DDwIA-yMOtgIPtgN0DwIA-8oOvAMPAgD-Jg__A-----------
------------------ywbDl9oTDYuMTbOmmUtMTEuODMBAKA3LHpvb209MX19
-:: gfx/1.gfx
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
-Ny0xMyAxNjo0MToyNSIscmV2aXNpb249NTE3OF1dbHo0AJgGAADbNwAA8Rh7WzBdPXtibXA9cHh1
-AEMgCAgE8DAsZmxhZ3M9MTI4LHBhbl94PTAIANp5PTAsem9vbT0xNn0sNABRew8bCw4CALEEDg8U
-Dg0ODQ4DDQIAUg8VBF0MAwAzDVwNWgAfMFgAFbgPFFQOBF4PFQReDQMAPw5dDkoAH_8UHg8VDh0O
-BC4dDhQeDQoABw9aAB7wExsLAwAOCwMQDgAPFQMOAB0ACw4NAwsOAA0ODQANDgMOCw0fAFAAAw4A
-DR8AFQMfABADBAAPbQEf8AENXxcNDl0PEw5dDA49DA0MCABfDQw9DA5jASNQGwsDDxQGAPAEHxUP
-GwQPFAMPGy8VBAsPGw8UAwYAEBUeANAvFA8bAw4LBA8UDgsD5wAAKQBgDi8VAwsOJwAQDiYAXw4D
-HQ4DfwAd4WkPGVoJDloOCX4pDjkaCgAvOn5FAB1AfxVvFIIAEVQFAJWPFS8UDxU-FCQTAB8kUQAd
-FfEEAw8yABWznxA8LgwOHA4MHhwCAAEOADMuPJ5KAB8ySgAV8AAOLxcpDxkfFxcaGQ0nKgkEAGIP
-GSkoDxgGAM8fGRkYHxgELxkvGALXAB3zAw4vFywPEB8XFx8cHA8XJy8cDAYAYxIvDS8QAQcAzx8S
-Hw0fECEvEiEPIGIAHeAPFiYvGwMWFxseBicrDgQAYg8TIyUPFQYAzx8TExUvFS8TLxUPILwAIOQv
-GAIfFxcYHxgPFycoDwYAUhQkIg8VBgCPHxQUEi8VLxRgACHgKA8YBlgOBig_Bi6GWA4LAC9udv4A
-H7AADxUjAA8WADMOAwsA-wYNEw0OUw4DDTMNQw4jADMNAyANIxDyAx9PDyDxL5ECHf8TAV8QAR4B
-DiEPEg4BDjENHkENDkEdDjENAQ0OIQ0BHQFdAd4AHf8SAFcAB1AHBhAHIAcGAAYwBwYwBwAHBiAG
-EAcGUAcARgcA2QAf9QLwAgoACkAKGVAPGWAFcAVQBXgDHzOXABaRECcwBwYHBgcgBgBAMCdQB0kA
-H2BLACH-B-AKLx8IIA4oDw8IEAgNODAHDVAHDSBIAB-xECAPFg8VQA4PFg4NMA4dDiAdDg0OBRAO
-BQ4VDjAFDlADAA9XACD-GRA-IAUQDhEPEAUPFQUOER8QDxUPEA8VDhE-EB4hHQEeUQ4ADjEOID5i
-AiCPgQ8g8RMO8QJmAh0v8DBGAh1v8CsLEAsA-QAff-AiC1ALEAs3ASAh8Bw6AG8QCwALIAs-ACJ_
-cAsgCyALEDwADx8BFg8yAEhv8QoPIPEVuQEd4I8QXB4sDhweHA4sHgxuBgBPLA4cjqwGHQBGAAM8
-ACRuDFAADkYADyYBFg8yAN1u8QMPIFEOvgEPnAAXDzIA-0Jv8RUPIFEeDQUcXxAQBPDwzgAfDzIA
-5fgjAA8UBA8fDw8IDxgCDxUFDxYGBw8XDw4PHgEPEA8RDA8cDx0NDxIPEwMPGwsPGgoJDxkMAAol
-AAg-AAhYAA8fCx3wERA-EjAOEA5ADgFAAQ8fCgEgAQ8YCg8fDxgBEAEICgcIBwBuBwoIASAxYgcP
-VQEYDzIAqw_TDzdAPxg-FAQA8QIvGE8UHxi-FB8VTxQvFT8UPwQADk4AD30DLB80MgD---------
----------0rwOyAgBPBIF-AMJwAX8AkXMBfwBxdAJ-AENzAXABfwAhcQF3AH8AAXMBdgB9AnYAdA
-F8AXkAcwB8AXsBcAF8AH4BeAV_AXgAfwAxeALwDwCZAH8AIXoAfwARewB9A3wAegN-ABBzAnMCEA
-xCAXUAfwBDdgB-AHBwUAEAhyAE8KR-CctAALHzflAB8PMgD---------------8i8CxAQATw--8g
-R-AoNzAX8CQngBfwISegF-AeJwAHkCfwHCcwF2AXEAfwGSdwB1AHIAfwFyegB4AH8BcH0AcA8QYV
-F_AHcAfwFBfwAAdgF-AUB-ACB1AQAEACF0AHEACQBAcwF-ATF-AFPQBBExfwBggAAAEN8BYQF-AH
-hyAH8AgHAAfwBidwFwAH8Agn8AUXsAfwCQfwBhfQB-AHMQCQ8BUn8AcH8BMnFwDwARIX8AsH8BAn
-8AwH8A8X8A69DYDwEAfwCTfwElINIPAVTQDwEfAXB-ADJ-AZF-ABF-Acd3An8B8XECdAJ-AhB5AX
-8CIXBQDQB8AX8CAH0BfwHwfgBwoAAwUA-wIhB7AX8CInYCfwJnfw----FlEBCx8zggEfDzIA--9U
-DhkgDzIA---------6JQPTE0fX0=
-:: gfx/.info.pod
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ny0xNCAxODozODoyMCJdXQ==
 :: map/
-:: map/debug.map
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA2LTMwIDE5OjM3OjE0Iixtb2RpZmllZD0iMjAyNS0w
-Ny0wNiAxOToxNTozMSIscmV2aXNpb249MzE3XV1sejQAYQQAAKZyAADyEnt7Ym1wPXVzZXJkYXRh
-KCJpMTYiLDEzOCw1MywiMDA0MQQADwEA--8TASwCEjIEAA8BAAMPTAL-8CY0MQgACAQALjAwCAAP
-AQD-6gFIBBMxBAAHVAQEGAAPAQD--A8UAgkPLAL-----Ky40MSwCDygC--8jJjQ5BAAPKAL-7g8B
-AAUIHAIOKAIPAQD-9A4YAg8sAv8DOTEwNwQADyAADQ9gBL4qNDkgAgQQAAQIAA8oAvwPIAANDwEA
-ugVIERo5BAAJJAAvOTAoAv-wA9QKITQ5BAAzMTAx7AAKAgABIAALGAAEAQAMLAAIHAAPAQDBDggC
-DyAAAw8BAL4DJAIBMAIF7AAfMSgAAw4BAA40AA8BAP-JAeQBKTQ5EAAEAgAMLAICFgAfMUQAAw8B
-AP-NDOQBD-QBCi80OTQAHwEgABU0BAAPAQCxBFwGBAgADAwADwEAwQXkAQcEAggCAAQAAgUQAAMo
-AAgBAAgoAA4cAAQkAh82LAK2BBQCBAgADAwADwEA8g4oAg8BAAoEHAIPKAK5CBgCD7wKHR8xAgBQ
-DwEAqU8xMDMwAQDtAsYBHzIEABQfNQQAEB8yBAAEDjACDygCxR8xPAO8Aq4AHzIEAAwfNQQAJB8y
-BAACDwEAoQgoAh8xAgASHzIEABQPAgA-DAEAHzECADIfMgQAAB81BAA0HzIEAAQPUANjD3AABA9Y
-ASAfMgQAjAwCAB8yBAA4HzUEAEwfMgQABB8xKAJYHzIQAhQfMgQA-wUfNQQAVB8yBAAECgIADxAC
-Lw8CAAUeMhAADwQA-x8fNQQAVB8yBAANDxQCMB8yBABsHzUEABAfMgQAfB81BACMHzIoAiwfMgQA
-fB81BAAwFzIEAB81BAD0HjIoAg88BJoMBAAfNQQA-0UfMigCGB8yBACQHzUEAP9BHzIkAhYPKAL-
-----Ex8yJAIaDygC-_AfMiQCIg8oAv-YHzIkAioPKAL-1B8yJAIuDygCHxc3DAAMEAAfNxAABAgU
-AA8EACUfNQQA-yUEQAEPUARdCPgBDAwAGzIMAA4UAA8EACcfNQQA-w0EKAEPGAI3D1AEMw8IAAEI
-BAAeMhAADwQAKh81BAD-BR8yGAISCAwADygCJw_AFRkfNxAABB83FAAFDwQAQB81BADIHzIEAB4P
-AQAYDygC3A8EAFkXNQgADwQAQR4yBAAPKAKEDiwCDwQAew_4AAsfMgQAYBc1CAAPBAApHzIgApYO
-LAIVMYgADyQCjQ84AiwP6ACqDgEADywC4Q_MJ0IPdAIdDyQC-wcPMAJvAgIADwEAhA8UAu4PLAIP
-FTHoAA8EAD8GAgAPAQD-rhkxAgAfMgQANA8cAgoPNAL-vQQCAB8yBAAUBgIADwEA-94fMQIAGA8B
-AP---------------------I8QsiKSxoaWRkZW49ZmFsc2UscGFuX3g9LTg4NgsA0nk9MCx0aWxl
-X2g9MTYKABB3CgCgem9vbT0wLjV9fQ==
-:: map/.info.pod
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ny0xNCAxODozODoyMCJdXQ==
 :: net/
-:: net/client.lua
---[[pod_format="raw",created="2025-07-14 16:32:34",modified="2025-07-14 18:05:39",revision=2]]
-function make_client(entities, client_chunks)
-	
-end
-:: net/handler.lua
---[[pod_format="raw",created="2025-07-10 16:56:02",modified="2025-07-14 16:18:09",revision=11]]
-include "constants.lua"
-
-function make_decoder(sock)
-	local wanted_length = 0,
-	local whole_packet_accumulator = ''
-	local stream_accumulator = ''
-
-	local handlers = {}	
-
-	function encode_int_be(num, len)
-	    local bytes = {}
-	    for i = len, 1, -1 do
-	        local shift = (i - 1) * 8
-	        local byte = (num >> shift) & 0xFF
-	        bytes[#bytes+1] = byte
-	    end
-	    return chr(unpack(bytes))
-	end
-	
-	function decode_int_be(str, len)
-	    len = len or #str
-	    local num = 0
-	    for i = 1, len do
-	        local byte = ord(str, i) or 0
-	        num = (num << 8) | byte
-	    end
-	    return num
-	end
-	
-	function consume(n)
-		local s = decoder.stream_accumulator
-		local retval = sub(s,1,n)
-		decoder.stream_accumulator = sub(s,n+1)
-		return retval
-	end
-	
-	function decoder.read()
-		local buf = sock:read()
-		stream_accumulator = stream_accumulator .. buf
-		
-		-- Decoder's job is to accumulate enough bytes to have a whole packet
-		-- Decoder will keep consuming bytes until it gets a complete packet
-		
-		while #stream_accumulator > 0 do
-			if wanted_length == 0 then
-				-- We don't have anything to consume. Next payload MUST be a packet length
-				-- Consume 4 bytes from stream_acc
-				local len_data = consume(n)
-				wanted_length = len_data
-			else
-				local partial_data = consume(wanted_length)
-				wanted_length = wanted_length - #partial_data
-				whole_packet_accumulator = whole_packet_accumulator .. partial_data
-				if wanted_length == 0 then
-					-- Welp, we have a packet!
-					local evt = unpod(whole_packet_accumulator)
-					whole_packet_accumulator = ''
-					handlers[evt.type](evt.payload)
-				end
-			end
-		end
-	end
-	
-	function decoder.on(evt, cb)
-		handlers[evt] = cb
-	end
-	
-	return decoder
-end
-:: net/server.lua
---[[pod_format="raw",created="2025-07-14 16:32:29",modified="2025-07-14 18:05:39",revision=3]]
-function make_server(entities, server_chunks)
-	local server = {}
-
-
-	return server	
-end
-:: net/.info.pod
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA3LTE0IDE2OjMyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ny0xNCAxODozODoyMCJdXQ==
 :: sfx/
-:: sfx/0.sfx
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
-Ny0wNyAxNzo0OToyMiIscmV2aXNpb249NDc4Nl1dbHo0ACsBAADwCgAA8CNweHUAAygAAAQABA9A
-EAIOAAGgASACoA4ADxAADfDKAQIDQAyQBAUGB0APD5AICQoPCwkA-wAMDw0PDg8PQAuQA3AB8P8B
-AOv2EJYBEAYPDRABIAEgAfAAAhACDyAQASAPISABMA9poAIdAPAPMA9nIA8r8J8PfA--DxzwxQ-4
-Cg--D4AP9w8NAfAJRgAXIEYAFQ5FAI9A8MMPIg--BjIAAB8OMQAGXygP--DGMAD------28f-wEA
-rEDID0AA7wfzCie-Kf--I8D9I879I19zb3bwI1_B8CUP0DAgAEwsvy79HwATKhwA8AsxjzP9JpD9
-Jp79Jh9zf3bwJg_B8CcFIA-wICEA4hBADzf9LwH9Lw79L-BwEgAv-bAKAFwf-wEA-9ZQ-----90=
-:: sfx/.info.pod
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUyOjUzIixtb2RpZmllZD0iMjAyNS0w
-Ny0xNCAxODozODoyMCJdXQ==
 :: chunk.lua
---[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-07-14 18:37:25",revision=6857]]
+--[[pod_format="raw",created="2025-04-12 18:54:32",modified="2025-10-14 17:54:21",revision=6891]]
 --[[
   [x] Chunk allocation
   [x] Chunk loading -> Loads from debug map
@@ -439,22 +25,28 @@ Ny0xNCAxODozODoyMCJdXQ==
 --- OR
 --- Leverage Picotron's native crap <- went with this!
 
-function make_chunk_lib()
+include "constants.lua"
+include "logging.lua"
+include "generator.lua"
+include "util.lua"
+include "queue.lua"
+include "world_loader.lua"
+
+function make_chunk_lib(e_lib)
+	local chunk = {}
+	local entity_lib = nil
+	
+	function chunk.meta(wants)
+		entity_lib = wants "entity"
+	end
 
 	local my_requests = {}
-	chunk = {}
-	LOADED_CHUNKS = {}
+
+	local LOADED_CHUNKS = {}
+	chunk.loaded_chunks = LOADED_CHUNKS
 	
-	include "constants.lua"
-	include "logging.lua"
-	include "generator.lua"
-	include "util.lua"
-	include "queue.lua"
-	include "world_loader.lua"
-	
-	
-	ALLOCATION_TABLE = {}
-	RENDER_CHUNK_HEAP = userdata("i16",CHUNK_SIZE*512,CHUNK_SIZE)
+	local ALLOCATION_TABLE = {}
+	local RENDER_CHUNK_HEAP = userdata("i16",CHUNK_SIZE*512,CHUNK_SIZE)
 	
 	FALLBACK_LOADER_BEHAVIOR = false
 	function chunk.set_fallback_behavior()
@@ -559,11 +151,18 @@ function make_chunk_lib()
 		center_y = flr(y)
 	end
 	
-	function chunk.init(wname, remote)
-		chunk.WORLD_NAME = wname
-		send_message(CHUNK_PROCESS, { event = "begin", payload = {world_name = wname, allow_remote = remote} })
+	function chunk.init(opts)
+		chunk.WORLD_NAME = opts.name
+		send_message(CHUNK_PROCESS, { 
+			event = "begin", 
+			payload = 
+			{
+				world_name = opts.name, 
+				allow_remote = opts.server
+			} 
+		})
 		ADD_RENDER_GEN = make_queue()
-		load_world(wname)
+		load_world(opts.name)
 		memmap(RENDER_CHUNK_HEAP,0x100000)
 	end
 	
@@ -1052,16 +651,28 @@ function make_chunk_lib()
 	
 	return chunk
 end
+PUBLISH("chunk", make_chunk_lib())
 :: chunkservice.lua
---[[pod_format="raw",created="2025-04-25 11:19:16",icon=userdata("u8",16,16,"00000000000000000000000000000000000007000000000000000000000000000000000000000000000000000000000000000000000707070700000000000000000000000007070000070000000000000000000007070007070007070000000000000007000700070000070700000000000007070700000007070707000700000000070000000000000007070000070700000707070700070707070700000000000007070000000000070000000000000000000007000000000700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),modified="2025-07-14 18:36:20",revision=1008]]
+--[[pod_format="raw",created="2025-04-25 11:19:16",icon=userdata("u8",16,16,"0000000101010101010101010100000000000107070707070707070707010000000107121212121212121212120701000107121212121212121212121212070101071212120c0c0c0c0c0c1212120701010712120c0c0c0b1c0c0c0c1212070101071212010c0b0b1c1c0c0112120701010712120c0c0b1c1c0b0c0c1212070101071212010c0c1c1c0c0c0112120701010712120c0c0c0c0c0c0c0c1212070101071212010112121212010112120701011d0712121212121212121212071d01011d1d070707070707070707071d1d0100011d1d1d1d1d1d1d1d1d1d1d1d01000000011d1d1d1d1d1d1d1d1d1d01000000000001010101010101010101000000"),lowcol_icon=false,modified="2025-10-17 20:40:52",revision=1035]]
+PROCESS_TYPE="chunk_source"
+
+include "di.lua"
+
 include "chunk.lua"
+include "queue.lua"
 include "packets.lua"
 include "logging.lua"
+include "entity.lua"
+
+DI_BOOT()
+chunk = DI_GET("chunk")
 
 window { width = 200, height = 200, resizeable = false }
 dbg("Background process!")
 
 local MAIN_PID = env().argv[1]
+
+dbg(MAIN_PID)
 local READY = false
 local SOCK = nil
 
@@ -1082,15 +693,24 @@ end)
 on_event("begin", function(evt)
 	dbg "Let us begin"
 	READY = true
-	chunk.init(evt.payload.world_name)
+	chunk.init({
+		name = evt.payload.world_name
+	})
 	if evt.payload.allow_remote then
 		setup_remote()
 	end
+	dbg "If you see this:"
+	dbg "Your game is running!"
+	dbg "Just switch windows."
+	dbg ""
+	dbg "If this is a public build, "
+	dbg "ping me!"
 end)
 
 function setup_remote()
 	SOCK = socket("tcp://*:31415")
 	if not SOCK then error "Failed to open socket!" end
+	dbg "Now hosting on port 31415"
 end
 
 local tt = 0
@@ -1140,83 +760,348 @@ BOTTOM_RIGHT_PIXEL_Y=269
 
 
 
+:: di.lua
+--[[pod_format="raw",created="2025-10-14 17:06:18",modified="2025-10-14 17:39:28",revision=16]]
+local injectables = {}
+local di_booted = false
+	
+function PUBLISH(id, obj)
+	injectables[id] = obj
+	obj.__injectable_id = id
+end
+
+local function wants(id)
+	if not di_booted then error "Premature import!" end
+	if injectables[id] then return injectables[id] else error( id .. " is not published!", 2) end
+end
+
+function DI_GET(id)
+	return wants(id)
+end
+	
+function DI_BOOT()
+	di_booted = true
+	for id, injectable in pairs(injectables) do
+		if (not injectable.meta) then error (id .. " is malformed!") end
+		injectable.meta(wants)
+	end
+end
+
+:: entities/base.lua
+--[[pod_format="raw",created="2025-04-14 21:29:02",modified="2025-07-01 19:56:46",revision=2008]]
+function build_entity()
+	return {
+        x = 0, y = -64,
+        dx = 0, dy = 0,
+        grounded = true,
+        width = 0.8,
+        height = 0.8,
+        walk_speed = 1,
+        jump_force = -2.4,
+	}
+end
+
+function walking_animator(e, idle_frame, start_frame, frame_limit, air_frame, x_offset, y_offset)
+	e.wa_frame = 0
+	e.wa_limit = frame_limit
+	
+	e.wa_start_frame = start_frame
+	e.wa_idle_frame = idle_frame
+	e.wa_air_frame = air_frame
+	
+	e.wa_x_offset = x_offset
+	e.wa_y_offset = y_offset
+	
+	e.wa_left = false
+	return function(e)
+		if abs(e.dx) < 0.05 then
+			e.dx = 0
+		end
+		if (not e.grounded) then
+			if (e.dy > 0.5) then
+				if (e.dy > 3.5) then
+					spr(e.wa_air_frame+2,x_offset, y_offset, e.wa_left)
+				else
+					spr(e.wa_air_frame+1,x_offset, y_offset, e.wa_left)
+				end
+			else
+				spr(e.wa_air_frame,x_offset, y_offset, e.wa_left)
+			end
+		else
+			if (e.dx < 0) e.wa_left = true
+			if (e.dx > 0) e.wa_left = false
+			if (abs(e.dx)>0.1) then
+				e.wa_frame += abs(e.dx/3)
+				if (e.wa_frame >= e.wa_limit) then
+					e.wa_frame = 0
+				end
+				spr(flr(e.wa_start_frame+e.wa_frame), x_offset, y_offset, e.wa_left)
+			else
+				e.wa_frame = 0
+				spr(e.wa_idle_frame, e.wa_x_offset, e.wa_y_offset, e.wa_left)
+			end
+		end
+	end
+end
+:: entities/player.lua
+--[[pod_format="raw",created="2025-04-14 21:28:33",modified="2025-09-01 19:31:54",revision=3082]]
+include "entities/base.lua"
+
+
+local anchoring = {
+	-- POINTING ORDER: left left-up up right-up right
+	--
+	{} 	
+}
+local swing_frames_right = {
+	 {24, {0,  0, 13, 0.5, 0.5}}, -- L
+ 	 {25, {0,  3,  5, 0.5, 0.5}}, -- L U
+ 	 {26, {0, 10,  1, 0.5, 0.5}}, --   U
+ 	 {27, {0, 18,  3, 0.5, 0.5}}, -- R U
+ 	 {28, {0, 19, 13, 0.5, 0.5}}, -- R
+}
+
+local swing_frames_left = {
+ 	 {24, {0, 16, 13, 0.5, 0.5}}, -- R
+ 	 {25, {0, 13,  5, 0.5, 0.5}}, -- R U
+ 	 {26, {0,  6,  1, 0.5, 0.5}}, --   U
+ 	 {27, {0, -2,  3, 0.5, 0.5}}, -- L U
+	 {28, {0, -3, 13, 0.5, 0.5}}, -- L
+}
+
+function recalc_frame_data()
+	__re(swing_frames_right)
+	__re(swing_frames_left)
+end
+
+local function swing_animator(e)
+	e.swing_timer = 0
+	e.swinging = false
+	return function()
+		-- Draw swing
+		local data_source = e.wa_left and swing_frames_left or swing_frames_right
+		e.swing_timer += 0.4
+		if e.swing_timer < #swing_frames_right then
+			local frame_number = flr(e.swing_timer)+1
+			local frame_data   = data_source[frame_number]
+			
+			local frame_number_chr          = frame_data[1]
+			local frame_data_pickaxe        = frame_data[2]
+			local s_number                  = frame_data_pickaxe[1]
+			local frame_data_pickaxe_x      = frame_data_pickaxe[2]
+			local frame_data_pickaxe_y      = frame_data_pickaxe[3]
+			local frame_data_anchor_x       = frame_data_pickaxe[4]
+			local frame_data_anchor_y       = frame_data_pickaxe[5]
+			
+	
+			local s        = get_spr(s_number)
+			local s_width  = s:width()
+			local s_height = s:height()
+			
+			local spr_x_offset = -s_width * frame_data_anchor_x
+			local spr_y_offset = -s_height * frame_data_anchor_y
+
+			--spr(s_number, -5+frame_data_pickaxe_x+spr_x_offset, -8+frame_data_pickaxe_y+spr_y_offset)
+			circfill(-5+frame_data_pickaxe_x,-8+frame_data_pickaxe_y,1)
+			spr(frame_number_chr,-5,-8,e.wa_left)
+		else
+			e.swinging = false
+		end
+	end,
+	function ()
+		-- Trigger swing
+		e.swing_timer = 0
+		e.swinging = true
+	end
+end
+
+function build_player(chunk)
+	local base = build_entity()
+	
+	base.width = 0.7
+	base.update = update
+	base.walk_speed = 3
+-- uncoment for fun :) base.x = 999999999999999999
+	
+	local draw_swing, trigger_swing = swing_animator(base)
+	
+	local wa = walking_animator(base, 1, 2, 6, 9, -5, -8)
+	base.draw = function(e)
+		if (e.swinging) then
+			draw_swing()	
+		end
+		if not e.swinging then
+			wa(e)
+		end
+		if key "tab" then
+			prints(e.x .. " " .. e.y, -32, -32)
+		end
+	end
+	base.prev_whole_x = flr(base.x/8)
+	base.prev_whole_y = flr(base.y/8)
+	base.fc = 0
+	base.update = function(e,camera_offset_y)
+		local light_enabled = camera_offset_y > 100
+		e.fc += 1
+		-- Player input
+		-- e.dx = (input & 1 and e.walk_speed) or (input & 2 and -e.walk_speed) or 0
+		e.dx *= 0.8
+		if (key("a")) then 
+			e.dx -= e.walk_speed*0.2
+		elseif (key("d")) then 
+			e.dx += e.walk_speed*0.2
+		end
+		
+		-- Jumping
+		if e.grounded and key("w") then
+			e.dy = e.jump_force
+			e.grounded = false
+		end 
+		
+		if not (key("w") or e.grounded) and e.dy < -1 then
+			e.dy = -1
+		end
+		
+		if (keyp("t")) trigger_swing()
+		
+		if e.fc%5 == 0 then 
+			local whole_x = flr(e.x/8+0.5+ (e.wa_left and -1 or 1)) 
+			local whole_y = flr(e.y/8+0.5-1)
+			
+			if e.prev_whole_x != whole_x or e.prev_whole_y != whole_y then
+				if light_enabled then
+					chunk.place_light_in_world(whole_x, whole_y, 12)
+				end
+				chunk.break_light_in_world(base.prev_whole_x, base.prev_whole_y)
+			end
+		
+			e.prev_whole_x = whole_x
+			e.prev_whole_y = whole_y
+		end
+	end
+	
+	base.equipped_sprite = 16
+	return base
+end
 :: entity.lua
---[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-07-13 15:35:43",revision=2153]]
+--[[pod_format="raw",created="2025-04-14 16:32:59",modified="2025-10-14 17:34:50",revision=2173]]
 
 include "constants.lua"
 include "chunk.lua"
 
+--================================-- begin module
+function make_entity_lib()
 
-
-ENTITIES = {}
-function update_entities(camera_offset_y)
-	for e in all(ENTITIES) do
-		e:update(camera_offset_y)
-		move_entity(e)
+	local lib = {}
+	local chunk = nil
+	function lib.meta(wants)
+		chunk = wants "chunk"
 	end
-end
 
-function draw_entities(camera_x, camera_y)
-	for e in all(ENTITIES) do
-		camera(camera_x-flr(e.x),camera_y-flr(e.y))
-		e:draw()
+	local ENTITIES = {}
+	function lib.update_entities(camera_offset_y)
+		for e in all(ENTITIES) do
+			e:update(camera_offset_y)
+			move_entity(e)
+		end
 	end
-	camera(camera_x, camera_y)
-end
 
-function add_entity(e)
-	ENTITIES[#ENTITIES+1] = e
-end
+	function lib.draw_entities(camera_x, camera_y)
+		for e in all(ENTITIES) do
+			camera(camera_x-flr(e.x),camera_y-flr(e.y))
+			e:draw()
+		end
+		camera(camera_x, camera_y)
+	end
 
-function is_tile_solid(x,y)
-	local tile_number = chunk.get_tile_in_world(x,y)
-	return tile_number and tile_number > 0 and fget(256+tile_number,1) == false
-end
+	function lib.add_entity(e)
+		ENTITIES[#ENTITIES+1] = e
+	end
+	
+	function lib.add_player(e)
+		lib.add_entity(e)
+		lib.p = e
+	end
+	
+	function lib.is_tile_solid(x,y)
+		local tile_number = chunk.get_tile_in_world(x,y)
+		return tile_number and tile_number > 0 and fget(256+tile_number,1) == false
+	end
+	
+	function move_entity(e)
+	    -- Horizontal movement
+	    e.x += e.dx
+	    local tile_size = TILE_SIZE
+	    
+	    -- X collision check
+	    local x_side = e.dx > 0 and (e.x + e.width*tile_size) or e.x
+	    local tx = flr(x_side/tile_size)
+	    local ty_start = flr(e.y/tile_size)
+	    local ty_end = flr((e.y + e.height*tile_size - 1)/tile_size)
+	    
+	    for ty=ty_start,ty_end do
+	        if lib.is_tile_solid(tx, ty) then
+	            e.x = e.dx > 0 and (tx*tile_size - e.width*tile_size) or (tx+1)*tile_size
+	            e.dx = 0
+	            break
+	        end
+	    end
+	    
+	    -- Vertical movement
+	    -- Apply gravity
+	    e.dy = mid(-MAX_FALL, e.dy + GRAVITY, MAX_FALL)
+	    e.y += e.dy
+	    e.grounded = false
+	    
+	    -- Y collision check
+	    local y_side = e.dy > 0 and (e.y + e.height*tile_size) or e.y
+	    local ty = flr(y_side/tile_size)
+	    local tx_start = flr(e.x/tile_size)
+	    local tx_end = flr((e.x + e.width*tile_size - 1)/tile_size)
+	    
+	    for tx=tx_start,tx_end do
+	        if lib.is_tile_solid(tx, ty) then
+	            e.y = e.dy > 0 and (ty*tile_size - e.height*tile_size) or (ty+1)*tile_size
+	            if e.dy > 0 then e.grounded = true end
+	            e.dy = 0
+	            break
+	        end
+	    end
+	end
 
-function move_entity(e)
-    -- Horizontal movement
-    e.x += e.dx
-    local tile_size = TILE_SIZE
-    
-    -- X collision check
-    local x_side = e.dx > 0 and (e.x + e.width*tile_size) or e.x
-    local tx = flr(x_side/tile_size)
-    local ty_start = flr(e.y/tile_size)
-    local ty_end = flr((e.y + e.height*tile_size - 1)/tile_size)
-    
-    for ty=ty_start,ty_end do
-        if is_tile_solid(tx, ty) then
-            e.x = e.dx > 0 and (tx*tile_size - e.width*tile_size) or (tx+1)*tile_size
-            e.dx = 0
-            break
-        end
-    end
-    
-    -- Vertical movement
-    -- Apply gravity
-    e.dy = mid(-MAX_FALL, e.dy + GRAVITY, MAX_FALL)
-    e.y += e.dy
-    e.grounded = false
-    
-    -- Y collision check
-    local y_side = e.dy > 0 and (e.y + e.height*tile_size) or e.y
-    local ty = flr(y_side/tile_size)
-    local tx_start = flr(e.x/tile_size)
-    local tx_end = flr((e.x + e.width*tile_size - 1)/tile_size)
-    
-    for tx=tx_start,tx_end do
-        if is_tile_solid(tx, ty) then
-            e.y = e.dy > 0 and (ty*tile_size - e.height*tile_size) or (ty+1)*tile_size
-            if e.dy > 0 then e.grounded = true end
-            e.dy = 0
-            break
-        end
-    end
-end
+	return lib
+
+end -- of module
+PUBLISH("entity", make_entity_lib())
 :: game.lua
---[[pod_format="raw",created="2025-07-14 18:07:08",modified="2025-07-14 18:37:56",revision=32]]
-function make_game(chunk)
+--[[pod_format="raw",created="2025-07-14 18:07:08",modified="2025-11-04 18:50:12",revision=108]]
+function make_game(chunk, ticking_lib, queue_lib, e_lib)
+	
 	local game = {}
+	
+	local entity_lib = nil
+	function game.add_entity_lib(lib)
+		entity_lib = lib
+	end
+	
+	local queue_lib = nil
+	local work_queues, update_world_mouse, draw_world_mouse
+	local ticking_lib = nil
+	local chunk = nil
+	
+	function game.meta(wants)
+		queue_lib = wants "queue"
+		work_queues = queue_lib.work_queues
+		
+		ticking_lib = wants "ticking"
+		
+		chunk = wants "chunk"
+		entity_lib = wants "entity"
+		
+		local wi = wants "world_interaction"
+		update_world_mouse = wi.update_world_mouse
+		draw_world_mouse = wi.draw_world_mouse
+	end
 
 	local CAMERA_OFFSET_X = 0
 	local CAMERA_OFFSET_Y = 0
@@ -1227,19 +1112,25 @@ function make_game(chunk)
 	
 	window { cursor = 'crosshair', pauseable = false, autoclose = false }
 	
-	function game.init()
+	function game.init(opts)
 		poke(0x550b, 0x3f)
 		memcpy(0x5000+63*4,0x5000+12*4,4)
-		chunk.init("default_2")
+
 		CHUNK_PROCESS = nil 
-		if env().sandbox then
-			chunk.set_fallback_behavior() BBS_WARN = true 
-		else
-			CHUNK_PROCESS = create_process("chunkservice.lua", {argv={pid()}} )	
-		end 
+
+		if not (#opts.connection.host > 0) then
+			if env().sandbox then
+				chunk.set_fallback_behavior() BBS_WARN = true 
+			else
+				CHUNK_PROCESS = create_process("chunkservice.lua", {argv={pid()}} )	
+			end 
+		else 
+			game.setup_multiplayer_consumer(opts.connection.host)
+		end
 		init_everything()
+		chunk.init(opts.world)
 		on_event("load_chunk", chunk.recv_chunk)
-		add_entity(build_player())
+		entity_lib.add_player(build_player(chunk))
 		chunk.set_center(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
 		chunk_loader = chunk.start_loader_routine()
 		chunk_saver  = chunk.start_saver_routine()
@@ -1259,18 +1150,17 @@ function make_game(chunk)
 		
 		update_world_mouse(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
 		if FRAME_COUNTER > 150 then
-			update_entities(CAMERA_OFFSET_Y)
+			entity_lib.update_entities(CAMERA_OFFSET_Y)
 		end
 		
-		CAMERA_OFFSET_X = ENTITIES[1].x-240
-		CAMERA_OFFSET_Y = ENTITIES[1].y-135
+		CAMERA_OFFSET_X = entity_lib.p.x-240
+		CAMERA_OFFSET_Y = entity_lib.p.y-135
 		chunk.set_center(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
 	end
 	
 	function game.draw()
 
 		cls(63)
-		--local world_meta = get_world_meta()
 		start_bar_frame()
 		FRAME_COUNTER+=1
 		if CAMERA_OFFSET_Y < 140 then
@@ -1279,7 +1169,7 @@ function make_game(chunk)
 		end
 		camera(CAMERA_OFFSET_X,CAMERA_OFFSET_Y)
 		chunk.render_loaded_chunks()
-		draw_entities(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
+		entity_lib.draw_entities(CAMERA_OFFSET_X, CAMERA_OFFSET_Y)
 		chunk.render_light()
 		draw_world_mouse()
 	
@@ -1289,24 +1179,29 @@ function make_game(chunk)
 		local mem = stat(3)
 		if (key('tab')) then 
 			mem = stat(0)
-			prints("Picotron version: "..  stat(5),1,10)
-			prints("Loaded chunks: " .. real_count(LOADED_CHUNKS), 1, 20)
 			drawlog(1, 30)
 		end
 		prints("\n CS: " .. (SAVER_STATUS and "OK" or "FAIL") ..
 			"   CL: " .. (LOADER_STATUS and "OK" or "FAIL") ..
 			"   TS: " .. (SCHEDULE_STATUS and "OK" or "FAIL") ..
-			"   CC: " .. real_count(LOADED_CHUNKS),0,0,7)
+			"   CC: " .. real_count(chunk.loaded_chunks),0,0,7)
 		perf_graph()
 	
-		local a,b = work_queues()
+		-- This is done in draw because Picotron skips draw on lag frames
+		local a,b = queue_lib.work_queues()
 		
 		print(CAMERA_OFFSET_Y,0,0,7)
+		
+
 	end
 
-	print "Game made!"
+	function game.setup_multiplayer_consumer(address)
+		error ("Consumer set up on " .. address)
+	end
 	return game
 end
+
+PUBLISH("game", make_game())
 :: generator.lua
 --[[pod_format="raw",created="2025-04-13 21:39:41",modified="2025-07-07 17:23:25",revision=2601]]
 include "noise.lua"
@@ -1425,6 +1320,1359 @@ function init_colortables()
 end
 
 
+:: lightmap_data.lua
+--[[pod_format="raw",created="2025-06-17 17:31:54",modified="2025-09-01 19:12:18",revision=412]]
+
+include "logging.lua"
+
+local COLOR_PAIRS = {
+	0x0000, 0x0021, 0x2121, 0x2122, 0x2223, 0x2323, 0x2424
+}
+
+
+function make_dither_pattenrs()
+	fillp(0b0101101001011010)
+	local base_offset = #COLOR_PAIRS
+	local out_tiles = {}
+	for i,v in pairs(COLOR_PAIRS) do
+		local target_sprite = userdata("u8",8,8)
+		set_draw_target(target_sprite)
+		rectfill(0,0,7,7,v)
+		out_tiles[#out_tiles+1] = target_sprite
+	end
+	set_draw_target()
+	fillp()
+	return out_tiles
+end
+
+function generate_lightmap(tile_table)
+	-- ordered as tables of torch light per sky light
+	-- will then be stuffed into a buffer where sky * torch = final
+	local lightmap_data = {
+		{
+			-- Global shadow 0, noon
+			{0,0,0,0,0,0,0},
+			{0,1,1,1,1,1,1},
+			{0,1,2,2,2,2,2},
+			{0,1,2,3,3,3,3},
+			{0,1,2,3,4,4,4},
+			{0,1,2,3,4,5,5},
+			{0,1,2,3,4,5,6},
+		},
+		{
+			{0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1},
+			{1,2,2,2,2,2,2},
+			{1,2,3,3,3,3,3},
+			{1,2,3,4,4,4,4},
+			{1,2,3,4,5,5,5},
+			{1,2,3,4,5,6,6},
+		},
+		{
+			{0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1},
+			{2,2,2,2,2,2,2},
+			{2,3,3,3,3,3,3},
+			{2,3,4,4,4,4,4},
+			{2,3,4,5,5,5,5},
+			{2,3,4,5,6,6,6},
+		},
+		{
+			{0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1},
+			{2,2,2,2,2,2,2},
+			{3,3,3,3,3,3,3},
+			{3,4,4,4,4,4,4},
+			{3,4,5,5,5,5,5},
+			{3,4,5,6,6,6,6},
+		},
+		{
+			{0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1},
+			{2,2,2,2,2,2,2},
+			{3,3,3,3,3,3,3},
+			{4,4,4,4,4,4,4},
+			{4,5,5,5,5,5,5},
+			{4,5,6,6,6,6,6},
+		},
+		{
+			{0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1},
+			{2,2,2,2,2,2,2},
+			{3,3,3,3,3,3,3},
+			{4,4,4,4,4,4,4},
+			{5,5,5,5,5,5,5},
+			{5,6,6,6,6,6,6},
+		},
+		{
+			{0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1},
+			{2,2,2,2,2,2,2},
+			{3,3,3,3,3,3,3},
+			{4,4,4,4,4,4,4},
+			{5,5,5,5,5,5,5},
+			{6,6,6,6,6,6,6},
+			-- Global shadow 6, night
+		},
+	}
+	
+	for time_table in all(lightmap_data) do
+		for torch_light_table in all(time_table) do
+			for i,v in pairs(torch_light_table) do
+				-- clobber values in lightmap_data using input table of tiles
+				local tile_index = v+1
+				torch_light_table[i] = tile_table[tile_index]
+			end
+		end
+	end
+	
+	return lightmap_data
+end
+
+
+local DITHER_TILES = make_dither_pattenrs()
+local LIGHTMAP_CUBE = generate_lightmap(DITHER_TILES)
+
+local SKY_COLORS = {
+	12, 12, 16, 18, 1, 1, 0 
+}
+function set_lightmap(cube_idx)
+	local sane_cube_idx = mid(1,#LIGHTMAP_CUBE,cube_idx)
+	local sky_color = SKY_COLORS[sane_cube_idx]
+	memcpy(0x5000+63*4,0x5000+sky_color*4,4)
+	local time_table = LIGHTMAP_CUBE[sane_cube_idx]
+	-- Write tiles to memory!
+	for sky_light_idx, torch_light_table in pairs(time_table) do
+		local sky_light_offset = sky_light_idx-1
+		local row_str = ''
+		for torch_light_idx, light_tile_ref in pairs(torch_light_table) do
+			-- "it's writing time" and then he wrote all over the place
+			local torch_light_offset = torch_light_idx-1
+			local spr_num = 512-(torch_light_offset+(7*sky_light_offset))
+			
+			set_spr(spr_num,light_tile_ref)
+		--	row_str = row_str .. sky_light_offset .. "/" ..torch_light_offset .. ' ->' .. spr_num  .. ", "
+		end
+	end
+end
+
+
+local TIME_OFFSET = 0
+function debug_light()
+	if keyp("down") then TIME_OFFSET += 1 end
+	if keyp("up") then TIME_OFFSET -= 1 end
+	TIME_OFFSET = mid(1,#LIGHTMAP_CUBE,TIME_OFFSET)
+	if keyp("up") or keyp("down") then set_lightmap(TIME_OFFSET) end
+end
+:: logging.lua
+--[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-07-05 17:57:54",revision=1773]]
+include "util.lua"
+
+CURRENT_LOG = ""
+
+function dbg(str)
+	CURRENT_LOG ..= (str or 'nil') .. "\n"
+	CURRENT_LOG = sub(CURRENT_LOG,-1024)
+end
+
+function drawlog(x,y)
+	local split_log = split(CURRENT_LOG,"\n")
+	local c = 0;
+	for i = max(1,#split_log-20),#split_log do
+		prints(split_log[i],x,8+y+c*10)
+		c += 1;
+	end
+end
+
+function odbg(o,indent)
+   if not indent then dbg('Dumping object...') end
+	if type(o) == "userdata" then 
+		local w,h,t = o:attribs()
+		dbg(w .. "x" .. h .. " of " .. t)
+		return 
+	end
+	if type(o) != "table" then dbg("Dumping undumpable " .. type(o) .. ": "  .. o) return end
+	local indent = indent or ''
+	for i,v in pairs(o) do
+		if     (type(v) == 'table') then
+			dbg(indent .. i .. " -> ")
+			odbg(v, indent .. '  ')	
+		elseif (type(v) == "function") then
+			dbg("callable " .. i )
+		elseif (type(v) == "userdata") then
+			local w,h,t = v:attribs()
+			dbg(indent .. i .. "	-> " .. w .. "x" .. h .. " of " .. t)
+		elseif (type(v) == "boolean") then
+			dbg(indent .. i .. " -> " .. (v and "b-true" or "b-false"))
+		else
+			dbg(indent .. i .. ' = ' .. v )
+		end
+	end
+	if indent == '' then
+		dbg("Done dumping")
+	end
+end
+:: main.lua
+--[[pod_format="raw",created="2025-07-14 18:06:26",modified="2025-10-18 20:24:10",revision=96]]
+poke(0x4000, get(fetch("/system/fonts/lil_mono.font")))
+
+PROCESS_TYPE="main"
+
+include "di.lua"
+
+include "util.lua"
+include "constants.lua"
+include "chunk.lua"
+include "logging.lua"
+include "generator.lua"
+include "entity.lua"
+include "entities/player.lua"
+include "world_interaction.lua"
+include "queue.lua"
+include "init_routines.lua"
+include "lightmap_data.lua"
+include "ticking.lua"
+include "world_loader.lua"
+include "game.lua"
+include "ui.lua"
+include "ui_screens.lua"
+
+DI_BOOT()
+
+
+
+DI_GET("screens").make_title(function (is_host, destination) 
+	if destination and #destination > 0 then
+		local game = DI_GET("game")
+		_update = game.update
+		_draw = game.draw
+		
+		game.init({
+			world = {
+				name = destination,
+			},
+			connection = {
+				host = not is_host and "tcp://" .. destination or "", -- or "tcp://..."
+			}
+		})
+	end
+end)
+
+
+local ui_lib = DI_GET("ui")
+_update = ui_lib.draw
+_draw = ui_lib.update
+:: net/client.lua
+--[[pod_format="raw",created="2025-07-14 16:32:34",modified="2025-07-14 18:05:39",revision=2]]
+function make_client(entities, client_chunks)
+	
+end
+:: net/handler.lua
+--[[pod_format="raw",created="2025-07-10 16:56:02",modified="2025-07-14 16:18:09",revision=11]]
+include "constants.lua"
+
+function make_decoder(sock)
+	local wanted_length = 0,
+	local whole_packet_accumulator = ''
+	local stream_accumulator = ''
+
+	local handlers = {}	
+
+	function encode_int_be(num, len)
+	    local bytes = {}
+	    for i = len, 1, -1 do
+	        local shift = (i - 1) * 8
+	        local byte = (num >> shift) & 0xFF
+	        bytes[#bytes+1] = byte
+	    end
+	    return chr(unpack(bytes))
+	end
+	
+	function decode_int_be(str, len)
+	    len = len or #str
+	    local num = 0
+	    for i = 1, len do
+	        local byte = ord(str, i) or 0
+	        num = (num << 8) | byte
+	    end
+	    return num
+	end
+	
+	function consume(n)
+		local s = decoder.stream_accumulator
+		local retval = sub(s,1,n)
+		decoder.stream_accumulator = sub(s,n+1)
+		return retval
+	end
+	
+	function decoder.read()
+		local buf = sock:read()
+		stream_accumulator = stream_accumulator .. buf
+		
+		-- Decoder's job is to accumulate enough bytes to have a whole packet
+		-- Decoder will keep consuming bytes until it gets a complete packet
+		
+		while #stream_accumulator > 0 do
+			if wanted_length == 0 then
+				-- We don't have anything to consume. Next payload MUST be a packet length
+				-- Consume 4 bytes from stream_acc
+				local len_data = consume(n)
+				wanted_length = len_data
+			else
+				local partial_data = consume(wanted_length)
+				wanted_length = wanted_length - #partial_data
+				whole_packet_accumulator = whole_packet_accumulator .. partial_data
+				if wanted_length == 0 then
+					-- Welp, we have a packet!
+					local evt = unpod(whole_packet_accumulator)
+					whole_packet_accumulator = ''
+					handlers[evt.type](evt.payload)
+				end
+			end
+		end
+	end
+	
+	function decoder.on(evt, cb)
+		handlers[evt] = cb
+	end
+	
+	return decoder
+end
+:: net/server.lua
+--[[pod_format="raw",created="2025-07-14 16:32:29",modified="2025-07-14 18:05:39",revision=3]]
+function make_server(entities, server_chunks)
+	local server = {}
+
+
+	return server	
+end
+:: old_main.lua
+--[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-07-14 18:22:05",revision=6299]]
+-- Picotron Stargazer
+-- ~~ CREDITS ~~
+-- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
+
+include "util.lua"
+include "constants.lua"
+include "chunk.lua"
+include "logging.lua"
+include "generator.lua"
+include "entity.lua"
+include "entities/player.lua"
+include "world_interaction.lua"
+include "chunkservice.lua"
+include "queue.lua"
+include "init_routines.lua"
+include "lightmap_data.lua"
+include "ticking.lua"
+include "world_loader.lua"
+
+function init_game()
+	
+end
+
+function draw_game()
+	
+
+end
+
+--COLOR_MAGIC = {0, 33, 34, 35, 36, 37, 36, 35, 34, 33, 0}
+
+function update_game()
+
+end
+
+function server_draw()
+	-- Keeping this here for the same reasons as above
+	-- If the server is ever overburdened, this is going to be skipped
+	local a,b = work_queues()
+	
+	cls()
+	print("Server mode! Stats: ",0,0)
+	print(stat(3))
+	print(stat(1))
+	drawlog(32,32)
+end
+
+--=================================================================================--
+
+local TITLE_STATE = {}
+
+function _init()
+	fillp()
+	TITLE_STATE.worlds = ls(SAVEGAME_DIRECTORY)
+	TITLE_STATE.cursor = 1
+end
+
+function _draw()
+	cls()
+	print(
+[[
+Welcome to Stargazer!
+Running experimental build 20/06/2025
+Keyboard and mouse required! Arrows to navigate, space to select, del to DELETE!
+Press H to host a server! You'll need to launch another instance of the game to play.
+
+(C) cardboardbox.tech 2025
+]],16,16,7
+)
+	for i,v in pairs(TITLE_STATE.worlds) do
+		local vy = 74+i*10
+		print(v,16,vy)
+	end
+	spr(1,2,66+TITLE_STATE.cursor*10)
+	print(TITLE_STATE.entry_text and TITLE_STATE.entry_text .. '_' or "new!",16, 74+(1+#TITLE_STATE.worlds)*10,10)
+	
+end
+
+function _update()
+	if not TITLE_STATE.entry_text then
+		if (keyp "up") TITLE_STATE.cursor -= 1 
+		if (keyp "down") TITLE_STATE.cursor += 1
+		if keyp "enter" then
+			if TITLE_STATE.cursor == #TITLE_STATE.worlds+1 then
+				TITLE_STATE.entry_text = ''
+			else
+				init_game()
+				chunk.init(TITLE_STATE.worlds[TITLE_STATE.cursor])			
+				_update = update_game
+				_draw = draw_game
+			end
+		end
+		if keyp "h" and TITLE_STATE.cursor <= #TITLE_STATE.worlds then
+			init_game()
+			chunk.init(TITLE_STATE.worlds[TITLE_STATE.cursor])
+			_update = update_game
+			_draw = server_draw
+		end
+		if keyp "j" then
+			TITLE_STATE.entry_text = ''
+			TITLE_STATE.joining_remote = true
+		end
+		TITLE_STATE.cursor = mid(1,TITLE_STATE.cursor,#TITLE_STATE.worlds+1)
+	else
+		if keyp "enter" and #TITLE_STATE.entry_text > 0 then
+			if TITLE_STATE.joining_remote then
+				init_game()
+				chunk.remote_client = true
+				chunk.init(#TITLE_STATE.entry_text)
+			else
+				TITLE_STATE.worlds[#TITLE_STATE.worlds+1] = TITLE_STATE.entry_text
+				TITLE_STATE.entry_text = nil
+			end			
+		else
+			TITLE_STATE.entry_text = TITLE_STATE.entry_text .. (readtext() or '')
+			if keyp('backspace') then TITLE_STATE.entry_text = sub(TITLE_STATE.entry_text,1,#TITLE_STATE.entry_text-1) end
+		end
+	end
+end
+
+if SKIP_MAIN_MENU then
+	init_game()
+	_update = update_game
+	_draw = draw_game
+end
+:: packetreader.lua
+--[[pod_format="raw",created="2025-10-18 20:39:43",modified="2025-11-04 19:29:24",revision=5]]
+
+local function mkmod()
+	local mod = {}
+	local socks = {}
+	
+	function mod.make(addr)
+		local reader = {}
+		local sock = socket(addr)
+		local accumulator = ""
+		local current_packet_length = nil -- unknown
+		reader.read = function(self)
+			-- accumulate a full packet via sock:read()
+			-- this will be called several times
+			-- 1. get packet length
+			-- 2. read up to that many bytes
+			
+			local data = sock:read()
+			if (data and #data>0) then
+				accumulator = 
+			end
+		end
+		
+		reader.handle = function(self)
+			
+		end
+		
+		reader.send = function(self, data)
+			local out_pod = pod(data)
+			local packet = #data.."$"..out_pod()
+			sock:write(packet)
+		end
+	
+		socks[#socks+1] = reader
+		return reader
+	end
+	
+	function mod.broadcast(data,except)
+		for sock in all(socks) do
+			if (sock != except) sock.send(data)
+		end
+	end
+	
+	return mod
+end
+
+PUBLISH("packetreader", mkmod())
+:: queue.lua
+--[[pod_format="raw",created="2025-06-08 15:17:51",modified="2025-10-14 17:31:00",revision=188]]
+include "logging.lua"
+
+function make_queue_lib() -- module
+
+local QUEUES = {}
+
+function work_queues()
+	local running_queues = 0
+	for i,q in pairs(QUEUES) do
+		local s, err = coresume(q)
+		if s then running_queues += 1 end
+		if err then error(err) end
+	end
+	return running_queues, #QUEUES
+end
+
+function make_queue()
+	local actions = {}
+	
+	local r = cocreate(function()
+		while true do
+			local next_action = deli(actions, 1)
+			if next_action then
+				r = next_action.f(unpack(next_action.argv))
+				--error(tostr(next_action.args))
+			end
+			yield()
+		end
+	end)
+	local a = function(func, argv)
+		actions[#actions+1] = { f = func, argv = argv }
+	end
+	
+	QUEUES[#QUEUES+1] = r
+	return a
+end
+
+	return {
+		make_queue = make_queue,
+		work_queues = work_queues,
+		meta = function() end
+	}
+
+end -- of module
+PUBLISH("queue", make_queue_lib())
+:: ticking.lua
+--[[pod_format="raw",created="2025-06-30 15:08:35",modified="2025-10-14 18:02:22",revision=396]]
+
+include "chunk.lua"
+include "util.lua"
+include "logging.lua"
+
+function make_ticking_lib(chunk) -- module
+
+	local lib = {}
+	local get_chunk_by_world_pos = nil
+	local get_tile_in_world = nil
+	local set_tile_in_world = nil
+
+	local chunk = nil
+	
+	function lib.meta(wants)
+		chunk = wants "chunk"
+		get_chunk_by_world_pos = chunk.get_chunk_by_world_pos
+		get_tile_in_world = chunk.get_tile_in_world
+		set_tile_in_world = chunk.set_tile_in_world
+	end
+	
+	function enqueue(x,y,fx,fy)
+		local c = get_chunk_by_world_pos(x,y)
+		if c then 
+			c.next_schedule[x .. " " .. y] = {x,y}
+		else
+			if fx and fy then 
+				local fc = get_chunk_by_world_pos(fx,fy)
+				fc.next_schedule[fx .. " " .. fy] = {fx,fy}
+			end
+		end
+	end
+
+	local function make_fluid_rule(
+		this_tile, 
+		residue_tile,
+		stale_tile,
+		left_tile,
+		right_tile,
+		free_tile,
+		direction_bias
+	)
+		return function(x,y)
+			local found_tile = get_tile_in_world(x,y+1)
+			if found_tile == free_tile or (found_tile and fget(256+found_tile,7)) then
+				-- downwards motion
+				set_tile_in_world(x,y,0,false,true)
+				set_tile_in_world(x,y+1,10,false,true)
+				enqueue(x,y-1,x,y)
+				enqueue(x,y+1,x,y)
+				enqueue(x+1,y,x,y)
+				enqueue(x-1,y,x,y)
+			else
+				-- lateral motion
+				local delta_x = sgn(rnd()-0.5+direction_bias)
+				local next_tile = delta_x < 0 and left_tile or right_tile
+				-- first try
+				local found_tile = get_tile_in_world(x+delta_x,y)
+				if found_tile == free_tile or (found_tile and fget(256+found_tile,7)) then
+					-- move
+					set_tile_in_world(x,y,residue_tile,false,true)
+					set_tile_in_world(x+delta_x,y,next_tile,false,true)
+					-- enqueue free tiles and my next position
+					enqueue(x,y-1,x,y)
+					enqueue(x,y+1,x,y)
+					enqueue(x+1,y,x,y)
+					enqueue(x-1,y,x,y)
+				else
+					delta_x *= -1
+					next_tile = delta_x < 0 and left_tile or right_tile
+					-- second try
+					local found_tile = get_tile_in_world(x+delta_x,y)
+					if found_tile == free_tile or (found_tile and fget(256+found_tile,7)) then
+						-- move
+						set_tile_in_world(x,y,residue_tile,false,true)
+						set_tile_in_world(x+delta_x,y,next_tile,false,true)
+						-- enqueue free tiles and my next position
+						enqueue(x,y-1,x,y)
+						enqueue(x,y+1,x,y)
+						enqueue(x+1,y,x,y)
+						enqueue(x-1,y,x,y)
+					else
+						-- become still
+						set_tile_in_world(x,y,stale_tile,false,true)
+					end
+				end
+			end
+		end
+	end
+	
+	RULES = {
+		[10] = make_fluid_rule(
+			10, -- this_tile, 
+			 0, -- residue_tile,
+			10, -- stale_tile,
+			34, -- left_tile,
+			35, -- right_tile
+			 0, -- free_tile,
+			 0  -- direction_bias
+		),
+		[34] = make_fluid_rule(
+			34, -- this_tile, 
+			 0, -- residue_tile,
+			10, -- stale_tile,
+			34, -- left_tile,
+			35, -- right_tile
+			 0, -- free_tile,
+		  -0.45 -- direction_bias
+		),
+		[35] = make_fluid_rule(
+			35, -- this_tile, 
+			 0, -- residue_tile,
+			10, -- stale_tile,
+			34, -- left_tile,
+			35, -- right_tile
+			 0, -- free_tile,
+		   0.45 -- direction_bias
+		),
+	}
+	
+	local RESUME_COUNT = 0
+	tick_schedule = cocreate(function() 
+		while true do
+			RESUME_COUNT += 1
+			for _,c in pairs(chunk.loaded_chunks) do
+				if c.y%3 != RESUME_COUNT%3 then goto continue end
+				local next_action
+				local action_count = 0
+				repeat
+					next_action = deli(c.schedule,1)
+					if next_action then
+						local x, y = unpack(next_action)
+						local rule = get_tile_in_world(x,y)
+						local r = RULES[rule]
+						if (r) r(x,y)			
+					end
+				until not next_action
+				::continue::
+			end
+			yield()
+			for _,c in pairs(chunk.loaded_chunks) do
+				for _,v in pairs(c.next_schedule) do
+					c.schedule[#c.schedule+1] = v
+				end
+				c.next_schedule = {}
+			end
+			yield()
+		end
+	end)
+	
+	
+	return lib
+
+end -- of module
+PUBLISH("ticking", make_ticking_lib())
+:: ui.lua
+--[[pod_format="raw",created="2025-09-01 20:23:23",modified="2025-10-14 17:25:32",revision=88]]
+include "util.lua"
+
+local function _nop() end
+
+local function make_clickable(b,cb)
+	b.update = chain(
+		b.update,
+		function(e, mouse_state)
+			if (
+				check_aabb_wh(
+					e.x,
+					e.y,
+					e.width,
+					e.height,
+					mouse_state.g_mouse_x,
+					mouse_state.g_mouse_y
+				)
+				and
+				mouse_state.left_pressed
+			) then 
+				cb(e)
+				e.text = "Clicked!"
+			end
+		end
+	)
+end
+
+function make_ui_lib()
+
+	local ui = {}
+	local elements = {}
+	local text_focus = nil
+	local prev = nil
+	
+	function ui.meta()
+		-- none
+	end
+	
+	function ui.draw()
+		cls()
+		for i,v in pairs(elements) do
+			v:draw()
+		end
+	end
+	
+	local y_accumulator = 0
+	local x_accumulator = 0
+	local x_anchor = 0
+	
+	local mouse_state = {}
+	local PREV_MOUSE_LEFT = false
+	local PREV_MOUSE_RIGHT = false
+	
+	function ui.update()
+		if text_focus then
+			text_focus.input = text_focus.input or ""
+			if peektext() then
+			  text_focus.input ..= readtext()
+			end
+			if keyp("backspace") then
+				text_focus.input = sub(text_focus.input,1,#text_focus.input-1)
+			end
+		end
+		
+		for i,v in pairs(elements) do
+		
+			-- this is possible, apparently
+			mouse_state.g_mouse_x, 
+			mouse_state.g_mouse_y, 
+			mouse_state.g_mouse_b, 
+			mouse_state.g_wheel_x, 
+			mouse_state.g_wheel_y 
+				= mouse()
+			
+			mouse_state.left_down      =   mouse_state.g_mouse_b & 0x1 > 0
+			mouse_state.right_down     =   mouse_state.g_mouse_b & 0x2 > 0
+			mouse_state.wheel_delta    = -(mouse_state.g_wheel_y == 0 and 0 or sgn(mouse_state.g_wheel_y))
+			
+			mouse_state.left_pressed   =     mouse_state.left_down and not PREV_MOUSE_LEFT
+			mouse_state.left_released  = not mouse_state.left_down and PREV_MOUSE_LEFT
+			
+			mouse_state.right_pressed  =     mouse_state.right_down and not PREV_MOUSE_RIGHT
+			mouse_state.right_released = not mouse_state.right_down and PREV_MOUSE_RIGHT
+			
+			v:update(mouse_state)
+		end
+	end
+	
+	local function put(b)
+		
+		elements[#elements+1] = b
+		if (b.y == "next" or b.y == "keep") then
+			if (b.y == "next") y_accumulator += (prev.height or 16) + 4
+			b.y = y_accumulator
+		else
+			y_accumulator = b.y
+		end
+		
+		if (b.x == "next" or b.x == "keep") then
+			if (b.x == "next") x_accumulator += (prev.width or error("No width! Can't calculate next position") ) + 2
+			b.x = x_accumulator
+		else
+			if (b.x == "reset") then
+				b.x = x_anchor
+				x_accumulator = x_anchor
+			else
+				x_anchor = b.x
+				x_accumulator = b.x
+			end
+		end
+		if (b.init) b:init()
+		prev = b
+	end
+
+	function ui.text(text,x,y,c,__skip)
+		obj = {
+			text = text,
+			x = x,
+			y = y,
+			c = c,
+			update = _nop,
+			draw = function(e)
+				print(e.text,e.x,e.y,e.c)
+			end
+		}
+		-- width = 4px padding + length * 5
+		obj.width = 4 + #text*5
+		-- height = constant 10 = letter height * 5 // TODO count newlines
+		obj.height = 10
+		if (not __skip) put(obj)
+		return obj
+	end
+	
+	function ui.button(text,x,y,c_bg,c_text,c_border,cb,__skip)
+		local obj = ui.text(text,x,y,c_text,true)
+		obj.c_bg     = c_bg or 7
+		obj.c_text   = c_text or 1
+		obj.c_border = c_border or 1
+		obj.c_text   = c_text
+		-- origin = 2px 2px
+		obj.draw = function (e)
+			rectfill(e.x, e.y, e.x+e.width, e.y+e.height, e.c_bg)
+			rect(e.x-1, e.y-1, e.x+e.width, e.y+e.height, e.c_border)
+			print(e.text,e.x+2,e.y+2, e.c_text)
+		end
+		
+		make_clickable(obj, cb or function(e)
+			e.c_bg = 10
+		end)
+		
+		if (not __skip) put(obj)
+		return obj
+	end
+	
+	function ui.spr(idx,x,y,__skip)
+		obj = {
+			idx = idx,
+			x = x,
+			y = y,
+			update = _nop,
+			draw = function(e)
+				spr(idx,x,y)
+			end
+		}
+		put(obj)
+		
+		if (not __skip) put(obj)
+		return obj
+	end
+	
+	function ui.field(x,y,width,ph,__skip)
+		local obj = ui.button('',x,y)
+		obj.input = ''
+		obj.width = width or 64
+		obj.c_bg = 0
+		obj.c_border = 7
+		
+		function obj.update(e)
+			if text_focus == e then
+				e.c_border = 10
+			else
+				e.c_border = 7
+			end
+			e.text = #e.input > 0 and e.input or ph
+		end
+		make_clickable(obj, function (e)
+			text_focus = e
+		end)
+		
+		
+
+		if (not __skip) put(obj)
+		return obj
+	end
+	
+	function ui.rect(x1,y1,x2,y2,c,__skip)
+		local obj = {
+			x1 = x1,
+			y1 = y1,
+			x2 = x2,
+			y2 = y2,
+			update = _nop,
+			draw = function(e)
+				rect(e.x1,e.y1,e.x2,e.y2,e.c)
+			end
+		}
+		if (not __skip) put(obj)
+		return obj
+	end
+	
+	function ui.clear()
+		elements = {}
+	end
+	
+	function ui.pad(x,y)
+		x_accumulator += x
+		y_accumulator += y
+	end
+	
+
+	return ui
+end
+
+PUBLISH("ui", make_ui_lib())
+:: ui_screens.lua
+--[[pod_format="raw",created="2025-09-07 16:32:30",modified="2025-10-18 20:25:51",revision=70]]
+include "ui.lua"
+
+function make_screens_lib()
+	local lib = {}
+	
+	local ui = nil
+	function lib.meta(wants)
+		ui = wants "ui"
+	end
+
+	local screens = {}
+	
+	-- TITLE
+	function lib.make_title(game_start_cb)
+		local field_world_name, field_connection
+		ui.clear()
+		
+		ui.rect(1,1,469,269,7)
+		ui.spr(512,16,16)
+		
+		ui.text("Singleplayer",32,100,7)
+		field_world_name = ui.field("keep","next",128, "Enter world name!")
+		ui.button("Play!","next","keep", nil, nil, nil, function()
+			game_start_cb(true, field_world_name.input)
+		end)
+		ui.pad(0,32)
+		
+		ui.text("Multiplayer (experimental!)","reset","next",7)
+		field_connection = ui.field("keep","next",128,"Enter address...")
+		ui.button("Connect","next","keep", nil, nil, nil, function()
+			game_start_cb(false, field_connection.input)
+		end)
+	end
+	
+	return lib
+end
+
+PUBLISH("screens", make_screens_lib())
+:: util.lua
+--[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-09-07 19:43:58",revision=2670]]
+function check_aabb_pair(x1,y1,x2,y2,x_t,y_t)
+	return x_t >= math.min(x1, x2) and
+	       x_t <= math.max(x1, x2) and
+	       y_t >= math.min(y1, y2) and
+	       y_t <= math.max(y1, y2)
+end
+
+function check_aabb_wh(x1,y1,width,height,x_t,y_t)
+	-- copied to avoid call overhead
+	local x2 = x1+width
+	local y2 = y1+height
+	return x_t >= math.min(x1, x2) and
+	       x_t <= math.max(x1, x2) and
+	       y_t >= math.min(y1, y2) and
+	       y_t <= math.max(y1, y2)
+end
+
+-- slow, use with caution
+function chain(f1,f2)
+	return function(...)
+			f1(...)
+			f2(...)
+		end
+end
+
+function cofetch(r, cb)
+	coresume(cocreate(function() 
+		local res = fetch(r)
+		cb(res)
+	end))
+end
+
+local perf_rec = {}
+local perf_c = 1
+local lag_counter = 0
+function perf_graph()
+	perf_c = (perf_c + 1)%60
+	perf_rec[perf_c] = stat(1) * 10
+	local acc = 0
+	local m = 0
+	for i,v in pairs(perf_rec) do
+		pset(i,SCREEN_HEIGHT - 10, 8)
+		pset(i,SCREEN_HEIGHT - 8, 1)
+		pset(i,SCREEN_HEIGHT - v,7)
+		acc += v
+		if v > m then m = v end
+	end
+	if stat(7) < 60 then lag_counter += 1 end
+	m = flr(m*10)
+	local avg = flr(acc / 6)
+	prints("lag " .. lag_counter,62, SCREEN_HEIGHT - 32)
+	prints("avg " .. avg .. "%",62,SCREEN_HEIGHT - 24)
+	prints("max " .. m .. "%",62,SCREEN_HEIGHT - 16)
+	prints("cur " .. flr(stat(1)*100) .. "% // target " .. stat(7) .. "  hold TAB for debug info",62,SCREEN_HEIGHT - 8)
+end
+
+local bars = {}
+
+function draw_debug_bars()
+	local last_bar_top = 0
+	for n,bar in pairs(bars) do
+		local next_bar_top = last_bar_top + (bar.max_slice_frame * 100)
+		rectfill(SCREEN_WIDTH,last_bar_top, SCREEN_WIDTH - 8, next_bar_top, bar.color)
+		rect(SCREEN_WIDTH,last_bar_top, SCREEN_WIDTH - 8, next_bar_top, 1)
+		print(n,SCREEN_WIDTH-#n*5-8,last_bar_top)
+		local perf_text = "WCpF " .. flr(bar.max_slice_frame * 100) .. "%"
+		print(perf_text,SCREEN_WIDTH-#perf_text*5-8,last_bar_top+8)
+		last_bar_top = next_bar_top
+	end
+end
+
+function start_bar_frame()
+	for n,bar in pairs(bars) do
+		bar.frame_slice = 0
+		if key("tab") then
+			bar.max_slice = 0
+			bar.max_slice_frame = 0
+		end
+	end
+end
+
+function bar_start(n)
+	local bar = bars[n]
+	if not bar then 
+		bar = {
+			max_slice = 0,
+			frame_slice = 0,
+			max_slice_frame = 0,
+			color = flr(rnd(29)+2)
+		}
+		bars[n] = bar
+	end
+	bar.waiting_slice = stat(1)
+end
+
+function bar_end(n)
+	local bar = bars[n]
+	bar.current_slice = stat(1) - bar.waiting_slice
+	bar.frame_slice += bar.current_slice
+	
+	if bar.max_slice_frame < bar.frame_slice then bar.max_slice_frame = bar.frame_slice end
+	if bar.max_slice < bar.current_slice then bar.max_slice = bar.current_slice end
+end
+
+
+
+function prints(s,x,y,c)
+	print(s,x+1,y+1,19)
+	print(s,x,y,c or 7)
+end
+
+function real_count(t)
+	local c = 0
+	for i,v in pairs(t) do c+=1 end
+	return c
+end
+
+function indexof(t,iv)
+	for i,ov in pairs(t) do if iv == ov then return i end end
+end
+
+function tracked_rect(w,h,cb)
+	bar_start("Rect")
+	local short_side = w < h and w or h
+	local half_short_side = short_side/2
+	for ix=0,w do
+		for iy=0,h do
+			local dist = sqrt( (half_short_side - ix)^2 + (half_short_side - iy)^2 )
+			local inverse_dist = half_short_side - dist
+			inverse_dist = inverse_dist < 0 and 0 or inverse_dist
+			cb(ix,iy,dist,inverse_dist)
+		end
+	end
+	bar_end("Rect")
+end
+
+
+:: world_interaction.lua
+--[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-10-14 17:47:31",revision=1780]]
+include "constants.lua"
+
+function make_wi_lib()
+	WORLD_MOUSE_X = 0
+	WORLD_MOUSE_Y = 0
+	PREV_MOUSE_LEFT = false
+	PREV_MOUSE_RIGHT = false
+	local BLOCK_BREAKS = {}
+	ACTIVE_BLOCK = 0
+	
+	local lib = {}
+
+	local chunk
+	function lib.meta(wants)
+		chunk = wants "chunk"
+	end
+	
+	function lib.update_world_mouse(camera_x, camera_y)
+		local g_mouse_x, g_mouse_y, g_mouse_b, g_wheel_x, g_wheel_y = mouse()
+		local left_down = g_mouse_b & 0x1 > 0
+		local right_down = g_mouse_b & 0x2 > 0
+		local wheel_delta = -(g_wheel_y == 0 and 0 or sgn(g_wheel_y))
+		
+		local left_pressed = left_down and not PREV_MOUSE_LEFT
+		local left_released = not left_down and PREV_MOUSE_LEFT
+		
+		local right_pressed = right_down and not PREV_MOUSE_RIGHT
+		local right_released = not right_down and PREV_MOUSE_RIGHT
+		
+		PREV_MOUSE_LEFT = left_down
+		PREV_MOUSE_RIGHT = right_down
+		WORLD_MOUSE_X = flr((camera_x + g_mouse_x) / TILE_SIZE)
+		WORLD_MOUSE_Y = flr((camera_y + g_mouse_y) / TILE_SIZE)
+		
+		ACTIVE_BLOCK = mid(1,24,ACTIVE_BLOCK+wheel_delta)
+		
+		if not key "ctrl" then
+			if right_pressed then
+				chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, ACTIVE_BLOCK, fget(256+ACTIVE_BLOCK,0))
+				enqueue(WORLD_MOUSE_X,WORLD_MOUSE_Y)
+			end
+			if left_pressed then
+				chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 0)
+				chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
+				enqueue(WORLD_MOUSE_X,WORLD_MOUSE_Y+1)
+				enqueue(WORLD_MOUSE_X,WORLD_MOUSE_Y-1)
+				enqueue(WORLD_MOUSE_X+1,WORLD_MOUSE_Y)
+				enqueue(WORLD_MOUSE_X-1,WORLD_MOUSE_Y)
+			end
+		end
+		
+	
+		if key "ctrl" then
+			if right_pressed then
+				chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
+				chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 57)
+				chunk.place_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 32)
+			end
+			if left_pressed then
+				chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
+				chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 0, true)
+			end
+		end
+	end
+	
+	function lib.block_break_routine(x,y)
+		local block_break_name = x .. '/' .. y
+		local block_break = BLOCK_BREAKS[block_break_name]
+		if not block_break then
+			
+			block_break = 0
+		end
+	end
+	
+	function lib.draw_world_mouse()
+		local rx = WORLD_MOUSE_X * TILE_SIZE
+		local ry = WORLD_MOUSE_Y * TILE_SIZE
+		fillp(0b1010010110100101)
+		rect(rx+1, ry+1, rx+TILE_SIZE, ry+TILE_SIZE, 1)
+		rect(rx, ry, rx+TILE_SIZE-1, ry+TILE_SIZE-1, 7)
+		
+		fillp()
+			print(rx .. "/" .. ry, rx,ry-8, 7)
+	end
+	return lib
+end -- of module
+PUBLISH("world_interaction", make_wi_lib())
+:: world_loader.lua
+--[[pod_format="raw",created="2025-07-01 20:06:17",modified="2025-09-01 19:52:20",revision=95]]
+local world_meta = {}
+
+function get_world_meta()
+	return world_meta
+end
+
+function load_world(wname)
+	mkdir(SAVEGAME_DIRECTORY)
+	mkdir(SAVEGAME_DIRECTORY .. "/" .. wname)
+	local meta_path = SAVEGAME_DIRECTORY .. "/" .. wname .. "/meta.pod"
+	local tp, size, path = fstat(meta_path)
+	if tp then
+		local loaded_meta = fetch(meta_path)
+		world_meta.seed = loaded_meta.seed
+		dbg("Read world!")
+	else
+		world_meta.seed = stat(86)
+		local a = store(meta_path, world_meta)
+		dbg("Stored world!")
+		dbg(a)
+	end
+end
+:: .info.pod
+--[[pod,bbs_id="_dev2279",created="2025-04-09 19:50:31",icon=userdata("u8",16,16,"00000001010101010101010101000000000001070707070707070707070100000001071515150a0a0a0a15151507010001071515150a0a0906070a1515150701010715151509090907070915151507010107151519191919191919191515070101071515150707010707011515150701010715151507070107070115151507010107151515100707070707151515070101071515150710070707071515150701010701151510101010101015151507010106071515101001011010151507060101060607070707070707070707060601000106060606060606060606060601000000010606060606060606060601000000000001010101010101010101000000"),lowcol_icon=false,modified="2025-11-04 19:29:24",runtime=23,sandbox=false,workspaces={{location="main.lua#39",workspace_index=1},{location="game.lua#122",workspace_index=1},{location="chunkservice.lua#49",workspace_index=1},{location="packetreader.lua#19",workspace_index=1},{location="gfx/0.gfx",workspace_index=2},{location="gfx/1.gfx",workspace_index=2},{location="gfx/2.gfx",workspace_index=2},{location="map/debug.map",workspace_index=3},{location="sfx/0.sfx",workspace_index=4}}]]
+:: entities/.info.pod
+--[[pod,created="2025-04-14 21:28:23",modified="2025-11-04 19:29:24"]]
+:: gfx/.info.pod
+--[[pod,created="2025-04-09 19:52:53",modified="2025-11-04 19:29:24"]]
+:: gfx/0.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
+Ny0wNiAxOToxNTozMSIscmV2aXNpb249NTA2NF1dbHo0AJcLAABXoQAA_CZ7WzBdPXtibXA9cHh1
+AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3g9MC4wNgEAETcYAPwQeT04LjMyNjY3
+MjY4NDY4ODdlLTAxNyx6b29tPTd9LGEA-xoaGaAaCQYHCZApFwmAfxmAFw8VFw6QFw4XDpAPEEeQ
+Bw03kF2ALhAuMH0AZG9tcC4gLiB9AEAfRvoAEU_QLi3Q_wBCH0d_ABQfwH4AQh9XfgARP6A_QHcB
+Zl89LoAucHcBZk8tAC5wfwBB8Ao-H3B_YE4ATjBeEE4QbiCuUI6AXpBegG6AFgD-Aj4wXiA_EF4w
+TgBOUI5wbpAefQFf-wMADlAODQcNNw0OUA59DlAO8AyEAEAbNoQAP5BHkIYAYBsmhgAv8AqHAGIf
+8FQAkKwEBAQ3Pxw8HxARWQADSQASMDYALjE1iwAPMgAasgoKBCAGYAYHcAYHBgDPdRd-FReAF3AX
+kAdQSgAMHjZKAPIaNyAGN0AGBw8VUAYHDgUOQBcADgUOMAYHEA4FDiAGMA4FDhAHQA4FDnAEAA9h
+AB76CRYXMBZXEBcADxUFABcABiAOBSAHMA4FcAMAHzBYAB3xAxAHFgcGYDcGYA8VBwZQDgUOB6wA
+MAAXILIAEBe_ACAwB8sAEEDWAE9gBQ5wYgAdMVAGkF8BwIAGB3UGB38VF3AXYAQALwcgSgAdMwUP
+FT4BMg5AB5oAAaYAIQYHswARBmABzwYHUA4GB0AmFyAWJ2IAHjMwDxVJAQZSAQFrAf8ABgAWAA4F
+AAYHEBc2FzA3WQAeUHAPFQVgngARQKoAEjC3AAIcAhMHKgLfDgUOUBcOYAY3YCYXEGEAGgD9Ah9V
+3ggVDuIHczU0Mjg1NzEGAANqACYyLhMAPzI4NlUJFoQnDxUXkCcOF3UAT4AuPdB0ADwfV3QADn8O
+XZAeEC4gdgA6sFgqCaAqCQYHkDkXdACJNw8VB5A3Dgd0AB8AdAA8Gml0ACFXkHYA-wIPECcPFQeA
+DgcPEDeAHk0OAHQAOh-wTgDSTAgIBPCWAkMtMC42QgASNDQALzEwNQDODlcBDzUAeg-UAAImMTI3
+AEItMjQ4OgA-MC41OwDmD5EBFQ81AGQO2gAPNQDkDnMBDzUAegDUAD4TDxN9DA9-CAoANgBfDA8T
+UA44ACDfAw8TcA5QDlAOAA7wAz4AIQA5DTEwDgBCAD9wDpBDAB0QkIAAAj4AFRBGAD9QDiBIACAR
+IIgAMxAOIEwAESAGAD8wDiBQACESAJgAAkoADlYAAhIAAHAAD1oAIQI6ABMASgA4AB4ADgADCAAV
+EGoAPwAOAGQAGj8BAQQxAP-----------------------------------------------5zFKOAB
+AAB4AAAABPz-AQA1XQcMAgAAFwAUZQwAESkHABRsGQBjsAf8BQcMAgAj-H0JAAUqABLsJgATrAsA
+AgIAEEwVAABhACP8BxIAIvwvRwBj-P--qgesFQABPAAQWwUAEwESACL8TQcAV---pgcMAgAk-Acr
+AASaAEMMB-xVCQABMAAUoAsAEg8HADVZBwwCACD8XwUApHEPEPz-zw4MDvzrAAA5ADkmBwwCAED8
+Cg4MJABD-8sODAoAE58bABGMBgAj-AUZAAAbADfHDgwOABCcHwA3Fg4MAgCJ-A4H-P_kDgwCADD8
+-5cqADsXDgwCAK38DQfsB-z-kQ4MAgBf-P_9DgwCAAAn-AoTAQTVAD_KDgwCAAJf-P_5DgwCAARH
+-AsHDEMADoQACEcAP7UODAIACBL8QwA-lA4MAgAKX-z-sQ4MJAAOP68ODCYAED_tDgwoABI-qw4M
+KgAUbxsO-H0ODAIAFFD8Pg78yQgAP3sODAIAFiD8PAUAAkMCT-x5DgwCABgi-DoHADLFDgwJAD93
+DgwCABok-DgJABPDCQBvDA78dQ4MAgAcI-w2CQBlDA78wQ4MAgBP-HMODAIAHkX8NA4MAgAi-DKJ
+Ajd4DgwCAE-8cQ4MAgAgR-wyDgwCABz8SwNP-G8ODAIAIkn8MA4MAgBC-C8HDLkADk0BT-xtDgwC
+ACRL-C4ODAIAH-zLAwFP-GsODAIAJk38LA4MAgAi-BS5BQBjBE-8cA4MAgAAT-xpDgwCAChP-CoO
+DAIAAB-8ZAQFT-xnDgwCACpP-CgODAIAAiD8EeUAMQMHDKIGD0wBCH-8KQf8Kw4MAgAsT-wmDgwC
+AAQf-BoFCU-8Yw4MAgAuT-wkDgwCAAZi-BAHDAfMyAI-eg4MRwAKACQADsIBDwIAIU-8Ig4MAgAI
+H-zkBQ1P-F8ODAIAMk-8IA4MAgAKJvwPDwgP8gUPIPwhKAA-KQ4MAgA0T-weDgwCAAx--FkO-D8O
+DAIADk-8Ww4MAgA2T-wcDgwCAA4h-A43ARIsPQEAcgRP-D0ODF4AEg5qAg8CAC1P-BoODAIAECL8
+VQcAPzsODAIAEk-8Vw4MAgA6T-wYDgwCABID-gpEDAf8LRIAPzkODAIAFCT8A-8EDq0CDwIALgsY
+Cw8rAAoTUQkAbwwO-DcODAIAFk-8Uw4MAgA_T-wUDgwCABZF-E8ODAIAT-w1DgwCABgj-AI5DQYC
+AA7uAg8CADJP-BIODAIAGEf8TQ4MAgAj-DMJAA8VARkPAgBCT-wQDgwCABpJ-EsODAIAT-wxDgwC
+ABwBIAMHowEEaAMPAgA-T-wODgwCABxN-EkODJEKAwkADykBHQ8CAEY--AwOAgAfTfxHDgwCAA59
+AQ8mARYPAgBIA0IQDzcAHj9FDgwCAAAOaAoPMgEYDwIASk-8CA4MAgAiT-xDDgxXCwIPdwYoDj4B
+DwIAPk-8Bg4MAgAkT-xBDgwCAAQj-CcJAA9KASUPAgBOT-wEDgwCACYPhgoKI-wlCQAPVgEnDwIA
+UE-8Ag4MAgAoD98KDCP8IwkAD2IBKQ8CAFJP-AAODAIAKg9ACw4j-CEJAA9uASsPAgBUP9wODAIA
+LA_cCxAj-B8JAA95AS0PAgBWP7wODAIALg-3CxIj-B0JAA_FAS8PAgBYP5wODAIAMA9cDBQj-BsJ
+AA_RATEPAgBaP3wODAIAMg_uDBYj-BkJAA_dATMPAgBcP1wODAIANA8TDRgOwRoPqQEsDwIAXgCB
+GQ-BADYPaQ0ZI-wVCQAPtQE3DwIAYA7wEw-FABYPzg0vI-wTCQAPwQFiD0cBiA8xDh0j-BEJAA-L
+AWYPAgA4Px4MDgIAOQ_SDiAj-A8JAA-VAWoPngKFD-EOJCP8DQkAD98Bbg_qAoUPTg8mI-wLCQAf
+DOkBcQ_2AoUPqQ8oTvwJDgwCAA-zAWkPwgKFDwIQKk78Bw4MAgAP-QFtD84ChQ9aECwHBScPAgBB
+DgkSD9oCrg_wEC5O-AMODAIADxECdQ-mAoUPBBEwTvwBDgwCAA8bAnkP8gKFD1YRMj7sDgwCAA8k
+An0P-QKFD6URND7MDgwCAA8tAoEPCAOFD-IRNj6sDgwCAA83AoUPFAOFDz0SOD6MDgwCAA9BAokP
+IAOFD4gSOj5sDgwCAA9LAo0PLAOFD9MSPD5MDgwCAA9VApEPOAOFDx4TPj4sDgwCAA9fApUPRAOF
+DmkTDwIAoA6HFQ9QA8IOtBMPrgFFD3EC1Q9aA0sO-RMPsgFGD3cC1w9iA0wORBQPtgFHD30C2Q9q
+A00OiRQPugFID4MC2w9yA04OzBQPvgFJD4kC3Q96A08ODRUPAgBJD44C3w_BA1AOTBUPAgBKD5MC
+4A_HA1EOiBUPAgBLD5gC4g_OA1IOwhUPAgBMD54C5A_WA1MO_hUPAgBND6QC5g_eA1QOMBYPAgBO
+D6oC6A_mA1UPZBZfLwwOsALqDq4DDwIA-yMOtgIPtgN0DwIA-8oOvAMPAgD-Jg__A-----------
+-----------------ywbDl9oTDYuMTbOmmUtMTEuODMBAKA3LHpvb209MX19
+:: gfx/1.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTEyIDIwOjA4OjQzIixtb2RpZmllZD0iMjAyNS0w
+OS0wNyAxNjoxNDo0OCIscmV2aXNpb249NTE3OV1dbHo0ABYGAABZNwAA8Rh7WzBdPXtibXA9cHh1
+AEMgCAgE8DAsZmxhZ3M9MTI4LHBhbl94PTAIANp5PTAsem9vbT0xNn0sNABRew8bCw4CALEEDg8U
+Dg0ODQ4DDQIAUg8VBF0MAwAzDVwNWgAfMFgAFbgPFFQOBF4PFQReDQMAPw5dDkoAH_8UHg8VDh0O
+BC4dDhQeDQoABw9aAB7wExsLAwAOCwMQDgAPFQMOAB0ACw4NAwsOAA0ODQANDgMOCw0fAFAAAw4A
+DR8AFQMfABADBAAPbQEf8AENXxcNDl0PEw5dDA49DA0MCABfDQw9DA5jASNQGwsDDxQGAPAEHxUP
+GwQPFAMPGy8VBAsPGw8UAwYAEBUeANAvFA8bAw4LBA8UDgsD5wAAKQBgDi8VAwsOJwAQDiYAXw4D
+HQ4DfwAd4WkPGVoJDloOCX4pDjkaCgAvOn5FAB1AfxVvFIIAEVQFAJWPFS8UDxU-FCQTAB8kUQAd
+FfEEAw8yABWznxA8LgwOHA4MHhwCAAEOADMuPJ5KAB8ySgAV8AAOLxcpDxkfFxcaGQ0nKgkEAGIP
+GSkoDxgGAM8fGRkYHxgELxkvGALXAB3zAw4vFywPEB8XFx8cHA8XJy8cDAYAYxIvDS8QAQcAzx8S
+Hw0fECEvEiEPIGIAHeAPFiYvGwMWFxseBicrDgQAYg8TIyUPFQYAzx8TExUvFS8TLxUPILwAIOQv
+GAIfFxcYHxgPFycoDwYAUhQkIg8VBgCPHxQUEi8VLxRgACHgKA8YBlgOBig_Bi6GWA4LAC9udv4A
+H7AADxUjAA8WADMOAwsA-wYNEw0OUw4DDTMNQw4jADMNAyANIxDyAx9PDyDxL5ECHf8TAV8QAR4B
+DiEPEg4BDjENHkENDkEdDjENAQ0OIQ0BHQFdAd4AHf8SAFcAB1AHBhAHIAcGAAYwBwYwBwAHBiAG
+EAcGUAcARgcA2QAf9QLwAgoACkAKGVAPGWAFcAVQBXgDHzOXABaRECcwBwYHBgcgBgBAMCdQB0kA
+H2BLACH-B-AKLx8IIA4oDw8IEAgNODAHDVAHDSBIAB-xECAPFg8VQA4PFg4NMA4dDiAdDg0OBRAO
+BQ4VDjAFDlADAA9XACD-GRA-IAUQDhEPEAUPFQUOER8QDxUPEA8VDhE-EB4hHQEeUQ4ADjEOID5i
+AiCPgQ8g8RMO8QJmAh0v8DBGAh1v8CsLEAsA-QAff-AiC1ALEAs3ASAh8Bw6AG8QCwALIAs-ACJ_
+cAsgCyALEDwADx8BFg8yAEhv8QoPIPEVuQEd4I8QXB4sDhweHA4sHgxuBgBPLA4cjqwGHQBGAAM8
+ACRuDFAADkYADyYBFg8yAN1u8QMPIFEOvgEPnAAXDzIA-0Jv8RUPIFEeDQUcXxAQBPDwzgAfDzIA
+5fgjAA8UBA8fDw8IDxgCDxUFDxYGBw8XDw4PHgEPEA8RDA8cDx0NDxIPEwMPGwsPGgoJDxkMAAol
+AAg-AAhYAA8fCx3wERA-EjAOEA5ADgFAAQ8fCgEgAQ8YCg8fDxgBEAEICgcIBwBuBwoIASAxYgcP
+VQEYDzIAqw_TDzdAPxg-FAQA8QIvGE8UHxi-FB8VTxQvFT8UPwQADk4AD30DLB80MgD---------
+---------20fN2MAHw8yAP---------------yLwLEBABPD--yBH8Cg3MBfwJCeAF-AhJ6AX8B4n
+AAeQJ-AcJzAXYBcQB-AZJ3AHUAcgB-AXJ6AHgAfwFwfQBwDxBhUX4AdwB-AUF-AAB2AX8BQH8AIH
+UBAAQAIXQAcQAJAEBzAX8BMX8AU9AEETF-AGCADwGgfwBwcQF-AHhyAH8AgHAAfwBidwFwAH8Agn
+8AUXsAfwCQfwBhfQB-AHMQCQ8BUn8AcH8BMnFwDwExIX8AsH8BAn8AwH8A8X8A4X8Awn8BAH8Ak3
+8BIH8AgX8BVNAPAR8BcH8AMn8BkX8AEX8Bx3cCfwHxcQJ0An8CEHkBfwIhcFANAHwBfwIAfQF-Af
+B_AHCgADBQD-AiEHsBfwIidgJ-Amd-D---8WUQELHzOCAR8PMgD--1QOlx8PMgD---------olA9
+MTR9fQ==
+:: gfx/2.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA5LTA3IDE2OjI2OjA2Iixtb2RpZmllZD0iMjAyNS0w
+OS0wNyAxNjoyNjowNiIscmV2aXNpb249MF1dbHo0AA8IAABGPAAA8iF7WzBdPXtibXA9cHh1AEMg
+4EAE8P---4MU8M0EHxkE8AwU8K0EDhoOBPAKBB4E8KwMABIJBwBVoRRwBD4OAPAeoAQeRCAEPgQw
+NGBEMBQOGg4UEBQQJFBEQBQQNPB9BA4aTgQQBD4EIAQ_FDAEDACALhouFB4ULgQOAIAgBB4UPgTw
+fEsAQToOBABTAFAQBA46HgYAokoOFA56HhoeKg4OAAEgAKAeOg4E8HsEDnoObQAAEwBwag4UDmoO
+BCsAATMAEWoaALBaDgTwegQOKi4qDlYAchQOKi4aDgQGAFQ_Gk46Hg4AUhQOSh4aLQAzGk4aLQDR
+Gn4qThpOGk4qLhoeKhYAKzouJQBgBA4qfhpeJQBhGj4aHhpeEgAdPiUAIRqOGwByLhouBA4aficA
+JBpOJwA1DiQOKQAxHiQeBgADFgCDJA4aHgROGh4iAAA-AA81AAYjDjQMAQQGACMUThQARQ4aHhQ5
+ACE_Gi0AAagAES4OACgABDkANR4EHiQAFQBwABJ6EQB3Hnouai4EAB0AWxAkHmouLQADEQBZPjpu
+Oj4tAFswBD46Pi0AgRpuFD4ErgSeIgKCAAQ_BEAEnhQKAAQfAGUUngSOBCAfABGOCAAFIQATXg8A
+c34EAARuBDAbAFhQBG4EECcAAWkCcAQgFD4UIBQfABEeEABTcBQ_BDAMAABSAvIEGg40QBRQNGA0
+cBRAFKA0UBRAFJoC8AwEYFSA9AbQJLBk8AdE8AckoPQFMCQAtGBk8AL5AvAFJF4kQAT_BgSwBC4E
+kARuJPADBE4FAGAuBIAE-gXyAoEEviQgBG4k4AgD8AMuWi4EIAQO_gYOBJAEDioOBHA2AaEU8AAE
+DkouBPABFABQYAQO_gW1AiEOunQBYGouFMAEPgcDEboNAyH6BzgAEToqAKGqHhTABA6KDgTgEgAS
+UB8AQQ76Aw4cACGwBE4DEdp6AQM5ABFKJwChyh4EoAQOqg4E0BIAGEA5AJDKHgSwFBAEDuo3ADEu
+_gVqABFaNwCh6g4EgAQOyg4EsBIAADcAIwYeNwAR6k0AIVpezgMwnjquMAARajYAMjo_ekQAUS5K
+DgSgFgCzQAT_AUouBA46-gAgAFOwBA463joAEEDlAwE6ABJuZgBhSm4aHgSQFgBkQAT_AEo_OgAh
+blpMAWI67gQQBI46ADI6Dio8ADB_Wg5vAUNKvgSQFgBjQATuOk4UOwAhflrNAIE67gQgFG46nmcA
+AEUBAEMAJI5KOwAVgBYAMM46TkcBMjruFCAAADwAsD5UPgRQVA46DoRAEQEDPgAyDiReswRjSj4k
+TgSAGgBRUKQOOk7jBDUO1AAmAGBwBA5abkT9AHQOBMAEDkoeRABCBBAkPhkFgzouFBAkHiRwHgAA
+6wEA1wIAJAA3MGQgLAAQcLwBABECEjqhAQZMAEBABC467wRTLjR_BFAaABDQwAAgFDAgABBENgMF
+KABhBHAEHtoekQEBSAA0Sj4qSAAwUAQeSAAwOi4EswETQBwAEcDAAgBzASJearIAAyoAUQRwBC7q
+8wEESgAAtAABDgAhMCSyBTE6PsoSAAEaABGgSAAAAQM1Ag4UJQBSBHAETtrmAQIjACM_SkUAkkQu
+Sh4UDjoe6q0BABgAEZBDABVwQwAAIwBXBIAErmpBABLaPwAQXrEEMDou2gcEIg7aIAAWPjsAAB8A
+M5AEviUCAR8AEeo5ACD6AH4CMi5aPqsGAhMDIDo_BgAxmo4UHwBEoAS_SjgAUYAEDvoBoQAg6j7w
+ADEabjp9BQAVABFgOQASkFUCl_o_BIAkABSuOjoAMaoeOjsAI7peVwESnnUAARgAEVDsABKgPgCo
+ul4EgAQuBBBkPkAAI2peQAADeQIEQAABGAARQEAABHgDACQAEoCWBCgUHkQAIjqORAAxOh56KwFA
+Og4UXgEBIwQQHAARQA4AEMBTASN0ECgAAeAEVBRgFA5KSgAAvwIESgAhTmrLBAHfAkEeJA5KlAAB
+HgARMBIBEcDeAROQKgAAQABWHmQeSh5KACE6fl8CFhBzAlJKDkQeSpQABhwAIj7EZgAT0CgAAW0D
+GGpIACQ_RCwAgn5aDhQeSk5q5AAFGABVKv4CBABFAAA0BGNgBB76Ai5EABFgnwNTMAQeSg4nAHJ_
+Sg4EHvoAiwADGwAQFPQFAI8CJcQQJABCUAQu6vwBAkYAEB5ZABM6RgBRNF5KPtotBgQYABIUoQUl
+Ss4hAAB5ATY_yk5DACgqLkMAMAQgBOUBIS6qLAQoKi5HAFYe_gEOFCQAoVAEXmpuBKAEHhptACAa
+HrgDASMIAAwAMDAUTo8IRmpeBDAcABEU_QUBSAAGJACwYAT_AgSwBF4EYASOAgC0AqJeBFAUbhT_
+AARAEwCRFP4JBC76AA4UGQBhBHAE7hTAMQAAyAACMQARcAgAMt4EUBQAghT_CRQ_yh4UGQBQgATO
+BPDeByCABGcDAV4KIQSQCAAzrhRwFABAAAT_CAUAMwMEAB4AcKAkbiTwAgT1BoAeBMAEHgRABOEE
+ZB4EQBRuFBQAQCAE-gYFADMCBBAeAPAH4GTwBhTAFOAUYBTQFHBk0BTgFED0BoIG8w4EMBTQFPCp
+FM4E8MLE8O0sZmxhZ3M9MCxwYW5feAgAx3k9MCx6b29tPTJ9LHILXxAQBPDwMQALHzgxAP------
+---------------------------------------------------------7hQbT04fX0=
 :: label.qoi
 b64$cW9pZgAAAeAAAAEOBAH_Ka3--f39-f39_f4dK1PBCijACsAowArAKMEKKMEKKMEKKMAKwSjA
 CsgoxgrD-v-x6MEKwD-ACsA-wAo-wQo-wQrAP8AKP8AKyD-BCj-BCj-BCsA-wAo-wQo-wQo-wQo-
@@ -2009,223 +3257,33 @@ wTk-wTU-wTk1P8A5P8E5NcI-wTU-OT85Pzk1wD-ANTk1-f39-ew5wDXAOcA1OTU5NcU5NTnBNTk1
 OTXDOTXBOTXGOTXAOTU5NTk1OTU5wTU5wTXAOTXEOcE1OcE1wDk1wDnBNcc5NTk1OcA1wDnBNTnB
 NcQ5NcA5NTk1OcE1wzk1wTnANcA5NTk1wznBNTnBNTnBNcA5wDU5wTXDOcE1OTU5NTk1wTnANf39
 -f39-f39-f39-f39-f39-f3LAAAAAAAAAAE=
-:: lightmap_data.lua
---[[pod_format="raw",created="2025-06-17 17:31:54",modified="2025-07-01 19:56:46",revision=411]]
-
-include "logging.lua"
-
-local COLOR_PAIRS = {
-	0x0000, 0x0021, 0x2121, 0x2122, 0x2223, 0x2323, 0x2424
-}
-
-
-function make_dither_pattenrs()
-	fillp(0b0101101001011010)
-	local base_offset = #COLOR_PAIRS
-	local out_tiles = {}
-	for i,v in pairs(COLOR_PAIRS) do
-		local target_sprite = userdata("u8",8,8)
-		set_draw_target(target_sprite)
-		rectfill(0,0,7,7,v)
-		out_tiles[#out_tiles+1] = target_sprite
-	end
-	set_draw_target()
-	return out_tiles
-end
-
-function generate_lightmap(tile_table)
-	-- ordered as tables of torch light per sky light
-	-- will then be stuffed into a buffer where sky * torch = final
-	local lightmap_data = {
-		{
-			-- Global shadow 0, noon
-			{0,0,0,0,0,0,0},
-			{0,1,1,1,1,1,1},
-			{0,1,2,2,2,2,2},
-			{0,1,2,3,3,3,3},
-			{0,1,2,3,4,4,4},
-			{0,1,2,3,4,5,5},
-			{0,1,2,3,4,5,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{1,2,2,2,2,2,2},
-			{1,2,3,3,3,3,3},
-			{1,2,3,4,4,4,4},
-			{1,2,3,4,5,5,5},
-			{1,2,3,4,5,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{2,3,3,3,3,3,3},
-			{2,3,4,4,4,4,4},
-			{2,3,4,5,5,5,5},
-			{2,3,4,5,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{3,4,4,4,4,4,4},
-			{3,4,5,5,5,5,5},
-			{3,4,5,6,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{4,4,4,4,4,4,4},
-			{4,5,5,5,5,5,5},
-			{4,5,6,6,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{4,4,4,4,4,4,4},
-			{5,5,5,5,5,5,5},
-			{5,6,6,6,6,6,6},
-		},
-		{
-			{0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1},
-			{2,2,2,2,2,2,2},
-			{3,3,3,3,3,3,3},
-			{4,4,4,4,4,4,4},
-			{5,5,5,5,5,5,5},
-			{6,6,6,6,6,6,6},
-			-- Global shadow 6, night
-		},
-	}
-	
-	for time_table in all(lightmap_data) do
-		for torch_light_table in all(time_table) do
-			for i,v in pairs(torch_light_table) do
-				-- clobber values in lightmap_data using input table of tiles
-				local tile_index = v+1
-				torch_light_table[i] = tile_table[tile_index]
-			end
-		end
-	end
-	
-	return lightmap_data
-end
-
-
-local DITHER_TILES = make_dither_pattenrs()
-local LIGHTMAP_CUBE = generate_lightmap(DITHER_TILES)
-
-local SKY_COLORS = {
-	12, 12, 16, 18, 1, 1, 0 
-}
-function set_lightmap(cube_idx)
-	local sane_cube_idx = mid(1,#LIGHTMAP_CUBE,cube_idx)
-	local sky_color = SKY_COLORS[sane_cube_idx]
-	memcpy(0x5000+63*4,0x5000+sky_color*4,4)
-	local time_table = LIGHTMAP_CUBE[sane_cube_idx]
-	-- Write tiles to memory!
-	for sky_light_idx, torch_light_table in pairs(time_table) do
-		local sky_light_offset = sky_light_idx-1
-		local row_str = ''
-		for torch_light_idx, light_tile_ref in pairs(torch_light_table) do
-			-- "it's writing time" and then he wrote all over the place
-			local torch_light_offset = torch_light_idx-1
-			local spr_num = 512-(torch_light_offset+(7*sky_light_offset))
-			
-			set_spr(spr_num,light_tile_ref)
-		--	row_str = row_str .. sky_light_offset .. "/" ..torch_light_offset .. ' ->' .. spr_num  .. ", "
-		end
-	end
-end
-
-
-local TIME_OFFSET = 0
-function debug_light()
-	if keyp("down") then TIME_OFFSET += 1 end
-	if keyp("up") then TIME_OFFSET -= 1 end
-	TIME_OFFSET = mid(1,#LIGHTMAP_CUBE,TIME_OFFSET)
-	if keyp("up") or keyp("down") then set_lightmap(TIME_OFFSET) end
-end
-:: logging.lua
---[[pod_format="raw",created="2025-04-12 21:25:08",modified="2025-07-05 17:57:54",revision=1773]]
-include "util.lua"
-
-CURRENT_LOG = ""
-
-function dbg(str)
-	CURRENT_LOG ..= (str or 'nil') .. "\n"
-	CURRENT_LOG = sub(CURRENT_LOG,-1024)
-end
-
-function drawlog(x,y)
-	local split_log = split(CURRENT_LOG,"\n")
-	local c = 0;
-	for i = max(1,#split_log-20),#split_log do
-		prints(split_log[i],x,8+y+c*10)
-		c += 1;
-	end
-end
-
-function odbg(o,indent)
-   if not indent then dbg('Dumping object...') end
-	if type(o) == "userdata" then 
-		local w,h,t = o:attribs()
-		dbg(w .. "x" .. h .. " of " .. t)
-		return 
-	end
-	if type(o) != "table" then dbg("Dumping undumpable " .. type(o) .. ": "  .. o) return end
-	local indent = indent or ''
-	for i,v in pairs(o) do
-		if     (type(v) == 'table') then
-			dbg(indent .. i .. " -> ")
-			odbg(v, indent .. '  ')	
-		elseif (type(v) == "function") then
-			dbg("callable " .. i )
-		elseif (type(v) == "userdata") then
-			local w,h,t = v:attribs()
-			dbg(indent .. i .. "	-> " .. w .. "x" .. h .. " of " .. t)
-		elseif (type(v) == "boolean") then
-			dbg(indent .. i .. " -> " .. (v and "b-true" or "b-false"))
-		else
-			dbg(indent .. i .. ' = ' .. v )
-		end
-	end
-	if indent == '' then
-		dbg("Done dumping")
-	end
-end
-:: main.lua
---[[pod_format="raw",created="2025-07-14 18:06:26",modified="2025-07-14 18:37:51",revision=23]]
-include "util.lua"
-include "constants.lua"
-include "chunk.lua"
-include "logging.lua"
-include "generator.lua"
-include "entity.lua"
-include "entities/player.lua"
-include "world_interaction.lua"
-include "queue.lua"
-include "init_routines.lua"
-include "lightmap_data.lua"
-include "ticking.lua"
-include "world_loader.lua"
-include "game.lua"
-
--- function _update() end
--- function _draw() end
-
-local game = make_game()
-local cl = make_chunk_lib()
-
-game.init(cl)
-_update = game.update
-_draw = game.draw
+:: map/.info.pod
+--[[pod,created="2025-04-09 19:52:53",modified="2025-11-04 19:29:24"]]
+:: map/debug.map
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA2LTMwIDE5OjM3OjE0Iixtb2RpZmllZD0iMjAyNS0w
+Ny0wNiAxOToxNTozMSIscmV2aXNpb249MzE3XV1sejQAYQQAAKZyAADyEnt7Ym1wPXVzZXJkYXRh
+KCJpMTYiLDEzOCw1MywiMDA0MQQADwEA--8TASwCEjIEAA8BAAMPTAL-8CY0MQgACAQALjAwCAAP
+AQD-6gFIBBMxBAAHVAQEGAAPAQD--A8UAgkPLAL-----Ky40MSwCDygC--8jJjQ5BAAPKAL-7g8B
+AAUIHAIOKAIPAQD-9A4YAg8sAv8DOTEwNwQADyAADQ9gBL4qNDkgAgQQAAQIAA8oAvwPIAANDwEA
+ugVIERo5BAAJJAAvOTAoAv-wA9QKITQ5BAAzMTAx7AAKAgABIAALGAAEAQAMLAAIHAAPAQDBDggC
+DyAAAw8BAL4DJAIBMAIF7AAfMSgAAw4BAA40AA8BAP-JAeQBKTQ5EAAEAgAMLAICFgAfMUQAAw8B
+AP-NDOQBD-QBCi80OTQAHwEgABU0BAAPAQCxBFwGBAgADAwADwEAwQXkAQcEAggCAAQAAgUQAAMo
+AAgBAAgoAA4cAAQkAh82LAK2BBQCBAgADAwADwEA8g4oAg8BAAoEHAIPKAK5CBgCD7wKHR8xAgBQ
+DwEAqU8xMDMwAQDtAsYBHzIEABQfNQQAEB8yBAAEDjACDygCxR8xPAO8Aq4AHzIEAAwfNQQAJB8y
+BAACDwEAoQgoAh8xAgASHzIEABQPAgA-DAEAHzECADIfMgQAAB81BAA0HzIEAAQPUANjD3AABA9Y
+ASAfMgQAjAwCAB8yBAA4HzUEAEwfMgQABB8xKAJYHzIQAhQfMgQA-wUfNQQAVB8yBAAECgIADxAC
+Lw8CAAUeMhAADwQA-x8fNQQAVB8yBAANDxQCMB8yBABsHzUEABAfMgQAfB81BACMHzIoAiwfMgQA
+fB81BAAwFzIEAB81BAD0HjIoAg88BJoMBAAfNQQA-0UfMigCGB8yBACQHzUEAP9BHzIkAhYPKAL-
+----Ex8yJAIaDygC-_AfMiQCIg8oAv-YHzIkAioPKAL-1B8yJAIuDygCHxc3DAAMEAAfNxAABAgU
+AA8EACUfNQQA-yUEQAEPUARdCPgBDAwAGzIMAA4UAA8EACcfNQQA-w0EKAEPGAI3D1AEMw8IAAEI
+BAAeMhAADwQAKh81BAD-BR8yGAISCAwADygCJw_AFRkfNxAABB83FAAFDwQAQB81BADIHzIEAB4P
+AQAYDygC3A8EAFkXNQgADwQAQR4yBAAPKAKEDiwCDwQAew_4AAsfMgQAYBc1CAAPBAApHzIgApYO
+LAIVMYgADyQCjQ84AiwP6ACqDgEADywC4Q_MJ0IPdAIdDyQC-wcPMAJvAgIADwEAhA8UAu4PLAIP
+FTHoAA8EAD8GAgAPAQD-rhkxAgAfMgQANA8cAgoPNAL-vQQCAB8yBAAUBgIADwEA-94fMQIAGA8B
+AP---------------------I8QsiKSxoaWRkZW49ZmFsc2UscGFuX3g9LTg4NgsA0nk9MCx0aWxl
+X2g9MTYKABB3CgCgem9vbT0wLjV9fQ==
+:: net/.info.pod
+--[[pod,created="2025-07-14 16:32:53",modified="2025-11-04 19:29:24"]]
 :: noise-all.lua
 b64$LS1bW3BvZF9mb3JtYXQ9InJhdyIsY3JlYXRlZD0iMjAyNS0wNC0yNCAxNjoxNDo0NSIsbW9k
 aWZpZWQ9IjIwMjUtMDQtMjQgMTY6MTQ6NDUiLHJldmlzaW9uPTBdXQotLS0tLS0tLS0tLS0tLS0t
@@ -2812,544 +3870,14 @@ ICAgICAgICBlbmQKICAgICAgICByZXQgPSByZXQgKyAoaS9wb3dlcikqKG1hdGguYWJzKGZ1bmMo
 dW5wYWNrKHNjYWxlZCkpKSkKICAgIGVuZAogICAgbG9jYWwgYXJncyA9IHsuLi59CiAgICBsb2Nh
 bCBkaXJfY29tcG9uZW50ID0gYXJnc1tkaXJlY3Rpb24rMV0KICAgIHJldHVybiBtYXRoLnNpbihk
 aXJfY29tcG9uZW50K3JldCkKZW5k
-:: old_main.lua
---[[pod_format="raw",created="2025-04-09 18:59:05",modified="2025-07-14 18:22:05",revision=6299]]
--- Picotron Stargazer
--- ~~ CREDITS ~~
--- Perlin noise implementation: github kitao -> pico8-libs -> perlin.lua
-
-include "util.lua"
-include "constants.lua"
-include "chunk.lua"
-include "logging.lua"
-include "generator.lua"
-include "entity.lua"
-include "entities/player.lua"
-include "world_interaction.lua"
-include "chunkservice.lua"
-include "queue.lua"
-include "init_routines.lua"
-include "lightmap_data.lua"
-include "ticking.lua"
-include "world_loader.lua"
-
-function init_game()
-	
-end
-
-function draw_game()
-	
-
-end
-
---COLOR_MAGIC = {0, 33, 34, 35, 36, 37, 36, 35, 34, 33, 0}
-
-function update_game()
-
-end
-
-function server_draw()
-	-- Keeping this here for the same reasons as above
-	-- If the server is ever overburdened, this is going to be skipped
-	local a,b = work_queues()
-	
-	cls()
-	print("Server mode! Stats: ",0,0)
-	print(stat(3))
-	print(stat(1))
-	drawlog(32,32)
-end
-
---=================================================================================--
-
-local TITLE_STATE = {}
-
-function _init()
-	fillp()
-	TITLE_STATE.worlds = ls(SAVEGAME_DIRECTORY)
-	TITLE_STATE.cursor = 1
-end
-
-function _draw()
-	cls()
-	print(
-[[
-Welcome to Stargazer!
-Running experimental build 20/06/2025
-Keyboard and mouse required! Arrows to navigate, space to select, del to DELETE!
-Press H to host a server! You'll need to launch another instance of the game to play.
-
-(C) cardboardbox.tech 2025
-]],16,16,7
-)
-	for i,v in pairs(TITLE_STATE.worlds) do
-		local vy = 74+i*10
-		print(v,16,vy)
-	end
-	spr(1,2,66+TITLE_STATE.cursor*10)
-	print(TITLE_STATE.entry_text and TITLE_STATE.entry_text .. '_' or "new!",16, 74+(1+#TITLE_STATE.worlds)*10,10)
-	
-end
-
-function _update()
-	if not TITLE_STATE.entry_text then
-		if (keyp "up") TITLE_STATE.cursor -= 1 
-		if (keyp "down") TITLE_STATE.cursor += 1
-		if keyp "enter" then
-			if TITLE_STATE.cursor == #TITLE_STATE.worlds+1 then
-				TITLE_STATE.entry_text = ''
-			else
-				init_game()
-				chunk.init(TITLE_STATE.worlds[TITLE_STATE.cursor])			
-				_update = update_game
-				_draw = draw_game
-			end
-		end
-		if keyp "h" and TITLE_STATE.cursor <= #TITLE_STATE.worlds then
-			init_game()
-			chunk.init(TITLE_STATE.worlds[TITLE_STATE.cursor])
-			_update = update_game
-			_draw = server_draw
-		end
-		if keyp "j" then
-			TITLE_STATE.entry_text = ''
-			TITLE_STATE.joining_remote = true
-		end
-		TITLE_STATE.cursor = mid(1,TITLE_STATE.cursor,#TITLE_STATE.worlds+1)
-	else
-		if keyp "enter" and #TITLE_STATE.entry_text > 0 then
-			if TITLE_STATE.joining_remote then
-				init_game()
-				chunk.remote_client = true
-				chunk.init(#TITLE_STATE.entry_text)
-			else
-				TITLE_STATE.worlds[#TITLE_STATE.worlds+1] = TITLE_STATE.entry_text
-				TITLE_STATE.entry_text = nil
-			end			
-		else
-			TITLE_STATE.entry_text = TITLE_STATE.entry_text .. (readtext() or '')
-			if keyp('backspace') then TITLE_STATE.entry_text = sub(TITLE_STATE.entry_text,1,#TITLE_STATE.entry_text-1) end
-		end
-	end
-end
-
-if SKIP_MAIN_MENU then
-	init_game()
-	_update = update_game
-	_draw = draw_game
-end
-:: queue.lua
---[[pod_format="raw",created="2025-06-08 15:17:51",modified="2025-06-12 19:57:00",revision=185]]
-include "logging.lua"
-
-local QUEUES = {}
-
-function work_queues()
-	local running_queues = 0
-	for i,q in pairs(QUEUES) do
-		local s, err = coresume(q)
-		if s then running_queues += 1 end
-		if err then error(err) end
-	end
-	return running_queues, #QUEUES
-end
-
-function make_queue()
-	local actions = {}
-	
-	local r = cocreate(function()
-		while true do
-			local next_action = deli(actions, 1)
-			if next_action then
-				r = next_action.f(unpack(next_action.argv))
-				--error(tostr(next_action.args))
-			end
-			yield()
-		end
-	end)
-	local a = function(func, argv)
-		actions[#actions+1] = { f = func, argv = argv }
-	end
-	
-	QUEUES[#QUEUES+1] = r
-	return a
-end
-:: ticking.lua
---[[pod_format="raw",created="2025-06-30 15:08:35",modified="2025-07-05 17:58:24",revision=383]]
-
-include "chunk.lua"
-include "util.lua"
-include "logging.lua"
-
-local get_chunk_by_world_pos = chunk.get_chunk_by_world_pos
-local get_tile_in_world = chunk.get_tile_in_world
-local set_tile_in_world = chunk.set_tile_in_world
-
-function enqueue(x,y,fx,fy)
-	local c = get_chunk_by_world_pos(x,y)
-	if c then 
-		c.next_schedule[x .. " " .. y] = {x,y}
-	else
-		local fc = get_chunk_by_world_pos(fx,fy)
-		fc.next_schedule[fx .. " " .. fy] = {fx,fy}
-	end
-end
-
-local function make_fluid_rule(
-	this_tile, 
-	residue_tile,
-	stale_tile,
-	left_tile,
-	right_tile,
-	free_tile,
-	direction_bias
-)
-	return function(x,y)
-		local found_tile = get_tile_in_world(x,y+1)
-		if found_tile == free_tile or (found_tile and fget(256+found_tile,7)) then
-			-- downwards motion
-			set_tile_in_world(x,y,0,false,true)
-			set_tile_in_world(x,y+1,10,false,true)
-			enqueue(x,y-1,x,y)
-			enqueue(x,y+1,x,y)
-			enqueue(x+1,y,x,y)
-			enqueue(x-1,y,x,y)
-		else
-			-- lateral motion
-			local delta_x = sgn(rnd()-0.5+direction_bias)
-			local next_tile = delta_x < 0 and left_tile or right_tile
-			-- first try
-			local found_tile = get_tile_in_world(x+delta_x,y)
-			if found_tile == free_tile or (found_tile and fget(256+found_tile,7)) then
-				-- move
-				set_tile_in_world(x,y,residue_tile,false,true)
-				set_tile_in_world(x+delta_x,y,next_tile,false,true)
-				-- enqueue free tiles and my next position
-				enqueue(x,y-1,x,y)
-				enqueue(x,y+1,x,y)
-				enqueue(x+1,y,x,y)
-				enqueue(x-1,y,x,y)
-			else
-				delta_x *= -1
-				next_tile = delta_x < 0 and left_tile or right_tile
-				-- second try
-				local found_tile = get_tile_in_world(x+delta_x,y)
-				if found_tile == free_tile or (found_tile and fget(256+found_tile,7)) then
-					-- move
-					set_tile_in_world(x,y,residue_tile,false,true)
-					set_tile_in_world(x+delta_x,y,next_tile,false,true)
-					-- enqueue free tiles and my next position
-					enqueue(x,y-1,x,y)
-					enqueue(x,y+1,x,y)
-					enqueue(x+1,y,x,y)
-					enqueue(x-1,y,x,y)
-				else
-					-- become still
-					set_tile_in_world(x,y,stale_tile,false,true)
-				end
-			end
-		end
-	end
-end
-
-RULES = {
-	[10] = make_fluid_rule(
-		10, -- this_tile, 
-		 0, -- residue_tile,
-		10, -- stale_tile,
-		34, -- left_tile,
-		35, -- right_tile
-		 0, -- free_tile,
-		 0  -- direction_bias
-	),
-	[34] = make_fluid_rule(
-		34, -- this_tile, 
-		 0, -- residue_tile,
-		10, -- stale_tile,
-		34, -- left_tile,
-		35, -- right_tile
-		 0, -- free_tile,
-	  -0.45 -- direction_bias
-	),
-	[35] = make_fluid_rule(
-		35, -- this_tile, 
-		 0, -- residue_tile,
-		10, -- stale_tile,
-		34, -- left_tile,
-		35, -- right_tile
-		 0, -- free_tile,
-	   0.45 -- direction_bias
-	),
-}
-
-local RESUME_COUNT = 0
-tick_schedule = cocreate(function() 
-	while true do
-		RESUME_COUNT += 1
-		for _,c in pairs(LOADED_CHUNKS) do
-			if c.y%3 != RESUME_COUNT%3 then goto continue end
-			local next_action
-			local action_count = 0
-			repeat
-				next_action = deli(c.schedule,1)
-				if next_action then
-					local x, y = unpack(next_action)
-					local rule = get_tile_in_world(x,y)
-					local r = RULES[rule]
-					if (r) r(x,y)			
-				end
-			until not next_action
-			::continue::
-		end
-		yield()
-		for _,c in pairs(LOADED_CHUNKS) do
-			for _,v in pairs(c.next_schedule) do
-				c.schedule[#c.schedule+1] = v
-			end
-			c.next_schedule = {}
-		end
-		yield()
-	end
-end)
-:: util.lua
---[[pod_format="raw",created="2025-04-12 19:25:23",modified="2025-06-12 19:57:00",revision=2664]]
-
-function cofetch(r, cb)
-	coresume(cocreate(function() 
-		local res = fetch(r)
-		cb(res)
-	end))
-end
-
-local perf_rec = {}
-local perf_c = 1
-local lag_counter = 0
-function perf_graph()
-	perf_c = (perf_c + 1)%60
-	perf_rec[perf_c] = stat(1) * 10
-	local acc = 0
-	local m = 0
-	for i,v in pairs(perf_rec) do
-		pset(i,SCREEN_HEIGHT - 10, 8)
-		pset(i,SCREEN_HEIGHT - 8, 1)
-		pset(i,SCREEN_HEIGHT - v,7)
-		acc += v
-		if v > m then m = v end
-	end
-	if stat(7) < 60 then lag_counter += 1 end
-	m = flr(m*10)
-	local avg = flr(acc / 6)
-	prints("lag " .. lag_counter,62, SCREEN_HEIGHT - 32)
-	prints("avg " .. avg .. "%",62,SCREEN_HEIGHT - 24)
-	prints("max " .. m .. "%",62,SCREEN_HEIGHT - 16)
-	prints("cur " .. flr(stat(1)*100) .. "% // target " .. stat(7) .. "  hold TAB for debug info",62,SCREEN_HEIGHT - 8)
-end
-
-local bars = {}
-
-function draw_debug_bars()
-	local last_bar_top = 0
-	for n,bar in pairs(bars) do
-		local next_bar_top = last_bar_top + (bar.max_slice_frame * 100)
-		rectfill(SCREEN_WIDTH,last_bar_top, SCREEN_WIDTH - 8, next_bar_top, bar.color)
-		rect(SCREEN_WIDTH,last_bar_top, SCREEN_WIDTH - 8, next_bar_top, 1)
-		print(n,SCREEN_WIDTH-#n*5-8,last_bar_top)
-		local perf_text = "WCpF " .. flr(bar.max_slice_frame * 100) .. "%"
-		print(perf_text,SCREEN_WIDTH-#perf_text*5-8,last_bar_top+8)
-		last_bar_top = next_bar_top
-	end
-end
-
-function start_bar_frame()
-	for n,bar in pairs(bars) do
-		bar.frame_slice = 0
-		if key("tab") then
-			bar.max_slice = 0
-			bar.max_slice_frame = 0
-		end
-	end
-end
-
-function bar_start(n)
-	local bar = bars[n]
-	if not bar then 
-		bar = {
-			max_slice = 0,
-			frame_slice = 0,
-			max_slice_frame = 0,
-			color = flr(rnd(29)+2)
-		}
-		bars[n] = bar
-	end
-	bar.waiting_slice = stat(1)
-end
-
-function bar_end(n)
-	local bar = bars[n]
-	bar.current_slice = stat(1) - bar.waiting_slice
-	bar.frame_slice += bar.current_slice
-	
-	if bar.max_slice_frame < bar.frame_slice then bar.max_slice_frame = bar.frame_slice end
-	if bar.max_slice < bar.current_slice then bar.max_slice = bar.current_slice end
-end
-
-
-
-function prints(s,x,y,c)
-	print(s,x+1,y+1,19)
-	print(s,x,y,c or 7)
-end
-
-function real_count(t)
-	local c = 0
-	for i,v in pairs(t) do c+=1 end
-	return c
-end
-
-function indexof(t,iv)
-	for i,ov in pairs(t) do if iv == ov then return i end end
-end
-
-function tracked_rect(w,h,cb)
-	bar_start("Rect")
-	local short_side = w < h and w or h
-	local half_short_side = short_side/2
-	for ix=0,w do
-		for iy=0,h do
-			local dist = sqrt( (half_short_side - ix)^2 + (half_short_side - iy)^2 )
-			local inverse_dist = half_short_side - dist
-			inverse_dist = inverse_dist < 0 and 0 or inverse_dist
-			cb(ix,iy,dist,inverse_dist)
-		end
-	end
-	bar_end("Rect")
-end
-
-
-:: world_interaction.lua
---[[pod_format="raw",created="2025-04-16 12:52:53",modified="2025-07-07 17:23:25",revision=1776]]
-include "constants.lua"
-include "chunk.lua"
-include "ticking.lua"
-
-WORLD_MOUSE_X = 0
-WORLD_MOUSE_Y = 0
-PREV_MOUSE_LEFT = false
-PREV_MOUSE_RIGHT = false
-
-local BLOCK_BREAKS = {}
-
-ACTIVE_BLOCK = 0
-
-function update_world_mouse(camera_x, camera_y)
-	local g_mouse_x, g_mouse_y, g_mouse_b, g_wheel_x, g_wheel_y = mouse()
-	local left_down = g_mouse_b & 0x1 > 0
-	local right_down = g_mouse_b & 0x2 > 0
-	local wheel_delta = -(g_wheel_y == 0 and 0 or sgn(g_wheel_y))
-	
-	local left_pressed = left_down and not PREV_MOUSE_LEFT
-	local left_released = not left_down and PREV_MOUSE_LEFT
-	
-	local right_pressed = right_down and not PREV_MOUSE_RIGHT
-	local right_released = not right_down and PREV_MOUSE_RIGHT
-	
-	PREV_MOUSE_LEFT = left_down
-	PREV_MOUSE_RIGHT = right_down
-	WORLD_MOUSE_X = flr((camera_x + g_mouse_x) / TILE_SIZE)
-	WORLD_MOUSE_Y = flr((camera_y + g_mouse_y) / TILE_SIZE)
-	
-	ACTIVE_BLOCK = mid(1,24,ACTIVE_BLOCK+wheel_delta)
-	
-	if not key "ctrl" then
-		if right_pressed then
-			chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, ACTIVE_BLOCK, fget(256+ACTIVE_BLOCK,0))
-			enqueue(WORLD_MOUSE_X,WORLD_MOUSE_Y)
-		end
-		if left_pressed then
-			chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 0)
-			chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
-			enqueue(WORLD_MOUSE_X,WORLD_MOUSE_Y+1)
-			enqueue(WORLD_MOUSE_X,WORLD_MOUSE_Y-1)
-			enqueue(WORLD_MOUSE_X+1,WORLD_MOUSE_Y)
-			enqueue(WORLD_MOUSE_X-1,WORLD_MOUSE_Y)
-		end
-	end
-	
-
-	if key "ctrl" then
-		if right_pressed then
-			chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
-			chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 57)
-			chunk.place_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 32)
-		end
-		if left_pressed then
-			chunk.break_light_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y)
-			chunk.set_tile_in_world(WORLD_MOUSE_X, WORLD_MOUSE_Y, 0, true)
-		end
-	end
-end
-
-function block_break_routine(x,y)
-	local block_break_name = x .. '/' .. y
-	local block_break = BLOCK_BREAKS[block_break_name]
-	if not block_break then
-		
-		block_break = 0
-	end
-end
-
-function draw_world_mouse()
-	local rx = WORLD_MOUSE_X * TILE_SIZE
-	local ry = WORLD_MOUSE_Y * TILE_SIZE
-	fillp(0b1010010110100101)
-	rect(rx+1, ry+1, rx+TILE_SIZE, ry+TILE_SIZE, 1)
-	rect(rx, ry, rx+TILE_SIZE-1, ry+TILE_SIZE-1, 7)
-	
-	fillp()
-		print(rx .. "/" .. ry, rx,ry-8, 7)
-end
-:: world_loader.lua
---[[pod_format="raw",created="2025-07-01 20:06:17",modified="2025-07-13 15:35:43",revision=66]]
-local world_meta = {}
-
-function get_world_meta()
-	return world_meta
-end
-
-function load_world(wname)
-	mkdir(SAVEGAME_DIRECTORY)
-	mkdir(SAVEGAME_DIRECTORY .. "/" .. wname)
-	local meta_path = SAVEGAME_DIRECTORY .. "/" .. wname .. "/meta.pod"
-	local tp, size, path = fstat(meta_path)
-	if tp then
-		local loaded_meta = fetch(meta_path)
-		world_meta.seed = loaded_meta.seed
-		dbg("Read world!")
-	else
-		world_meta.seed = stat(86)
-		local a = store(meta_path, world_meta)
-		dbg("Stored world!")
-		dbg(a)
-	end
-end
-:: .info.pod
-b64$LS1bW3BvZCxiYnNfaWQ9Il9kZXYyMjc5IixjcmVhdGVkPSIyMDI1LTA0LTA5IDE5OjUwOjMx
-IixpY29uPXVzZXJkYXRhKCJ1OCIsMTYsMTYsIjAwMDAwMDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAw
-MDAwMDAwMDAxMDcwNzA3MDcwNzA3MDcwNzA3MDcwMTAwMDAwMDAxMDcxNTE1MTUwYTBhMGEwYTE1
-MTUxNTA3MDEwMDAxMDcxNTE1MTUwYTBhMDkwNjA3MGExNTE1MTUwNzAxMDEwNzE1MTUxNTA5MDkw
-OTA3MDcwOTE1MTUxNTA3MDEwMTA3MTUxNTE5MTkxOTE5MTkxOTE5MTkxNTE1MDcwMTAxMDcxNTE1
-MTUwNzA3MDEwNzA3MDExNTE1MTUwNzAxMDEwNzE1MTUxNTA3MDcwMTA3MDcwMTE1MTUxNTA3MDEw
-MTA3MTUxNTE1MTAwNzA3MDcwNzA3MTUxNTE1MDcwMTAxMDcxNTE1MTUwNzEwMDcwNzA3MDcxNTE1
-MTUwNzAxMDEwNzAxMTUxNTEwMTAxMDEwMTAxMDE1MTUxNTA3MDEwMTA2MDcxNTE1MTAxMDAxMDEx
-MDEwMTUxNTA3MDYwMTAxMDYwNjA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwNjAxMDAwMTA2MDYwNjA2
-MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjAxMDAwMDAwMDAw
-MDAxMDEwMTAxMDEwMTAxMDEwMTAxMDAwMDAwIiksbG93Y29sX2ljb249ZmFsc2UsbW9kaWZpZWQ9
-IjIwMjUtMDctMTQgMTg6Mzg6MjAiLHJ1bnRpbWU9MTksc2FuZGJveD1mYWxzZSx3b3Jrc3BhY2Vz
-PXt7bG9jYXRpb249Im1haW4ubHVhIzIyIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJn
-YW1lLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJjaHVuay5sdWEjNjI5Iix3
-b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJjaHVua3NlcnZpY2UubHVhIzI3Iix3b3Jrc3Bh
-Y2VfaW5kZXg9MX0se2xvY2F0aW9uPSJ0aWNraW5nLmx1YSIsd29ya3NwYWNlX2luZGV4PTF9LHts
-b2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJnZngvMS5n
-ZngiLHdvcmtzcGFjZV9pbmRleD0yfSx7bG9jYXRpb249Im1hcC9kZWJ1Zy5tYXAiLHdvcmtzcGFj
-ZV9pbmRleD0zfSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
+:: sfx/.info.pod
+--[[pod,created="2025-04-09 19:52:53",modified="2025-11-04 19:29:24"]]
+:: sfx/0.sfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI1LTA0LTA5IDE4OjU5OjA1Iixtb2RpZmllZD0iMjAyNS0w
+Ny0wNyAxNzo0OToyMiIscmV2aXNpb249NDc4Nl1dbHo0ACsBAADwCgAA8CNweHUAAygAAAQABA9A
+EAIOAAGgASACoA4ADxAADfDKAQIDQAyQBAUGB0APD5AICQoPCwkA-wAMDw0PDg8PQAuQA3AB8P8B
+AOv2EJYBEAYPDRABIAEgAfAAAhACDyAQASAPISABMA9poAIdAPAPMA9nIA8r8J8PfA--DxzwxQ-4
+Cg--D4AP9w8NAfAJRgAXIEYAFQ5FAI9A8MMPIg--BjIAAB8OMQAGXygP--DGMAD------28f-wEA
+rEDID0AA7wfzCie-Kf--I8D9I879I19zb3bwI1_B8CUP0DAgAEwsvy79HwATKhwA8AsxjzP9JpD9
+Jp79Jh9zf3bwJg_B8CcFIA-wICEA4hBADzf9LwH9Lw79L-BwEgAv-bAKAFwf-wEA-9ZQ-----90=
 :: [eoc]
